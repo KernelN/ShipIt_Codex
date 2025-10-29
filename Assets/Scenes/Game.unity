@@ -131,6 +131,8 @@ GameObject:
   - component: {fileID: 174805923}
   - component: {fileID: 174805922}
   - component: {fileID: 174805921}
+  - component: {fileID: 174805925}
+  - component: {fileID: 174805926}
   m_Layer: 6
   m_Name: Planet A
   m_TagString: Untagged
@@ -228,6 +230,33 @@ Transform:
   - {fileID: 1072133889}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &174805925
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 174805920}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0214c377ec0ec3147b722ad91edbf960, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &174805926
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 174805920}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56373ca3ed7fc204187abb7a80fce2f3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  astralBody: {fileID: 174805925}
+  componentList:
+  - {fileID: 11400000, guid: 51695a80d58c13d48919aba29a75a333, type: 2}
 --- !u!1 &330585543
 GameObject:
   m_ObjectHideFlags: 0
@@ -650,6 +679,8 @@ GameObject:
   - component: {fileID: 1159228545}
   - component: {fileID: 1159228544}
   - component: {fileID: 1159228543}
+  - component: {fileID: 1159228548}
+  - component: {fileID: 1159228547}
   m_Layer: 6
   m_Name: Planet B
   m_TagString: Untagged
@@ -746,6 +777,33 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1159228547
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1159228542}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56373ca3ed7fc204187abb7a80fce2f3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  astralBody: {fileID: 1159228548}
+  componentList:
+  - {fileID: 11400000, guid: 51695a80d58c13d48919aba29a75a333, type: 2}
+--- !u!114 &1159228548
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1159228542}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0214c377ec0ec3147b722ad91edbf960, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1260599641
 GameObject:
   m_ObjectHideFlags: 0
