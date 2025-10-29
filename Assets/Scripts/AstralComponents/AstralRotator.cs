@@ -11,18 +11,14 @@ namespace ShipIt.Gameplay.Astral
         {
             this.speed = speed;
         }
-
         public override void Set(AstralBody body)
         {
-            target = body != null ? body.transform : null;
+            target = body.transform;
+            body.OnUpdate += Update;
         }
-
-        public override void Update()
+        public void Update(float dt, float udt)
         {
-            if (target == null)
-                return;
-
-            target.Rotate(Vector3.up, speed * Time.deltaTime, Space.Self);
+            target.Rotate(Vector3.up, speed * dt);
         }
     }
 }
