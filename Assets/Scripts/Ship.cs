@@ -11,21 +11,22 @@ namespace ShipIt.Gameplay
         [SerializeField] LayerMask planetMask;
         [SerializeField] LineRenderer planetLine;
         Transform detectedPlanet;
+        Transform cPlanet;
+        Vector3 detectedTargetPoint;
         public bool HasPlanetAbove { get; private set; }
         Vector3 RayOrigin => cPlanet ? cPlanet.position : transform.position;
         public Transform CurrentPlanet => cPlanet;
-        Transform cPlanet;
+        
         [Header("Launch")] 
-        [SerializeField] float launchSpeed = 50f;
+        [SerializeField, Min(0)] float launchSpeed = 50f;
         float sqrJumpSpeed;
-        public float JumpPer;
-        public System.Action<bool> OnIsJumping;
-        Vector3 detectedTargetPoint;
         bool isLaunching;
         float launchElapsed;
         float launchDuration;
         Vector3 launchStartPosition;
         Vector3 launchTargetPosition;
+        public System.Action<bool> OnIsJumping;
+        public float JumpPer { get; private set; }
         
         const int UpdateTime = 2;
 
@@ -140,13 +141,8 @@ namespace ShipIt.Gameplay
             isLaunching = true;
             OnIsJumping?.Invoke(true);
         }
-        void CacheSqrJumpSpeed()
-        {
-            if (launchSpeed < 0f)
-                launchSpeed = 0f;
+        void CacheSqrJumpSpeed() => sqrJumpSpeed = launchSpeed * launchSpeed;
 
-            sqrJumpSpeed = launchSpeed * launchSpeed;
-        }
         void SetLineColor(Color c)
         {
             var grad = new Gradient();

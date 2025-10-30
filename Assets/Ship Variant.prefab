@@ -245,3 +245,5 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   planetLine: {fileID: 8267794517906154729}
+  launchSpeed: 5
+  JumpPer: 0
