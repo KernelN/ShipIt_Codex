@@ -15,6 +15,7 @@ namespace ShipIt.Gameplay
 
         // ——— Runtime ———
         public bool HasPlanetAbove { get; private set; }
+        public float JumpPer;
 
         const int UpdateTime = 2;
         Vector3 RayOrigin => cPlanet ? cPlanet.position : transform.position;
