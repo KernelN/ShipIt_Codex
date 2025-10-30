@@ -1,26 +1,38 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 using ShipIt.TickManaging;
 
 namespace ShipIt.Gameplay
 {
     public class Ship : MonoBehaviour
     {
-        // ——— Config ———
-        [Header("Planet Check")] [SerializeField]
-        float checkDistance = 200f;
-
+        [Header("Planet Check")]
+        [SerializeField] float checkDistance = 200f;
         [SerializeField] LayerMask planetMask;
         [SerializeField] LineRenderer planetLine;
-        Transform cPlanet;
-
-        // ——— Runtime ———
+        Transform detectedPlanet;
         public bool HasPlanetAbove { get; private set; }
-
-        const int UpdateTime = 2;
         Vector3 RayOrigin => cPlanet ? cPlanet.position : transform.position;
+        public Transform CurrentPlanet => cPlanet;
+        Transform cPlanet;
+        [Header("Launch")] 
+        [SerializeField] float launchSpeed = 50f;
+        float sqrJumpSpeed;
+        public float JumpPer;
+        public System.Action<bool> OnIsJumping;
+        Vector3 detectedTargetPoint;
+        bool isLaunching;
+        float launchElapsed;
+        float launchDuration;
+        Vector3 launchStartPosition;
+        Vector3 launchTargetPosition;
+        
+        const int UpdateTime = 2;
 
         void Awake()
         {
+            CacheSqrJumpSpeed();
+
             if (!planetLine)
             {
                 planetLine = gameObject.AddComponent<LineRenderer>();
@@ -33,18 +45,47 @@ namespace ShipIt.Gameplay
                     planetLine.material = new Material(Shader.Find("Sprites/Default")); // simple unlit shader}
             }
         }
-
         void Start()
         {
             UpdateManager.inst.SuscribeToLateScaled(UpdateTime, _Update);
-        }
 
+            InputHolder inputs = InputHolder.inst;
+
+            if(!inputs) return;
+
+            inputs.actions.Player.Launch.performed += Launch;
+        }
         void OnDestroy()
         {
             // Always unsubscribe when disabled/destroyed
             if (UpdateManager.inst != null)
                 UpdateManager.inst.RemoveFromLateScaled(UpdateTime, _Update);
+
+            InputHolder inputs = InputHolder.inst;
+
+            if(!inputs) return;
+
+            inputs.actions.Player.Launch.performed -= Launch;
         }
+        void Update()
+        {
+            if(!isLaunching) return;
+
+            launchElapsed += Time.deltaTime;
+            JumpPer = launchDuration <= 0f ? 1f : Mathf.Clamp01(launchElapsed / launchDuration);
+            transform.position = Vector3.Lerp(launchStartPosition, launchTargetPosition, JumpPer);
+
+            if(JumpPer >= 1f)
+            {
+                transform.up = (launchStartPosition - launchTargetPosition).normalized;
+                cPlanet = detectedPlanet;
+                isLaunching = false;
+                OnIsJumping?.Invoke(false);
+            }
+        }
+#if UNITY_EDITOR
+        void OnValidate() => CacheSqrJumpSpeed();
+#endif
 
         void _Update()
         {
@@ -62,14 +103,50 @@ namespace ShipIt.Gameplay
             {
                 planetLine.SetPosition(1, hit.point);
                 SetLineColor(Color.white);
+                detectedPlanet = hit.transform;
+                detectedTargetPoint = hit.point;
             }
             else
             {
                 planetLine.SetPosition(1, ray.origin + ray.direction * checkDistance);
                 SetLineColor(Color.red);
+                detectedPlanet = null;
+                detectedTargetPoint = Vector3.zero;
             }
         }
+        void Launch(InputAction.CallbackContext ctx)
+        {
+            if(!HasPlanetAbove || detectedPlanet == null || isLaunching)
+                return;
 
+            if(sqrJumpSpeed <= Mathf.Epsilon)
+                return;
+
+            launchStartPosition = transform.position;
+            launchTargetPosition = detectedTargetPoint;
+
+            Vector3 displacement = launchTargetPosition - launchStartPosition;
+            float sqrDistance = displacement.sqrMagnitude;
+
+            if(sqrDistance <= Mathf.Epsilon)
+            {
+                JumpPer = 1f;
+                return;
+            }
+
+            launchDuration = sqrDistance / sqrJumpSpeed;
+            launchElapsed = 0f;
+            JumpPer = 0f;
+            isLaunching = true;
+            OnIsJumping?.Invoke(true);
+        }
+        void CacheSqrJumpSpeed()
+        {
+            if (launchSpeed < 0f)
+                launchSpeed = 0f;
+
+            sqrJumpSpeed = launchSpeed * launchSpeed;
+        }
         void SetLineColor(Color c)
         {
             var grad = new Gradient();
