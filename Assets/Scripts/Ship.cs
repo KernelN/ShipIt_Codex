@@ -10,12 +10,12 @@ namespace ShipIt.Gameplay
         [SerializeField] float checkDistance = 200f;
         [SerializeField] LayerMask planetMask;
         [SerializeField] LineRenderer planetLine;
-        Transform detectedPlanet;
         Transform cPlanet;
         Vector3 detectedTargetPoint;
         public bool HasPlanetAbove { get; private set; }
         Vector3 RayOrigin => cPlanet ? cPlanet.position : transform.position;
         public Transform CurrentPlanet => cPlanet;
+        public Transform DetectedPlanet { get; private set; }
         
         [Header("Launch")] 
         [SerializeField, Min(0)] float launchSpeed = 50f;
@@ -28,10 +28,10 @@ namespace ShipIt.Gameplay
         Vector3 landTargetPos;
         Vector3 jumpInitialUp;
         Vector3 jumpFinalUp;
-        public System.Action<bool> OnIsJumping;
+        public System.Action<JumpPhase> OnJump;
         public float JumpPer { get; private set; }
 
-        enum JumpPhase
+        public enum JumpPhase
         {
             None,
             ToPlanet,
@@ -121,14 +121,14 @@ namespace ShipIt.Gameplay
             {
                 planetLine.SetPosition(1, hit.point);
                 SetLineColor(Color.white);
-                detectedPlanet = hit.transform;
+                DetectedPlanet = hit.transform;
                 detectedTargetPoint = hit.point;
             }
             else
             {
                 planetLine.SetPosition(1, ray.origin + ray.direction * checkDistance);
                 SetLineColor(Color.red);
-                detectedPlanet = null;
+                DetectedPlanet = null;
                 detectedTargetPoint = Vector3.zero;
             }
         }
@@ -138,7 +138,7 @@ namespace ShipIt.Gameplay
         
         void Launch(InputAction.CallbackContext ctx)
         {
-            if(!HasPlanetAbove || detectedPlanet == null || isJumping)
+            if(!HasPlanetAbove || DetectedPlanet == null || isJumping)
                 return;
 
             if(sqrJumpSpeed <= Mathf.Epsilon)
@@ -168,24 +168,22 @@ namespace ShipIt.Gameplay
                 rightDirection = Vector3.Cross(upReference, pathDirection);
             }
 
-            float planetRadius = detectedPlanet.lossyScale.x;
+            float planetRadius = DetectedPlanet.lossyScale.x;
 
             Vector3 oppositeDirection = pathDirection;
             if (cPlanet)
             {
-                Vector3 toCurrentPlanet = cPlanet.position - detectedPlanet.position;
+                Vector3 toCurrentPlanet = cPlanet.position - DetectedPlanet.position;
                 oppositeDirection = -toCurrentPlanet.normalized;
             }
 
-            landTargetPos = detectedPlanet.position + oppositeDirection * planetRadius;
-            Vector3 offsetTarget = detectedPlanet.position + rightDirection * planetRadius;
+            landTargetPos = DetectedPlanet.position + oppositeDirection * planetRadius;
+            Vector3 offsetTarget = DetectedPlanet.position + rightDirection * planetRadius;
 
             bool startedPhase = StartLaunchPhase(offsetTarget, JumpPhase.ToPlanet);
 
             if (!startedPhase && !isJumping)
                 return;
-
-            OnIsJumping?.Invoke(true);
         }
         void CacheSqrJumpSpeed() => sqrJumpSpeed = launchSpeed * launchSpeed;
         bool StartLaunchPhase(Vector3 targetPosition, JumpPhase phase, float durationMultiplier = 1f)
@@ -203,6 +201,8 @@ namespace ShipIt.Gameplay
             //Check if ship is already at target
             if (sqrDistance <= Mathf.Epsilon)
             {
+                OnJump?.Invoke(phase);
+
                 if (phase == JumpPhase.ToPlanet)
                 {
                     BeginFinalApproach();
@@ -223,6 +223,8 @@ namespace ShipIt.Gameplay
             JumpPer = 0f;
             isJumping = true;
 
+            OnJump?.Invoke(phase);
+
             return true;
         }
         void BeginFinalApproach()
@@ -233,15 +235,15 @@ namespace ShipIt.Gameplay
         void Land()
         {
             //Get planet surface
-            Vector3 up = (jumpTargetPosition - detectedPlanet.position).normalized;
-            Vector3 pos = detectedPlanet.position + up * (detectedPlanet.lossyScale.x / 2);
+            Vector3 up = (jumpTargetPosition - DetectedPlanet.position).normalized;
+            Vector3 pos = DetectedPlanet.position + up * (DetectedPlanet.lossyScale.x / 2);
             
             //Set transform
             transform.position = pos;
             transform.up = up;
 
             //Update planet
-            cPlanet = detectedPlanet;
+            cPlanet = DetectedPlanet;
             transform.parent = cPlanet;
             
             //Reset jump values
@@ -252,7 +254,7 @@ namespace ShipIt.Gameplay
             jumpInitialUp = Vector3.zero;
             jumpElapsed = jumpDuration;
             JumpPer = 1f;
-            OnIsJumping?.Invoke(false);
+            OnJump?.Invoke(JumpPhase.None);
         }
         void SetLineColor(Color c)
         {
