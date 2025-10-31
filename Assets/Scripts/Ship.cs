@@ -124,7 +124,41 @@ namespace ShipIt.Gameplay
                 return;
 
             launchStartPosition = transform.position;
-            launchTargetPosition = detectedTargetPoint;
+
+            Vector3 targetPoint = detectedTargetPoint;
+            Vector3 displacementToTarget = targetPoint - launchStartPosition;
+
+            if(displacementToTarget.sqrMagnitude <= Mathf.Epsilon)
+            {
+                JumpPer = 1f;
+                return;
+            }
+
+            Vector3 pathDirection = displacementToTarget.normalized;
+            Vector3 upReference = Vector3.up;
+            Camera mainCam = Camera.main;
+
+            if (mainCam)
+                upReference = mainCam.transform.up;
+
+            Vector3 rightDirection = Vector3.Cross(upReference, pathDirection);
+
+            if(rightDirection.sqrMagnitude <= Mathf.Epsilon)
+            {
+                upReference = transform.up;
+                rightDirection = Vector3.Cross(upReference, pathDirection);
+            }
+
+            if(rightDirection.sqrMagnitude > Mathf.Epsilon)
+                rightDirection.Normalize();
+            else
+                rightDirection = transform.right;
+
+            float planetRadius = Mathf.Abs(detectedPlanet.lossyScale.x) * 0.5f;
+            if(planetRadius <= Mathf.Epsilon)
+                planetRadius = Vector3.Distance(targetPoint, detectedPlanet.position);
+
+            launchTargetPosition = detectedPlanet.position + rightDirection * planetRadius;
 
             Vector3 displacement = launchTargetPosition - launchStartPosition;
             float sqrDistance = displacement.sqrMagnitude;
