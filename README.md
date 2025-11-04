@@ -1,7 +1,7 @@
 # ShipIt
 
 Mobile 3D game. Made in Unity 6.0
-Will use Facade, Memento and Factory design patterns.
+Will use Facade, Composite, Factory, Builder and Memento design patterns.
 Make use of the UpdateManager whenever possible to minimize CPU load. UpdateUserExample shows how the UpdateManager should be used.
 
 V1
