@@ -8,20 +8,30 @@ namespace ShipIt.Gameplay
     {
         [SerializeField] Ship ship;
         [SerializeField] PositionConstraint positionConstraint;
-        [SerializeField] AnimationCurve followCurve = AnimationCurve.Linear(0f, 0f, 1f, 1f);
+        [SerializeField] AnimationCurve toPlanetCurve = AnimationCurve.Linear(0f, 0f, 1f, 1f);
+        [SerializeField] AnimationCurve landCurve = AnimationCurve.Linear(0f, 0f, 1f, 1f);
         [SerializeField] float resetWeightsLerpDuration = .5f;
         bool isShipJumping;
-        
+        AnimationCurve activeCurve;
+
         void Start()
         {
-            ship.OnIsJumping += OnShipIsJumping;
+            if (!ship) return;
+
+            ship.OnJump += OnShipJumpPhase;
+        }
+        void OnDestroy()
+        {
+            if (!ship) return;
+
+            ship.OnJump -= OnShipJumpPhase;
         }
         void Update()
         {
             if(!isShipJumping) return;
-            if (!ship || !positionConstraint) return;
+            if (!ship || !positionConstraint || activeCurve == null) return;
 
-            float weight = followCurve.Evaluate(ship.JumpPer);
+            float weight = activeCurve.Evaluate(ship.JumpPer);
 
             SetConstraintWeight(0, weight);
             SetConstraintWeight(1, 1f - weight);
@@ -35,17 +45,41 @@ namespace ShipIt.Gameplay
             source.weight = weight;
             positionConstraint.SetSource(index, source);
         }
-        void OnShipIsJumping(bool isJumping)
+        void OnShipJumpPhase(Ship.JumpPhase phase)
         {
-            isShipJumping = isJumping;
-            
-            if(isJumping) return;
-            
-            var source = positionConstraint.GetSource(1);
-            source.sourceTransform = ship.CurrentPlanet;
-            positionConstraint.SetSource(1, source);
+            switch (phase)
+            {
+                case Ship.JumpPhase.ToPlanet:
+                    activeCurve = toPlanetCurve;
+                    isShipJumping = true;
+                    break;
+                case Ship.JumpPhase.Land:
+                    activeCurve = landCurve;
+                    isShipJumping = true;
+                    OverrideConstraintSource(ship.DetectedPlanet);
+                    break;
+                case Ship.JumpPhase.None:
+                    activeCurve = null;
+                    isShipJumping = false;
+                    OverrideConstraintSource(ship.CurrentPlanet);
+                    StartCoroutine(ResetWeights());
+                    break;
+                default:
+                    activeCurve = null;
+                    isShipJumping = false;
+                    break;
+            }
+        }
 
-            StartCoroutine(ResetWeights());
+        void OverrideConstraintSource(Transform newSource)
+        {
+            if (!positionConstraint || newSource == null) return;
+
+            if (positionConstraint.sourceCount <= 1) return;
+
+            var source = positionConstraint.GetSource(1);
+            source.sourceTransform = newSource;
+            positionConstraint.SetSource(1, source);
         }
         System.Collections.IEnumerator ResetWeights()
         {
