@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3899948763af5a948b90b5903c01d13d, type: 3}
+  m_Name: SimpleMapFactory
+  m_EditorClassIdentifier: 
+  planetPrefab: {fileID: 6291150174628062828, guid: 20509690e23351c42bcd61417ca4c2ac, type: 3}
+  planetQuantity: 10
+  minDistanceBetweenPlanets: 5
+  maxDistanceBetweenPlanets: 10
+  componentBuilders:
+  - {fileID: 11400000, guid: 51695a80d58c13d48919aba29a75a333, type: 2}
