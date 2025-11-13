@@ -7,7 +7,7 @@ namespace ShipIt.Gameplay
     public class Ship : MonoBehaviour
     {
         [Header("Planet Check")]
-        [SerializeField] float checkDistance = 200f;
+        [SerializeField] float checkDistance = 20f;
         [SerializeField] LayerMask planetMask;
         [SerializeField] LineRenderer planetLine;
         Transform cPlanet;
@@ -236,6 +236,7 @@ namespace ShipIt.Gameplay
         {
             //Get planet surface
             Vector3 up = (jumpTargetPosition - DetectedPlanet.position).normalized;
+            up = Vector3.ProjectOnPlane(up, DetectedPlanet.up);
             Vector3 pos = DetectedPlanet.position + up * (DetectedPlanet.lossyScale.x / 2);
             
             //Set transform
