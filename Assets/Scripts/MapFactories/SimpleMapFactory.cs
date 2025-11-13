@@ -7,7 +7,7 @@ namespace ShipIt.Gameplay.Astral
     {
         public override int SpawnMap(Transform anchor)
         {
-            if (anchor == null || PlanetPrefab == null || PlanetQuantity <= 0)
+            if (anchor == null || planetPrefab == null || planetQuantity <= 0)
             {
                 LastSeed = 0;
                 return LastSeed;
@@ -17,20 +17,21 @@ namespace ShipIt.Gameplay.Astral
             var previousState = Random.state;
             Random.InitState(seed);
 
-            float minDistance = Mathf.Min(MinDistanceBetweenPlanets, MaxDistanceBetweenPlanets);
-            float maxDistance = Mathf.Max(MinDistanceBetweenPlanets, MaxDistanceBetweenPlanets);
+            float minDistance = Mathf.Min(minDistanceBetweenPlanets, maxDistanceBetweenPlanets);
+            float maxDistance = Mathf.Max(minDistanceBetweenPlanets, maxDistanceBetweenPlanets);
 
-            Quaternion firstRotation = Random.rotation;
-            GameObject planetInstance = Instantiate(PlanetPrefab, anchor.position, firstRotation, anchor);
+            AstralBody planetInstance = Instantiate(planetPrefab, anchor.position, anchor.rotation);
+            planetInstance.AddAstralComponent(componentBuilders[0].GetComponent());
             Transform previousPlanet = planetInstance.transform;
 
-            for (int i = 1; i < PlanetQuantity; i++)
+            for (int i = 1; i < planetQuantity; i++)
             {
                 float distance = Random.Range(minDistance, maxDistance);
-                Vector3 spawnPosition = previousPlanet.position + previousPlanet.forward * distance;
-                Quaternion spawnRotation = Random.rotation;
+                Vector3 spawnPos = previousPlanet.position + previousPlanet.forward * distance;
+                Quaternion spawnRot = Random.rotation;
 
-                planetInstance = Instantiate(PlanetPrefab, spawnPosition, spawnRotation, anchor);
+                planetInstance = Instantiate(planetPrefab, spawnPos, spawnRot);
+                planetInstance.AddAstralComponent(componentBuilders[0].GetComponent());
                 previousPlanet = planetInstance.transform;
             }
 
