@@ -240,10 +240,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dc91b7f86694ba54c9f54592ba886b03, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  checkDistance: 200
+  checkDistance: 10
   planetMask:
     serializedVersion: 2
     m_Bits: 64
   planetLine: {fileID: 8267794517906154729}
   launchSpeed: 5
-  JumpPer: 0
+  finalApproachDurationFactor: 0.35

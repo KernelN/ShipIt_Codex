@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b57d403fa288da9469a259adefcfdb06, type: 3}
   m_Name: AstralRotator
   m_EditorClassIdentifier: 
-  minRotSpeed: -30
+  minRotSpeed: 15
   maxRotSpeed: 30

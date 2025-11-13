@@ -5,12 +5,15 @@ namespace ShipIt.Gameplay.Astral
     [CreateAssetMenu(menuName = "Astral/Rotator", fileName = "AstralRotator")]
     public class AstralRotatorBuilder : AstralComponentBuilder
     {
-        [SerializeField] float minRotSpeed = -30f;
-        [SerializeField] float maxRotSpeed = 30f;
+        [SerializeField, Min(0)] float minRotSpeed = 15f;
+        [SerializeField, Min(0)] float maxRotSpeed = 30f;
 
         public override AstralComponentType GetType => AstralComponentType.Rotator;
 
-        public override AstralComponent GetComponent() 
-            => new AstralRotator(Random.Range(minRotSpeed, maxRotSpeed));
+        public override AstralComponent GetComponent()
+        {
+            int sign = Random.value > .5f ? 1 : -1;
+            return new AstralRotator(Random.Range(minRotSpeed, maxRotSpeed) * sign);
+        }
     }
 }

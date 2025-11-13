@@ -22,6 +22,7 @@ namespace ShipIt.Gameplay.Astral
 
             AstralBody planetInstance = Instantiate(planetPrefab, anchor.position, anchor.rotation);
             planetInstance.AddAstralComponent(componentBuilders[0].GetComponent());
+            planetInstance.gameObject.name = "Planet 1";
             Transform previousPlanet = planetInstance.transform;
 
             for (int i = 1; i < planetQuantity; i++)
@@ -32,6 +33,7 @@ namespace ShipIt.Gameplay.Astral
 
                 planetInstance = Instantiate(planetPrefab, spawnPos, spawnRot);
                 planetInstance.AddAstralComponent(componentBuilders[0].GetComponent());
+                planetInstance.gameObject.name = $"Planet {i + 1}";
                 previousPlanet = planetInstance.transform;
             }
 
