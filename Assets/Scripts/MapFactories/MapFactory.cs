@@ -4,7 +4,7 @@ namespace ShipIt.Gameplay.Astral
 {
     public abstract class MapFactory : ScriptableObject
     {
-        [SerializeField] internal AstralBody planetPrefab;
+        [SerializeField] internal ComponentExposer planetPrefab;
         [SerializeField] internal int planetQuantity = 1;
         [SerializeField] internal float minDistanceBetweenPlanets = 1f;
         [SerializeField] internal float maxDistanceBetweenPlanets = 5f;

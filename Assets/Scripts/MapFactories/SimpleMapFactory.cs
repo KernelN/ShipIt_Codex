@@ -17,24 +17,24 @@ namespace ShipIt.Gameplay.Astral
             var previousState = Random.state;
             Random.InitState(seed);
 
-            float minDistance = Mathf.Min(minDistanceBetweenPlanets, maxDistanceBetweenPlanets);
-            float maxDistance = Mathf.Max(minDistanceBetweenPlanets, maxDistanceBetweenPlanets);
+            float minDistance = minDistanceBetweenPlanets;
+            float maxDistance = maxDistanceBetweenPlanets;
 
-            AstralBody planetInstance = Instantiate(planetPrefab, anchor.position, anchor.rotation);
-            planetInstance.AddAstralComponent(componentBuilders[0].GetComponent());
-            planetInstance.gameObject.name = "Planet 1";
-            Transform previousPlanet = planetInstance.transform;
+            ComponentExposer inst = Instantiate(planetPrefab, anchor.position, anchor.rotation);
+            inst.AstralBody.AddAstralComponent(componentBuilders[0].GetComponent());
+            inst.gameObject.name = "Planet 1";
+            Transform prevPlanet = inst.transform;
 
             for (int i = 1; i < planetQuantity; i++)
             {
                 float distance = Random.Range(minDistance, maxDistance);
-                Vector3 spawnPos = previousPlanet.position + previousPlanet.forward * distance;
+                Vector3 spawnPos = prevPlanet.position + prevPlanet.forward * distance;
                 Quaternion spawnRot = Random.rotation;
 
-                planetInstance = Instantiate(planetPrefab, spawnPos, spawnRot);
-                planetInstance.AddAstralComponent(componentBuilders[0].GetComponent());
-                planetInstance.gameObject.name = $"Planet {i + 1}";
-                previousPlanet = planetInstance.transform;
+                inst = Instantiate(planetPrefab, spawnPos, spawnRot);
+                inst.AstralBody.AddAstralComponent(componentBuilders[0].GetComponent());
+                inst.gameObject.name = $"Planet {i + 1}";
+                prevPlanet = inst.transform;
             }
 
             LastSeed = seed;
