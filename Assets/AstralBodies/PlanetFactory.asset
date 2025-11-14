@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 68fb39d2f46d7c94a9d308ebc7a60baa, type: 3}
+  m_Name: PlanetFactory
+  m_EditorClassIdentifier: 
+  bodyPrefab: {fileID: 8513145836359807240, guid: 20509690e23351c42bcd61417ca4c2ac, type: 3}
+  minScaleMultiplier: 0.8
+  maxScaleMultiplier: 1.2
+  materials:
+  - {fileID: 2100000, guid: d26aadb1df9baf044871bc85d4c2671f, type: 2}
+  - {fileID: 2100000, guid: fd888d9a535806847bed1d4beb400bca, type: 2}
+  - {fileID: 2100000, guid: 7d9a09e47f2746142a40411315aaf11d, type: 2}
+  - {fileID: 2100000, guid: 6d391d33c86f3dd4a9eb03ed712363fd, type: 2}
+  - {fileID: 2100000, guid: d96966dd9b9cd904884611a0451d5890, type: 2}
