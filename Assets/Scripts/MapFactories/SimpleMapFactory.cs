@@ -7,7 +7,7 @@ namespace ShipIt.Gameplay.Astral
     {
         public override int SpawnMap(Transform anchor)
         {
-            if (anchor == null || planetPrefab == null || planetQuantity <= 0)
+            if (anchor == null || planetFactory == null || planetQuantity <= 0)
             {
                 LastSeed = 0;
                 return LastSeed;
@@ -20,10 +20,17 @@ namespace ShipIt.Gameplay.Astral
             float minDistance = minDistanceBetweenPlanets;
             float maxDistance = maxDistanceBetweenPlanets;
 
-            ComponentExposer inst = Instantiate(planetPrefab, anchor.position, anchor.rotation);
-            inst.AstralBody.AddAstralComponent(componentBuilders[0].GetComponent());
-            inst.gameObject.name = "Planet 1";
-            Transform prevPlanet = inst.transform;
+            AstralBody firstPlanet = planetFactory.SpawnBody(anchor.position, anchor.rotation);
+            if (firstPlanet == null)
+            {
+                LastSeed = 0;
+                Random.state = previousState;
+                return LastSeed;
+            }
+
+            firstPlanet.AddAstralComponent(componentBuilders[0].GetComponent());
+            firstPlanet.gameObject.name = "Planet 1";
+            Transform prevPlanet = firstPlanet.transform;
 
             for (int i = 1; i < planetQuantity; i++)
             {
@@ -31,10 +38,15 @@ namespace ShipIt.Gameplay.Astral
                 Vector3 spawnPos = prevPlanet.position + prevPlanet.forward * distance;
                 Quaternion spawnRot = Random.rotation;
 
-                inst = Instantiate(planetPrefab, spawnPos, spawnRot);
-                inst.AstralBody.AddAstralComponent(componentBuilders[0].GetComponent());
-                inst.gameObject.name = $"Planet {i + 1}";
-                prevPlanet = inst.transform;
+                AstralBody planet = planetFactory.SpawnBody(spawnPos, spawnRot);
+                if (planet == null)
+                {
+                    continue;
+                }
+
+                planet.AddAstralComponent(componentBuilders[0].GetComponent());
+                planet.gameObject.name = $"Planet {i + 1}";
+                prevPlanet = planet.transform;
             }
 
             LastSeed = seed;
