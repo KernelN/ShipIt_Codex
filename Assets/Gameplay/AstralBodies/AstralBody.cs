@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using ShipIt.Gameplay;
 
 namespace ShipIt.Gameplay.Astral
 {
@@ -11,6 +12,8 @@ namespace ShipIt.Gameplay.Astral
         /// float 1 = dt | float 2 = udt
         /// </summary>
         public System.Action<float, float> OnUpdate;
+        public System.Action<Ship> onShipEntered;
+        public System.Action<Ship> onShipExit;
 
         void Update() => OnUpdate?.Invoke(Time.deltaTime, Time.unscaledDeltaTime);
 
@@ -19,5 +22,9 @@ namespace ShipIt.Gameplay.Astral
             component.Set(this);
             components.Add(component);
         }
+
+        public void OnShipEntered(Ship ship) => onShipEntered?.Invoke(ship);
+
+        public void OnShipExit(Ship ship) => onShipExit?.Invoke(ship);
     }
 }
