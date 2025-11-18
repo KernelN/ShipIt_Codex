@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 using ShipIt.TickManaging;
+using ShipIt.Gameplay.Astral;
 
 namespace ShipIt.Gameplay
 {
@@ -144,8 +145,9 @@ namespace ShipIt.Gameplay
             if(sqrJumpSpeed <= Mathf.Epsilon)
                 return;
 
+            NotifyPlanetExit(cPlanet);
             transform.parent = null;
-            
+
             jumpStartPosition = transform.position;
 
             Vector3 displacementToTarget = detectedTargetPoint - jumpStartPosition;
@@ -246,6 +248,7 @@ namespace ShipIt.Gameplay
             //Update planet
             cPlanet = DetectedPlanet;
             transform.parent = cPlanet;
+            NotifyPlanetEntered(cPlanet);
             
             //Reset jump values
             isJumping = false;
@@ -265,6 +268,24 @@ namespace ShipIt.Gameplay
                 new[] { new GradientAlphaKey(c.a, 0f), new GradientAlphaKey(c.a, 1f) }
             );
             planetLine.colorGradient = grad;
+        }
+
+        void NotifyPlanetEntered(Transform planet)
+        {
+            if (!planet)
+                return;
+
+            AstralBody body = planet.GetComponent<AstralBody>();
+            body?.OnShipEntered(this);
+        }
+
+        void NotifyPlanetExit(Transform planet)
+        {
+            if (!planet)
+                return;
+
+            AstralBody body = planet.GetComponent<AstralBody>();
+            body?.OnShipExit(this);
         }
     }
 }
