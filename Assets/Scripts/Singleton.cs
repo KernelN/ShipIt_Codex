@@ -23,7 +23,7 @@ namespace Universal
             if(DoNotDestroyOnLoad)
                 DontDestroyOnLoad(this);
         }
-        void OnDestroy()
+        internal virtual void OnDestroy()
         {
             if (inst == this) inst = null;
         }

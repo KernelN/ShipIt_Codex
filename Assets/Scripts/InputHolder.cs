@@ -9,9 +9,16 @@ public class InputHolder : Singleton<InputHolder>
     {
         base.Awake();
         if(inst != this) return;
-        
-            actions = new InputActions();
-            actions.Enable();
+
+        actions = new InputActions();
+        actions.Enable();
     }
-    
+
+    internal override void OnDestroy()
+    {
+        if(inst != this) return;
+        base.OnDestroy();
+
+        actions.Disable();
+    }
 }
