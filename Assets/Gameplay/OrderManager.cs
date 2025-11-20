@@ -58,6 +58,7 @@ namespace ShipIt.Gameplay.Astral
         public void OnTargetReached()
         {
             UnsubscribeFromTicks();
+            SaveOrderCredits();
             TargetReached?.Invoke();
         }
 
@@ -154,6 +155,18 @@ namespace ShipIt.Gameplay.Astral
         void RaiseCreditsUpdated()
         {
             CreditsUpdated?.Invoke(currentOrderCredits, currentTipCredits);
+        }
+
+        void SaveOrderCredits()
+        {
+            GameManager manager = GameManager.inst;
+            if (manager?.Data == null)
+            {
+                return;
+            }
+
+            manager.Data.credits += Mathf.RoundToInt(TotalCredits);
+            manager.SaveGameData();
         }
     }
 }

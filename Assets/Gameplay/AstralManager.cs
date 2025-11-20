@@ -1,5 +1,6 @@
 using UnityEngine;
 using Universal;
+using ShipIt;
 
 namespace ShipIt.Gameplay.Astral
 {
@@ -26,7 +27,25 @@ namespace ShipIt.Gameplay.Astral
                 return;
             }
 
-            MapSeed = mapFactory.SpawnMap(mapRoot);
+            int seed = -1;
+            GameData data = GameManager.inst?.Data;
+            if (data != null)
+            {
+                seed = data.randomSeed;
+            }
+
+            if (seed < 0)
+            {
+                seed = Random.Range(0, int.MaxValue);
+            }
+
+            MapSeed = mapFactory.SpawnMap(mapRoot, seed);
+
+            if (data != null)
+            {
+                data.randomSeed = MapSeed;
+                GameManager.inst.SaveGameData();
+            }
         }
     }
 }

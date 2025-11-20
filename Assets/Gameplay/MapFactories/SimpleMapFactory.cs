@@ -7,7 +7,7 @@ namespace ShipIt.Gameplay.Astral
     {
         [SerializeField] AstralTargetBuilder targetBuilder;
 
-        public override int SpawnMap(Transform anchor)
+        public override int SpawnMap(Transform anchor, int seed)
         {
             if (anchor == null || planetFactory == null || planetQuantity <= 0)
             {
@@ -15,7 +15,6 @@ namespace ShipIt.Gameplay.Astral
                 return LastSeed;
             }
 
-            int seed = Random.Range(int.MinValue, int.MaxValue);
             var previousState = Random.state;
             Random.InitState(seed);
 
