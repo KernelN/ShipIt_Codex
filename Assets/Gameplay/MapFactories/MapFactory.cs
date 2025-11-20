@@ -11,6 +11,6 @@ namespace ShipIt.Gameplay.Astral
         [SerializeField] internal AstralComponentBuilder[] componentBuilders;
         public int LastSeed { get; protected set; }
 
-        public abstract int SpawnMap(Transform anchor);
+        public abstract int SpawnMap(Transform anchor, int seed);
     }
 }

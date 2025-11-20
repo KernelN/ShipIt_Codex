@@ -1,5 +1,6 @@
 using UnityEngine;
 using Universal;
+using ShipIt.DataManagement;
 using ShipIt.TickManaging;
 
 namespace ShipIt.Gameplay.Astral
@@ -58,6 +59,7 @@ namespace ShipIt.Gameplay.Astral
         public void OnTargetReached()
         {
             UnsubscribeFromTicks();
+            SaveOrderCredits();
             TargetReached?.Invoke();
         }
 
@@ -154,6 +156,18 @@ namespace ShipIt.Gameplay.Astral
         void RaiseCreditsUpdated()
         {
             CreditsUpdated?.Invoke(currentOrderCredits, currentTipCredits);
+        }
+
+        void SaveOrderCredits()
+        {
+            GameDataController controller = GameDataController.inst;
+            if (controller?.Data == null)
+            {
+                return;
+            }
+
+            controller.Data.credits += Mathf.RoundToInt(TotalCredits);
+            controller.Save();
         }
     }
 }
