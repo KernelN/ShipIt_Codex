@@ -19,7 +19,7 @@ namespace ShipIt.Gameplay.Astral
                 owner.onShipEntered -= HandleShipEntered;
             }
 
-            AstralManager.inst?.OnTargetReached();
+            OrderManager.inst?.OnTargetReached();
         }
     }
 }

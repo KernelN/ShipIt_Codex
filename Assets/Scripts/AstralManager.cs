@@ -16,16 +16,17 @@ namespace ShipIt.Gameplay.Astral
         {
             base.Awake();
 
-            if (inst != this || mapFactory == null || mapRoot == null)
+            if (inst != this)
+            {
+                return;
+            }
+
+            if (mapFactory == null || mapRoot == null)
             {
                 return;
             }
 
             MapSeed = mapFactory.SpawnMap(mapRoot);
-        }
-
-        public void OnTargetReached()
-        {
         }
     }
 }
