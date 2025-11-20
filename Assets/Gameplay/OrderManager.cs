@@ -1,6 +1,5 @@
 using UnityEngine;
 using Universal;
-using ShipIt.DataManagement;
 using ShipIt.TickManaging;
 
 namespace ShipIt.Gameplay.Astral
@@ -160,14 +159,14 @@ namespace ShipIt.Gameplay.Astral
 
         void SaveOrderCredits()
         {
-            GameDataController controller = GameDataController.inst;
-            if (controller?.Data == null)
+            GameManager manager = GameManager.inst;
+            if (manager?.Data == null)
             {
                 return;
             }
 
-            controller.Data.credits += Mathf.RoundToInt(TotalCredits);
-            controller.Save();
+            manager.Data.credits += Mathf.RoundToInt(TotalCredits);
+            manager.SaveGameData();
         }
     }
 }
