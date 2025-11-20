@@ -1,6 +1,5 @@
 using TMPro;
 using UnityEngine;
-using ShipIt.Gameplay.Astral;
 
 namespace ShipIt.Gameplay.Astral
 {
@@ -18,7 +17,7 @@ namespace ShipIt.Gameplay.Astral
         void OnEnable()
         {
             orderManager = OrderManager.inst;
-            if (orderManager != null)
+            if (orderManager)
             {
                 orderManager.CreditsUpdated += OnCreditsUpdated;
                 orderManager.TargetReached += OnTargetReached;
@@ -26,7 +25,6 @@ namespace ShipIt.Gameplay.Astral
                 EnableTargetReachedIndicator(false);
             }
         }
-
         void OnDisable()
         {
             if (orderManager != null)
@@ -38,7 +36,7 @@ namespace ShipIt.Gameplay.Astral
 
         void OnCreditsUpdated(float orderCredits, float tipCredits)
         {
-            if (creditsLabel == null)
+            if (!creditsLabel)
             {
                 return;
             }
@@ -48,26 +46,22 @@ namespace ShipIt.Gameplay.Astral
 
             if (tipCredits > 0f)
             {
-                float tipRatio = orderManager != null ? orderManager.TipRemainingRatio : 0f;
+                float tipRatio = orderManager.TipRemainingRatio;
                 creditsLabel.color = Color.Lerp(tipEndColor, tipStartColor, tipRatio);
                 return;
             }
 
-            float orderRatio = orderManager != null ? orderManager.OrderRemainingRatio : 0f;
+            float orderRatio = orderManager.OrderRemainingRatio;
             creditsLabel.color = Color.Lerp(orderEndColor, orderStartColor, orderRatio);
         }
-
+        
         void OnTargetReached()
         {
             EnableTargetReachedIndicator();
         }
-
         void EnableTargetReachedIndicator(bool shouldEnable = true)
         {
-            if (targetReachedIndicator != null)
-            {
-                targetReachedIndicator.SetActive(shouldEnable);
-            }
+            targetReachedIndicator?.SetActive(shouldEnable);
         }
     }
 }

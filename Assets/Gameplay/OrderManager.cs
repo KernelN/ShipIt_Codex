@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 using Universal;
 using ShipIt.TickManaging;
@@ -7,18 +6,19 @@ namespace ShipIt.Gameplay.Astral
 {
     public class OrderManager : Singleton<OrderManager>
     {
+        internal override bool DoNotDestroyOnLoad => false;
+
         [SerializeField] float orderCredits;
         [SerializeField] float tipCredits;
         [SerializeField] float orderTime;
         [SerializeField] float tipTime;
-
-        const float TickInterval = 0.1f;
-
         float currentOrderCredits;
         float currentTipCredits;
         float tipTimer;
         float orderTimer;
         bool tickSubscribed;
+
+        const float TickInterval = 0.1f;
 
         public float CurrentOrderCredits => currentOrderCredits;
         public float CurrentTipCredits => currentTipCredits;
@@ -26,10 +26,8 @@ namespace ShipIt.Gameplay.Astral
         public float OrderRemainingRatio => orderCredits > 0 ? Mathf.Clamp01(currentOrderCredits / orderCredits) : 0f;
         public float TipRemainingRatio => tipCredits > 0 ? Mathf.Clamp01(currentTipCredits / tipCredits) : 0f;
 
-        public event Action<float, float> CreditsUpdated;
-        public event Action TargetReached;
-
-        internal override bool DoNotDestroyOnLoad => false;
+        public System.Action<float, float> CreditsUpdated;
+        public System.Action TargetReached;
 
         internal override void Awake()
         {
@@ -67,18 +65,16 @@ namespace ShipIt.Gameplay.Astral
 
         void InitializeCredits()
         {
-            currentOrderCredits = Mathf.Max(0f, orderCredits);
-            currentTipCredits = Mathf.Max(0f, tipCredits);
+            currentOrderCredits = orderCredits;
+            currentTipCredits = tipCredits;
             tipTimer = 0f;
             orderTimer = 0f;
         }
 
         void SubscribeToTicks()
         {
-            if (tickSubscribed || UpdateManager.inst == null)
-            {
+            if (tickSubscribed || !UpdateManager.inst)
                 return;
-            }
 
             UpdateManager.inst.SuscribeToScaled(TickInterval, TickCredits);
             tickSubscribed = true;
@@ -86,10 +82,8 @@ namespace ShipIt.Gameplay.Astral
 
         void UnsubscribeFromTicks()
         {
-            if (!tickSubscribed || UpdateManager.inst == null)
-            {
+            if (!tickSubscribed || !UpdateManager.inst)
                 return;
-            }
 
             UpdateManager.inst.RemoveFromScaled(TickInterval, TickCredits);
             tickSubscribed = false;
@@ -123,26 +117,19 @@ namespace ShipIt.Gameplay.Astral
                 return tipWasAvailable;
             }
 
-            if (tipTimer >= tipTime)
-            {
+            if (tipTimer <= 0)
                 return false;
-            }
 
-            float previousCredits = currentTipCredits;
-            tipTimer = Mathf.Min(tipTimer + TickInterval, tipTime);
+            tipTimer -= TickInterval;
 
-            float remainingRatio = 1f - (tipTimer / tipTime);
-            currentTipCredits = Mathf.Max(0f, tipCredits * remainingRatio);
+            currentTipCredits = tipCredits * tipTimer / tipTime;
 
-            return !Mathf.Approximately(previousCredits, currentTipCredits);
+            return true;
         }
 
         bool UpdateOrderCredits()
         {
-            if (!HasTipEnded())
-            {
-                return false;
-            }
+            if (!HasTipEnded()) return false;
 
             if (orderCredits <= 0f || orderTime <= 0f)
             {
@@ -152,21 +139,17 @@ namespace ShipIt.Gameplay.Astral
                 return orderWasAvailable;
             }
 
-            if (orderTimer >= orderTime)
-            {
+            if (orderTimer <= 0)
                 return false;
-            }
 
-            float previousCredits = currentOrderCredits;
-            orderTimer = Mathf.Min(orderTimer + TickInterval, orderTime);
+            orderTimer -= TickInterval;
 
-            float remainingRatio = 1f - (orderTimer / orderTime);
-            currentOrderCredits = Mathf.Max(0f, orderCredits * remainingRatio);
+            currentOrderCredits = orderCredits * orderTimer / orderTime;
 
-            return !Mathf.Approximately(previousCredits, currentOrderCredits);
+            return true;
         }
 
-        bool HasTipEnded() => tipTimer >= tipTime || tipCredits <= 0f || tipTime <= 0f;
+        bool HasTipEnded() => tipTimer <= 0 || tipCredits <= 0f;
 
         void RaiseCreditsUpdated()
         {
