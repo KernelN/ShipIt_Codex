@@ -5,6 +5,8 @@ namespace ShipIt.Gameplay.Astral
     [CreateAssetMenu(fileName = "SimpleMapFactory", menuName = "ShipIt/MapFactory/Simple Map Factory")]
     public class SimpleMapFactory : MapFactory
     {
+        [SerializeField] AstralTargetBuilder targetBuilder;
+
         public override int SpawnMap(Transform anchor)
         {
             if (anchor == null || planetFactory == null || planetQuantity <= 0)
@@ -31,6 +33,7 @@ namespace ShipIt.Gameplay.Astral
             firstPlanet.AddAstralComponent(componentBuilders[0].GetComponent());
             firstPlanet.gameObject.name = "Planet 1";
             Transform prevPlanet = firstPlanet.transform;
+            AstralBody lastPlanet = firstPlanet;
 
             for (int i = 1; i < planetQuantity; i++)
             {
@@ -47,6 +50,12 @@ namespace ShipIt.Gameplay.Astral
                 planet.AddAstralComponent(componentBuilders[0].GetComponent());
                 planet.gameObject.name = $"Planet {i + 1}";
                 prevPlanet = planet.transform;
+                lastPlanet = planet;
+            }
+
+            if (lastPlanet != null && targetBuilder != null)
+            {
+                lastPlanet.AddAstralComponent(targetBuilder.GetComponent());
             }
 
             LastSeed = seed;
