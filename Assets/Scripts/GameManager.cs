@@ -5,6 +5,7 @@ namespace ShipIt
 {
     public class GameManager : Universal.Singleton<GameManager>
     {
+        internal override bool DoNotDestroyOnLoad => true;
         const string DataPath = "/Data/GameData.dat";
 
         GameData data;

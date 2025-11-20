@@ -5,6 +5,8 @@ namespace ShipIt.SocialNet
 {
     public class GameSocials : Universal.Singleton<GameSocials>
     {
+        internal override bool DoNotDestroyOnLoad => true;
+
         string leaderboardID = "";
 #if UNITY_ANDROID || PLATFORM_ANDROID
         public static PlayGamesPlatform platform = null;

@@ -5,6 +5,8 @@ namespace ShipIt.Plugins
 {
     public class LoggerPlugin : Singleton<LoggerPlugin>
     {
+        internal override bool DoNotDestroyOnLoad => true;
+
         //Plugin:
         //Con un boton muestra los logs
         //Con un boton registra los logs

@@ -1,24 +1,27 @@
 using UnityEngine;
 using Universal;
 
-public class InputHolder : Singleton<InputHolder>
+namespace ShipIt.Gameplay
 {
-    public InputActions actions { get; private set; }
-    
-    internal override void Awake()
+    public class InputHolder : Singleton<InputHolder>
     {
-        base.Awake();
-        if(inst != this) return;
+        public InputActions actions { get; private set; }
 
-        actions = new InputActions();
-        actions.Enable();
-    }
+        internal override void Awake()
+        {
+            base.Awake();
+            if (inst != this) return;
 
-    internal override void OnDestroy()
-    {
-        if(inst != this) return;
-        base.OnDestroy();
+            actions = new InputActions();
+            actions.Enable();
+        }
 
-        actions.Disable();
+        internal override void OnDestroy()
+        {
+            if (inst != this) return;
+            base.OnDestroy();
+
+            actions.Disable();
+        }
     }
 }
