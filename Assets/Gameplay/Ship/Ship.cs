@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using ShipIt;
 using ShipIt.TickManaging;
 using ShipIt.Gameplay.Astral;
 
@@ -18,8 +19,9 @@ namespace ShipIt.Gameplay
         public Transform CurrentPlanet => cPlanet;
         public Transform DetectedPlanet { get; private set; }
         
-        [Header("Launch")] 
+        [Header("Launch")]
         [SerializeField, Min(0)] float launchSpeed = 50f;
+        [SerializeField] FuelBank fuelBank;
         float sqrJumpSpeed;
         bool isJumping;
         float jumpElapsed;
@@ -143,6 +145,9 @@ namespace ShipIt.Gameplay
                 return;
 
             if(sqrJumpSpeed <= Mathf.Epsilon)
+                return;
+
+            if (fuelBank && !fuelBank.TryConsumeForLaunch())
                 return;
 
             NotifyPlanetExit(cPlanet);

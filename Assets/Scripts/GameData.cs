@@ -7,5 +7,6 @@ namespace ShipIt
     {
         public int randomSeed = -1;
         public int credits;
+        public int fuel = -1;
     }
 }
