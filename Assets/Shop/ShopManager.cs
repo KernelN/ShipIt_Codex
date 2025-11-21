@@ -12,8 +12,8 @@ namespace ShipIt
         void Awake()
         {
             manager = GameManager.inst;
-            if(manager && manager.Data.purchases == null)
-                manager.Data.purchases = new System.Collections.Generic.List<PurchasedItemData>();
+            if(manager && manager.Data.items == null)
+                manager.Data.items = new System.Collections.Generic.List<ItemData>();
         }
         public bool CanBuy(ShopItem item)
         {
@@ -39,12 +39,12 @@ namespace ShipIt
                 return false;
             }
 
-            PurchasedItemData record = manager.Data.purchases.Find(p => p.id == item.ItemId);
+            ItemData record = manager.Data.items.Find(p => p.id == item.ItemId);
 
             if (record == null)
             {
-                record = new PurchasedItemData { id = item.ItemId };
-                manager.Data.purchases.Add(record);
+                record = new ItemData { id = item.ItemId };
+                manager.Data.items.Add(record);
             }
 
             manager.Data.credits -= item.Cost;
@@ -72,7 +72,7 @@ namespace ShipIt
                 return 0;
             }
 
-            PurchasedItemData record = manager.Data.purchases.Find(p => p.id == item.ItemId);
+            ItemData record = manager.Data.items.Find(p => p.id == item.ItemId);
             return record?.quantity ?? 0;
         }
         public int GetCredits()

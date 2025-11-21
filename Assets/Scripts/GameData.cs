@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace ShipIt
 {
     [Serializable]
-    public class PurchasedItemData
+    public class ItemData
     {
         public string id;
         public int quantity;
@@ -16,6 +16,6 @@ namespace ShipIt
         public int randomSeed = -1;
         public int credits;
         public int fuel = -1;
-        public List<PurchasedItemData> purchases = new List<PurchasedItemData>();
+        public List<ItemData> items = new List<ItemData>();
     }
 }

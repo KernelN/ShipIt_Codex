@@ -5,27 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c6f51c4c-8f77-4872-b7c9-339bcbef3921" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/.idea.ShipIt_Codex/.idea/AndroidProjectSystem.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scenes/Shop.unity" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scenes/Shop.unity.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Shop.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Shop/Skin_Green.asset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Shop/Skin_Green.asset.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Shop/Skin_Red.asset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Shop/Skin_Red.asset.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ProjectSettings/AndroidResolverDependencies.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ProjectSettings/GooglePlayGameSettings.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ProjectSettings/GvhProjectSettings.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.ShipIt_Codex/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.ShipIt_Codex/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Plugins/Android/mainTemplate.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Plugins/Android/mainTemplate.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scenes/Menu.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/Menu.unity" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/CreditsUI.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/GameManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/GameManager.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/ShopItem.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/ShopItemUI.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/ShopManager.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/ShopManagerUI.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ProjectSettings/EditorBuildSettings.asset" beforeDir="false" afterPath="$PROJECT_DIR$/ProjectSettings/EditorBuildSettings.asset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/GameData.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/GameData.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Shop/ShopManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Shop/ShopManager.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ProjectSettings/GvhProjectSettings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/ProjectSettings/GvhProjectSettings.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -55,7 +37,7 @@
     "ModuleVcsDetector.initialDetectionPerformed": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "codex/add-shop-manager-and-creditsui",
+    "git-widget-placeholder": "main",
     "ignore.virus.scanning.warn.message": "true",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
@@ -134,7 +116,7 @@
       <workItem from="1762999832508" duration="1788000" />
       <workItem from="1763665857616" duration="1448000" />
       <workItem from="1763735853283" duration="7051000" />
-      <workItem from="1763763040719" duration="2801000" />
+      <workItem from="1763763040719" duration="3437000" />
     </task>
     <servers />
   </component>
