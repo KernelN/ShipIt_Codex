@@ -25,6 +25,11 @@ namespace ShipIt
             Unsubscribe();
         }
 
+        void OnDestroy()
+        {
+            Unsubscribe();
+        }
+
         void Subscribe()
         {
             if (fuelManager != null)
