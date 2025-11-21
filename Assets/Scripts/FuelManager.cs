@@ -17,6 +17,8 @@ namespace ShipIt
         GameManager gameManager;
         IdleManager idleManager;
 
+        public event Action<int> OnFuelChanged;
+
         void Awake()
         {
             gameManager = GameManager.inst;
@@ -74,6 +76,8 @@ namespace ShipIt
             {
                 currentFuel = Mathf.Clamp(data.fuel, 0, maxFuel);
             }
+
+            OnFuelChanged?.Invoke(currentFuel);
         }
 
         void HandleIdleEvaluation()
@@ -118,6 +122,7 @@ namespace ShipIt
             if (currentFuel != previousFuel)
             {
                 PersistFuel();
+                OnFuelChanged?.Invoke(currentFuel);
             }
         }
 
