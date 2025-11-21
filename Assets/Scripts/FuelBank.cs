@@ -9,6 +9,8 @@ namespace ShipIt
         [SerializeField, Min(0)] int cachedFuel;
 
         public bool IsFuelDepleted { get; private set; }
+        public int CurrentFuel => cachedFuel;
+        public event Action<int> OnFuelChanged;
         public event Action OnFuelDepleted;
 
         GameManager gameManager;
@@ -21,6 +23,8 @@ namespace ShipIt
                 GameData data = gameManager.Data;
                 cachedFuel = Mathf.Max(0, data.fuel);
             }
+
+            NotifyFuelChanged();
 
             if (cachedFuel <= 0)
             {
@@ -46,6 +50,8 @@ namespace ShipIt
 
             cachedFuel -= launchFuelCost;
             PersistFuel();
+
+            NotifyFuelChanged();
 
             if (cachedFuel <= 0)
             {
@@ -76,6 +82,11 @@ namespace ShipIt
 
             IsFuelDepleted = true;
             OnFuelDepleted?.Invoke();
+        }
+
+        void NotifyFuelChanged()
+        {
+            OnFuelChanged?.Invoke(cachedFuel);
         }
 
         void OnDestroy()
