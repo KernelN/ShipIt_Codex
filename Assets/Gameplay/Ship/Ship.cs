@@ -7,6 +7,11 @@ namespace ShipIt.Gameplay
 {
     public class Ship : MonoBehaviour
     {
+        [Header("Damage")]
+        [SerializeField, Min(0)] int creditsLostPerDamage = 10;
+
+        public event System.Action Damaged;
+
         [Header("Planet Check")]
         [SerializeField] float checkDistance = 20f;
         [SerializeField] LayerMask planetMask;
@@ -17,8 +22,8 @@ namespace ShipIt.Gameplay
         Vector3 RayOrigin => cPlanet ? cPlanet.position : transform.position;
         public Transform CurrentPlanet => cPlanet;
         public Transform DetectedPlanet { get; private set; }
-        
-        [Header("Launch")] 
+
+        [Header("Launch")]
         [SerializeField, Min(0)] float launchSpeed = 50f;
         float sqrJumpSpeed;
         bool isJumping;
@@ -259,6 +264,21 @@ namespace ShipIt.Gameplay
             jumpElapsed = jumpDuration;
             JumpPer = 1f;
             OnJump?.Invoke(JumpPhase.None);
+        }
+        public void ApplyDamage(float damageAmount)
+        {
+            Damaged?.Invoke();
+
+            if (creditsLostPerDamage <= 0)
+                return;
+
+            GameManager manager = GameManager.inst;
+
+            if (manager?.Data == null)
+                return;
+
+            manager.Data.credits = Mathf.Max(0, manager.Data.credits - creditsLostPerDamage);
+            manager.SaveGameData();
         }
         void SetLineColor(Color c)
         {

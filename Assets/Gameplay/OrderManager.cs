@@ -1,6 +1,7 @@
 using UnityEngine;
 using Universal;
 using ShipIt.TickManaging;
+using ShipIt.Gameplay;
 
 namespace ShipIt.Gameplay.Astral
 {
@@ -12,11 +13,15 @@ namespace ShipIt.Gameplay.Astral
         [SerializeField] float tipCredits;
         [SerializeField] float orderTime;
         [SerializeField] float tipTime;
+        [Header("Damage Penalty")]
+        [SerializeField, Min(0f)] float damageTimePenalty = 1f;
+        [SerializeField] Ship ship;
         float currentOrderCredits;
         float currentTipCredits;
         float tipTimer;
         float orderTimer;
         bool tickSubscribed;
+        bool shipDamageSubscribed;
 
         const float TickInterval = 0.1f;
 
@@ -53,7 +58,21 @@ namespace ShipIt.Gameplay.Astral
             RaiseCreditsUpdated();
         }
 
-        void OnDisable() => UnsubscribeFromTicks();
+        void OnEnable()
+        {
+            if (inst != this)
+            {
+                return;
+            }
+
+            SubscribeToShipDamage();
+        }
+
+        void OnDisable()
+        {
+            UnsubscribeFromTicks();
+            UnsubscribeFromShipDamage();
+        }
 
         public void OnTargetReached()
         {
@@ -62,7 +81,11 @@ namespace ShipIt.Gameplay.Astral
             TargetReached?.Invoke();
         }
 
-        void OnDestroy() => UnsubscribeFromTicks();
+        void OnDestroy()
+        {
+            UnsubscribeFromTicks();
+            UnsubscribeFromShipDamage();
+        }
 
         void InitializeCredits()
         {
@@ -90,6 +113,32 @@ namespace ShipIt.Gameplay.Astral
             tickSubscribed = false;
         }
 
+        void SubscribeToShipDamage()
+        {
+            if (shipDamageSubscribed)
+                return;
+
+            if (!ship)
+            {
+                ship = FindObjectOfType<Ship>();
+            }
+
+            if (!ship)
+                return;
+
+            ship.Damaged += OnShipDamaged;
+            shipDamageSubscribed = true;
+        }
+
+        void UnsubscribeFromShipDamage()
+        {
+            if (!shipDamageSubscribed || !ship)
+                return;
+
+            ship.Damaged -= OnShipDamaged;
+            shipDamageSubscribed = false;
+        }
+
         void TickCredits()
         {
             if (inst != this)
@@ -105,6 +154,28 @@ namespace ShipIt.Gameplay.Astral
             if (creditsChanged)
             {
                 RaiseCreditsUpdated();
+            }
+        }
+
+        void OnShipDamaged()
+        {
+            if (inst != this)
+            {
+                return;
+            }
+
+            if (!HasTipEnded())
+            {
+                tipTimer += damageTimePenalty;
+            }
+            else
+            {
+                orderTimer += damageTimePenalty;
+            }
+
+            if (!tickSubscribed)
+            {
+                SubscribeToTicks();
             }
         }
 

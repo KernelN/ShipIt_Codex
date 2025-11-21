@@ -3,6 +3,7 @@ namespace ShipIt.Gameplay.Astral
     public enum AstralComponentType
     {
         Rotator,
-        Target
+        Target,
+        Hazard
     }
 }
