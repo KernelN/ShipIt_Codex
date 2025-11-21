@@ -34,22 +34,14 @@ namespace ShipIt
             item = shopItem;
             defaultColor = defaultItemColor;
             permanentOwnedColor = permanentColor;
+            
+            if(!item) return;
+            
+            if (nameLabel) 
+                nameLabel.text = item.DisplayName;
 
-            if (buyButton != null)
-            {
-                buyButton.onClick.RemoveAllListeners();
-                buyButton.onClick.AddListener(BuyItem);
-            }
-
-            if (nameLabel != null)
-            {
-                nameLabel.text = item != null ? item.DisplayName : string.Empty;
-            }
-
-            if (costLabel != null && item != null)
-            {
-                costLabel.text = item.Cost.ToString();
-            }
+            if (costLabel) 
+                costLabel.text = item.Cost.ToString("$0");
 
             RefreshUI();
             Subscribe();

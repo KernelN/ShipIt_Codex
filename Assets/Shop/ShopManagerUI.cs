@@ -30,14 +30,12 @@ namespace ShipIt
                 shopManager = GetComponent<ShopManager>();
             }
         }
-
-        void OnEnable()
+        void Start()
         {
             SubscribeToShopManager();
             InitializeEntries();
         }
-
-        void OnDisable()
+        void OnDestroy()
         {
             UnsubscribeFromShopManager();
         }

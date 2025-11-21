@@ -8,22 +8,17 @@ namespace ShipIt
         [SerializeField] TextMeshProUGUI creditsLabel;
         [SerializeField] ShopManager shopManager;
 
-        void OnEnable()
+        void Start()
         {
-            if (shopManager != null)
-            {
+            if (shopManager) 
                 shopManager.OnCreditsChanged += HandleCreditsChanged;
-            }
 
             RefreshCredits();
         }
-
-        void OnDisable()
+        void OnDestroy()
         {
-            if (shopManager != null)
-            {
+            if (shopManager)
                 shopManager.OnCreditsChanged -= HandleCreditsChanged;
-            }
         }
 
         void HandleCreditsChanged(int _)
@@ -35,12 +30,9 @@ namespace ShipIt
         {
             GameManager manager = GameManager.inst;
 
-            if (creditsLabel == null || manager == null || manager.Data == null)
-            {
-                return;
-            }
+            if (!creditsLabel || !manager || manager.Data == null) return;
 
-            creditsLabel.text = manager.Data.credits.ToString();
+            creditsLabel.text = manager.Data.credits.ToString("$0");
         }
     }
 }

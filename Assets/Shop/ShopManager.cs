@@ -1,20 +1,20 @@
-using System;
 using UnityEngine;
 
 namespace ShipIt
 {
     public class ShopManager : MonoBehaviour
     {
-        public event Action<int> OnCreditsChanged;
-        public event Action<ShopItem> OnItemBought;
+        public System.Action<int> OnCreditsChanged;
+        public System.Action<ShopItem> OnItemBought;
 
         GameManager manager;
 
         void Awake()
         {
             manager = GameManager.inst;
+            if(manager && manager.Data.purchases == null)
+                manager.Data.purchases = new System.Collections.Generic.List<PurchasedItemData>();
         }
-
         public bool CanBuy(ShopItem item)
         {
             if (item == null || manager == null || manager.Data == null)
@@ -27,7 +27,6 @@ namespace ShipIt
 
             return hasCredits && !ownsPermanent;
         }
-
         public bool TryBuy(ShopItem item)
         {
             if (item == null || manager == null || manager.Data == null)
@@ -66,7 +65,6 @@ namespace ShipIt
 
             return true;
         }
-
         public int GetOwnedQuantity(ShopItem item)
         {
             if (item == null || manager == null || manager.Data == null)
@@ -77,7 +75,6 @@ namespace ShipIt
             PurchasedItemData record = manager.Data.purchases.Find(p => p.id == item.ItemId);
             return record?.quantity ?? 0;
         }
-
         public int GetCredits()
         {
             if (manager == null || manager.Data == null)
