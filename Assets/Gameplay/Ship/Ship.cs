@@ -21,9 +21,12 @@ namespace ShipIt.Gameplay
         
         [Header("Launch")]
         [SerializeField, Min(0)] float launchSpeed = 50f;
+        [SerializeField, Min(0)] float failTravelDistance = 5f;
+        [SerializeField, Min(0)] float failTravelSpeed = 15f;
         [SerializeField] FuelBank fuelBank;
         float sqrJumpSpeed;
         bool isJumping;
+        bool isFailLaunching;
         float jumpElapsed;
         float jumpDuration;
         Vector3 jumpStartPosition;
@@ -33,6 +36,7 @@ namespace ShipIt.Gameplay
         Vector3 jumpFinalUp;
         public System.Action<JumpPhase> OnJump;
         public float JumpPer { get; private set; }
+        public bool IsFailLaunching => isFailLaunching;
 
         public enum JumpPhase
         {
@@ -88,6 +92,12 @@ namespace ShipIt.Gameplay
         }
         void Update()
         {
+            if (isFailLaunching)
+            {
+                UpdateFailLaunch();
+                return;
+            }
+
             if(!isJumping) return;
 
             jumpElapsed += Time.deltaTime;
@@ -141,7 +151,7 @@ namespace ShipIt.Gameplay
         
         void Launch(InputAction.CallbackContext ctx)
         {
-            if(!HasPlanetAbove || DetectedPlanet == null || isJumping)
+            if(isJumping || isFailLaunching)
                 return;
 
             if(sqrJumpSpeed <= Mathf.Epsilon)
@@ -150,6 +160,13 @@ namespace ShipIt.Gameplay
             if (fuelBank && !fuelBank.TryConsumeForLaunch())
                 return;
 
+            if (!HasPlanetAbove || DetectedPlanet == null)
+            {
+                StartFailLaunch();
+                return;
+            }
+
+            isFailLaunching = false;
             NotifyPlanetExit(cPlanet);
             transform.parent = null;
 
@@ -292,5 +309,50 @@ namespace ShipIt.Gameplay
             AstralBody body = planet.GetComponent<AstralBody>();
             body?.OnShipExit(this);
         }
+
+        #region Fail Launch
+        void StartFailLaunch()
+        {
+            if (failTravelDistance <= 0f)
+                return;
+
+            isFailLaunching = true;
+            jumpElapsed = 0f;
+            jumpDuration = failTravelSpeed > 0f ? failTravelDistance / failTravelSpeed : 0f;
+
+            jumpStartPosition = transform.position;
+            jumpTargetPosition = jumpStartPosition + transform.up * failTravelDistance;
+            jumpInitialUp = transform.up;
+
+            if (jumpDuration <= 0f)
+            {
+                FinishFailLaunch();
+            }
+        }
+
+        void UpdateFailLaunch()
+        {
+            if (!isFailLaunching)
+                return;
+
+            jumpElapsed += Time.deltaTime;
+            float failPer = jumpDuration > 0f ? Mathf.Clamp01(jumpElapsed / jumpDuration) : 1f;
+
+            transform.position = Vector3.Lerp(jumpStartPosition, jumpTargetPosition, failPer);
+
+            if (jumpElapsed >= jumpDuration)
+            {
+                FinishFailLaunch();
+            }
+        }
+
+        void FinishFailLaunch()
+        {
+            isFailLaunching = false;
+            transform.position = jumpStartPosition;
+            transform.up = jumpInitialUp;
+            jumpElapsed = 0f;
+        }
+        #endregion
     }
 }

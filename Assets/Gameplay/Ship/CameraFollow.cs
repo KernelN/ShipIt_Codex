@@ -47,6 +47,13 @@ namespace ShipIt.Gameplay
         }
         void OnShipJumpPhase(Ship.JumpPhase phase)
         {
+            if (ship != null && ship.IsFailLaunching)
+            {
+                activeCurve = null;
+                isShipJumping = false;
+                return;
+            }
+
             switch (phase)
             {
                 case Ship.JumpPhase.ToPlanet:
