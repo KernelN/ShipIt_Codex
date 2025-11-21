@@ -1488,6 +1488,14 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4712223945058746464, guid: 686cfe71b81b52249981901a78dd6d7b, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 2069597870}
+    - target: {fileID: 4712223945058746464, guid: 686cfe71b81b52249981901a78dd6d7b, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: LoadScene
+      objectReference: {fileID: 0}
     - target: {fileID: 6498983050936726642, guid: 686cfe71b81b52249981901a78dd6d7b, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
