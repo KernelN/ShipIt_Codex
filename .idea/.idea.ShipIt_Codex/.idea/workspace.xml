@@ -5,18 +5,43 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c6f51c4c-8f77-4872-b7c9-339bcbef3921" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.ShipIt_Codex/.idea/indexLayout.xml" beforeDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Gameplay/GameplayManager.cs.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Gameplay/GameplayManagerUI.cs.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Gameplay/UI.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Gameplay/UI/Credits Panel.prefab" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Gameplay/UI/Credits Panel.prefab.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Gameplay/UI/Order Complete Panel.prefab" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Gameplay/UI/Order Complete Panel.prefab.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Gameplay/UI/Order Failed Panel.prefab" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Gameplay/UI/Order Failed Panel.prefab.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Gameplay/UI/Return Button.prefab" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Gameplay/UI/Return Button.prefab.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/FuelBank.cs.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/FuelManager.cs.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/FuelUI.cs.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/IdleManager.cs.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.ShipIt_Codex/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.ShipIt_Codex/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Gameplay/GameplayManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Gameplay/GameplayManager.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Gameplay/OrderManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Gameplay/OrderManager.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Gameplay/Ship/Ship Variant.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Gameplay/Ship/Ship Variant.prefab" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Gameplay/UIOrderManager.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Gameplay/UIOrderManager.cs.meta" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scenes/Game.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/Game.unity" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scenes/Menu.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/Menu.unity" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/FileManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/FileManager.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/FuelBank.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/FuelBank.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/FuelManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/FuelManager.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/GameManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/GameManager.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/GameManager.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/GameManager.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/InputHolder.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/InputHolder.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/LoggerPlugin/LoggerPlugin.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/LoggerPlugin/LoggerPlugin.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Socials/GameSocials.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Socials/GameSocials.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/UpdateManager.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/UpdateManager.cs.meta" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="DpaMonitoringSettings">
+    <option name="firstShow" value="false" />
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -32,21 +57,22 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "main",
-    "ignore.virus.scanning.warn.message": "true",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Attach to Unity Editor.Attach to Unity Editor.executor&quot;: &quot;Debug&quot;,
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;codex/add-fuel-system-with-managers&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RunManager" selected="Attach to Unity Editor.Attach to Unity Editor">
     <configuration name="Start Unity" type="RunUnityExe" factoryName="Unity Executable">
       <option name="EXE_PATH" value="D:\Programas\Unity\Versions\6000.0.60f1\Editor\Unity.exe" />
@@ -86,13 +112,15 @@
       <option name="useMixedMode" value="false" />
       <method v="2" />
     </configuration>
-    <configuration name="Attach to Unity Editor" type="UNITY_DEBUG_RUN_CONFIGURATION" factoryName="Unity Debug" show_console_on_std_err="false" show_console_on_std_out="false" port="50000" address="localhost">
+    <configuration name="Attach to Unity Editor" type="UNITY_DEBUG_RUN_CONFIGURATION" factoryName="Unity Debug" show_console_on_std_err="false" show_console_on_std_out="false" port="50000" address="localhost" ignored-value-for-modified-check="1524">
       <option name="allowRunningInParallel" value="false" />
       <option name="listenPortForConnections" value="false" />
-      <option name="pid" />
+      <option name="pid" value="1524" />
       <option name="projectPathOnTarget" />
       <option name="runtimes">
-        <list />
+        <list>
+          <MonoRuntime />
+        </list>
       </option>
       <option name="selectedOptions">
         <list />
@@ -115,6 +143,7 @@
       <workItem from="1761842536052" duration="1751000" />
       <workItem from="1762999832508" duration="1788000" />
       <workItem from="1763665857616" duration="1448000" />
+      <workItem from="1763735853283" duration="7051000" />
     </task>
     <servers />
   </component>

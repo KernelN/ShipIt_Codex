@@ -6,8 +6,6 @@ namespace ShipIt.Gameplay.Astral
 {
     public class OrderManager : Singleton<OrderManager>
     {
-        internal override bool DoNotDestroyOnLoad => false;
-
         [SerializeField] float orderCredits;
         [SerializeField] float tipCredits;
         [SerializeField] float orderTime;
@@ -39,15 +37,11 @@ namespace ShipIt.Gameplay.Astral
             }
 
             InitializeCredits();
-            SubscribeToTicks();
         }
-
         void Start()
         {
             if (inst != this)
-            {
                 return;
-            }
 
             SubscribeToTicks();
             RaiseCreditsUpdated();
@@ -68,8 +62,8 @@ namespace ShipIt.Gameplay.Astral
         {
             currentOrderCredits = orderCredits;
             currentTipCredits = tipCredits;
-            tipTimer = 0f;
-            orderTimer = 0f;
+            tipTimer = tipTime;
+            orderTimer = orderTime;
         }
 
         void SubscribeToTicks()
@@ -93,19 +87,14 @@ namespace ShipIt.Gameplay.Astral
         void TickCredits()
         {
             if (inst != this)
-            {
                 return;
-            }
 
             bool creditsChanged = false;
 
             creditsChanged |= UpdateTipCredits();
             creditsChanged |= UpdateOrderCredits();
 
-            if (creditsChanged)
-            {
-                RaiseCreditsUpdated();
-            }
+            if (creditsChanged) RaiseCreditsUpdated();
         }
 
         bool UpdateTipCredits()
@@ -119,7 +108,10 @@ namespace ShipIt.Gameplay.Astral
             }
 
             if (tipTimer <= 0)
+            {
+                currentTipCredits = 0;
                 return false;
+            }
 
             tipTimer -= TickInterval;
 
@@ -141,7 +133,10 @@ namespace ShipIt.Gameplay.Astral
             }
 
             if (orderTimer <= 0)
+            {
+                currentOrderCredits = 0;
                 return false;
+            }
 
             orderTimer -= TickInterval;
 

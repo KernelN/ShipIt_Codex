@@ -23,7 +23,7 @@ namespace Universal.FileManaging
         {
             if (!File.Exists(dataPath))
             {
-                UnityEngine.Debug.LogError("Data file not found at path: " + dataPath);
+                UnityEngine.Debug.LogWarning("Data file not found at path: " + dataPath);
                 return default;
             }
 
