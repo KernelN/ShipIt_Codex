@@ -226,7 +226,7 @@ GameObject:
   - component: {fileID: 7789701661851163686}
   - component: {fileID: 6355885566385165184}
   m_Layer: 5
-  m_Name: Return Button (1)
+  m_Name: Return Button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
