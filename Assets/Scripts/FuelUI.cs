@@ -9,16 +9,11 @@ namespace ShipIt
         [SerializeField] FuelBank fuelBank;
         [SerializeField] TextMeshProUGUI fuelLabel;
 
-        void OnEnable()
+        void Awake()
         {
-            if (!fuelManager)
+            if (fuelManager == null && fuelBank == null)
             {
-                fuelManager = FindObjectOfType<FuelManager>();
-            }
-
-            if (!fuelBank)
-            {
-                fuelBank = FindObjectOfType<FuelBank>();
+                return;
             }
 
             Subscribe();
@@ -58,6 +53,11 @@ namespace ShipIt
 
         void RefreshFuel()
         {
+            if (fuelManager == null && fuelBank == null)
+            {
+                return;
+            }
+
             int amount = 0;
 
             if (fuelManager != null)
