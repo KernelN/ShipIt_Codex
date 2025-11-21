@@ -8,6 +8,7 @@ namespace ShipIt
     {
         [SerializeField] TextMeshProUGUI nameLabel;
         [SerializeField] TextMeshProUGUI costLabel;
+        [SerializeField] TextMeshProUGUI statusLabel;
         [SerializeField] Button buyButton;
         [SerializeField] Image background;
 
@@ -85,6 +86,17 @@ namespace ShipIt
             }
 
             int owned = managerUI.GetOwnedQuantity(item);
+
+            if (statusLabel != null)
+            {
+                bool showStatus = item.IsSpendable;
+                statusLabel.gameObject.SetActive(showStatus);
+
+                if (showStatus)
+                {
+                    statusLabel.text = $"Owned: {owned}";
+                }
+            }
 
             if (background != null && !item.IsSpendable)
             {
