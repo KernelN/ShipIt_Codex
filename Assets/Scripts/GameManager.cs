@@ -8,7 +8,7 @@ namespace ShipIt
         internal override bool DoNotDestroyOnLoad => true;
         const string DataPath = "/Data/GameData.dat";
 
-        GameData data;
+        [SerializeField] GameData data;
         public GameData Data => data;
 
         internal override void Awake()
