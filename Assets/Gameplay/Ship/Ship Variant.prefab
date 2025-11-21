@@ -157,11 +157,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8295495748857041584, guid: 3542f0d3296be4619b6608200d80e1d4, type: 3}
       propertyPath: m_LocalScale.y
-      value: 0.1
+      value: 0.10000005
       objectReference: {fileID: 0}
     - target: {fileID: 8295495748857041584, guid: 3542f0d3296be4619b6608200d80e1d4, type: 3}
       propertyPath: m_LocalScale.z
-      value: 0.1
+      value: 0.10000005
       objectReference: {fileID: 0}
     - target: {fileID: 8295495748857041584, guid: 3542f0d3296be4619b6608200d80e1d4, type: 3}
       propertyPath: m_LocalPosition.x
@@ -217,6 +217,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 4624496923813122708, guid: 3542f0d3296be4619b6608200d80e1d4, type: 3}
       insertIndex: -1
       addedObject: {fileID: 65653453320403719}
+    - targetCorrespondingSourceObject: {fileID: 4624496923813122708, guid: 3542f0d3296be4619b6608200d80e1d4, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2734343392673076008}
   m_SourcePrefab: {fileID: 100100000, guid: 3542f0d3296be4619b6608200d80e1d4, type: 3}
 --- !u!4 &753646549463703708 stripped
 Transform:
@@ -246,4 +249,18 @@ MonoBehaviour:
     m_Bits: 64
   planetLine: {fileID: 8267794517906154729}
   launchSpeed: 5
+  fuelBank: {fileID: 2734343392673076008}
   finalApproachDurationFactor: 0.35
+--- !u!114 &2734343392673076008
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4127403471045140664}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1949da640050fa14bb2670a8f1ca3641, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  launchFuelCost: 1

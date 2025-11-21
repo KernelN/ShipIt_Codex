@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 
 namespace ShipIt
@@ -9,7 +8,7 @@ namespace ShipIt
 
         [SerializeField] int fuelPerRecharge = 1;
         [SerializeField] float rechargeMinutes = 5f;
-        [SerializeField] float timer;
+        float timer;
         [SerializeField] int startingFuel = 10;
         [SerializeField] int maxFuel = 20;
 
@@ -17,7 +16,7 @@ namespace ShipIt
         GameManager gameManager;
         IdleManager idleManager;
 
-        public event Action<int> OnFuelChanged;
+        public System.Action<int> OnFuelChanged;
 
         void Awake()
         {

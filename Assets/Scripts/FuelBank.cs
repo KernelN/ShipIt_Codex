@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 
 namespace ShipIt
@@ -6,12 +5,12 @@ namespace ShipIt
     public class FuelBank : MonoBehaviour
     {
         [SerializeField] int launchFuelCost = 1;
-        [SerializeField, Min(0)] int cachedFuel;
+        int cachedFuel;
 
         public bool IsFuelDepleted { get; private set; }
         public int CurrentFuel => cachedFuel;
-        public event Action<int> OnFuelChanged;
-        public event Action OnFuelDepleted;
+        public System.Action<int> OnFuelChanged;
+        public System.Action OnFuelDepleted;
 
         GameManager gameManager;
 
@@ -21,7 +20,7 @@ namespace ShipIt
             if (gameManager != null)
             {
                 GameData data = gameManager.Data;
-                cachedFuel = Mathf.Max(0, data.fuel);
+                cachedFuel = data.fuel;
             }
 
             NotifyFuelChanged();
@@ -30,21 +29,16 @@ namespace ShipIt
             {
                 FlagDepleted();
             }
+            if (!HasFuelToConsume()) FlagDepleted();
         }
 
         public bool TryConsumeForLaunch()
         {
-            if (launchFuelCost <= 0)
-            {
-                return true;
-            }
+            if (launchFuelCost <= 0) return true;
 
-            if (cachedFuel < launchFuelCost)
+            if (!HasFuelToConsume())
             {
-                if (cachedFuel <= 0)
-                {
-                    FlagDepleted();
-                }
+                FlagDepleted();
                 return false;
             }
 
@@ -60,6 +54,8 @@ namespace ShipIt
 
             return true;
         }
+
+        bool HasFuelToConsume() => cachedFuel >= launchFuelCost;
 
         void PersistFuel()
         {

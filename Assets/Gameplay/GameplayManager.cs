@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 using Universal;
 using ShipIt.Gameplay.Astral;
@@ -13,8 +12,8 @@ namespace ShipIt.Gameplay
         public bool OrderCompleted { get; private set; }
         public bool OrderFailed { get; private set; }
 
-        public event Action OnOrderCompleted;
-        public event Action OnOrderFailed;
+        public System.Action OnOrderCompleted;
+        public System.Action OnOrderFailed;
 
         internal override void Awake()
         {
