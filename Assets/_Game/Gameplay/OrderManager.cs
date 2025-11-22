@@ -15,6 +15,7 @@ namespace ShipIt.Gameplay.Astral
         float tipTimer;
         float orderTimer;
         bool tickSubscribed;
+        bool creditsDepleted;
 
         const float TickInterval = 0.1f;
 
@@ -26,6 +27,7 @@ namespace ShipIt.Gameplay.Astral
 
         public System.Action<float, float> CreditsUpdated;
         public System.Action TargetReached;
+        public System.Action CreditsDepleted;
 
         internal override void Awake()
         {
@@ -149,6 +151,22 @@ namespace ShipIt.Gameplay.Astral
 
         void RaiseCreditsUpdated()
         {
+            if (TotalCredits <= 0f)
+            {
+                currentOrderCredits = 0f;
+                currentTipCredits = 0f;
+
+                CreditsUpdated?.Invoke(currentOrderCredits, currentTipCredits);
+
+                if (!creditsDepleted)
+                {
+                    creditsDepleted = true;
+                    CreditsDepleted?.Invoke();
+                }
+
+                return;
+            }
+
             CreditsUpdated?.Invoke(currentOrderCredits, currentTipCredits);
         }
 
