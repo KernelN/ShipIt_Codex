@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3899948763af5a948b90b5903c01d13d, type: 3}
-  m_Name: SimpleMapFactory
+  m_Name: SimpleMap 2
   m_EditorClassIdentifier: 
   planetFactory: {fileID: 11400000, guid: 841964032dd8c934cbc2917b15fb520f, type: 2}
   planetQuantity: 10

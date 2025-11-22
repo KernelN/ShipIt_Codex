@@ -51,7 +51,8 @@ MonoBehaviour:
   planetMask:
     serializedVersion: 2
     m_Bits: 64
-  planetLine: {fileID: 1782086687432813715}
+  planetLine: {fileID: 0}
+  targetPlanetOutline: {fileID: 0}
   launchSpeed: 5
   failTravelDistance: 5
   failTravelSpeed: 15
@@ -132,7 +133,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1402520110082417307
 Transform:
   m_ObjectHideFlags: 0
