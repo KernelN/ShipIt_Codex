@@ -25,7 +25,48 @@ namespace ShipIt.Gameplay
                 return;
             }
 
+            EnsureDefaultSkinOwnedAndSelected();
             selectedSkinId = LoadPersistedSelection();
+        }
+
+        void EnsureDefaultSkinOwnedAndSelected()
+        {
+            GameManager manager = GameManager.inst;
+            GameData data = manager != null ? manager.Data : null;
+
+            if (defaultSkin == null || data == null)
+            {
+                return;
+            }
+
+            if (data.items == null)
+            {
+                data.items = new List<ItemData>();
+            }
+
+            ItemData record = data.items.Find(entry => entry.id == defaultSkin.ItemId);
+
+            if (record == null)
+            {
+                record = new ItemData
+                {
+                    id = defaultSkin.ItemId,
+                    quantity = 1
+                };
+                data.items.Add(record);
+            }
+            else if (record.quantity <= 0)
+            {
+                record.quantity = 1;
+            }
+
+            if (string.IsNullOrEmpty(data.selectedSkinId))
+            {
+                data.selectedSkinId = defaultSkin.ItemId;
+                selectedSkinId = data.selectedSkinId;
+            }
+
+            manager.SaveGameData();
         }
 
         public bool TrySelectSkin(SkinOption option)
