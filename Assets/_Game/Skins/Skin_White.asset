@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0381aa7805f6fb644a396e1727a4496e, type: 3}
-  m_Name: Skin_Red
+  m_Name: Skin_White
   m_EditorClassIdentifier: 
-  displayName: Red Ship
-  itemId: Skin_Red
+  displayName: White Ship
+  itemId: Skin_White
   cost: 100
   isSpendable: 0
-  prefab: {fileID: 2649575484089557789, guid: cc4d303c412cb47bfb6c4a1d78862a29, type: 3}
+  prefab: {fileID: 4624496923813122708, guid: 3542f0d3296be4619b6608200d80e1d4, type: 3}
