@@ -17,5 +17,6 @@ namespace ShipIt
         public int credits;
         public int fuel = -1;
         public List<ItemData> items = new List<ItemData>();
+        public string selectedSkinId;
     }
 }

@@ -15,24 +15,17 @@ namespace ShipIt
         ShopItem item;
         ShopManagerUI managerUI;
         bool subscribed;
-        Color defaultColor = Color.white;
         Color permanentOwnedColor = Color.green;
+        Color selectedColor = Color.cyan;
 
-        void OnEnable()
-        {
-            Subscribe();
-        }
+        void Start() => Subscribe();
+        void OnDestroy() => Unsubscribe();
 
-        void OnDisable()
-        {
-            Unsubscribe();
-        }
-
-        public void Initialize(ShopManagerUI shopManagerUI, ShopItem shopItem, Color defaultItemColor, Color permanentColor)
+        public void Initialize(ShopManagerUI shopManagerUI, ShopItem shopItem, Color selectedColor, Color permanentColor)
         {
             managerUI = shopManagerUI;
             item = shopItem;
-            defaultColor = defaultItemColor;
+            this.selectedColor = selectedColor;
             permanentOwnedColor = permanentColor;
             
             if(!item) return;
@@ -46,85 +39,101 @@ namespace ShipIt
             RefreshUI();
             Subscribe();
         }
-
-        void BuyItem()
+        public void HandleAction()
         {
-            if (managerUI == null || item == null)
+            if (!managerUI || !item) return;
+
+            if (item.IsSpendable)
             {
-                return;
-            }
-
-            managerUI.TryBuy(item);
-        }
-
-        void HandleCreditsChanged(int _)
-        {
-            RefreshUI();
-        }
-
-        void HandleItemBought(ShopItem purchasedItem)
-        {
-            if (item != null && purchasedItem == item)
-            {
-                RefreshUI();
-            }
-        }
-
-        public void RefreshUI()
-        {
-            if (managerUI == null || item == null)
-            {
+                managerUI.TryBuy(item);
                 return;
             }
 
             int owned = managerUI.GetOwnedQuantity(item);
 
-            if (statusLabel != null)
+            if (owned <= 0)
             {
-                bool showStatus = item.IsSpendable;
-                statusLabel.gameObject.SetActive(showStatus);
+                managerUI.TryBuy(item);
+                return;
+            }
 
-                if (showStatus)
+            managerUI.TrySelect(item);
+        }
+        void HandleCreditsChanged(int _) => RefreshUI();
+        void HandleItemBought(ShopItem purchasedItem)
+        {
+            if (item && purchasedItem == item) 
+                RefreshUI();
+        }
+        void HandleItemSelected(ShopItem selectedItem)
+        {
+            if (!selectedItem || !item) return;
+
+            if (selectedItem == item || managerUI.IsSelected(item)) 
+                RefreshUI();
+        }
+        public void RefreshUI()
+        {
+            if (!managerUI || !item) return;
+
+            int owned = managerUI.GetOwnedQuantity(item);
+            bool isSelected = managerUI.IsSelected(item);
+
+            if (statusLabel)
+            {
+                if (item.IsSpendable)
                 {
+                    statusLabel.gameObject.SetActive(true);
                     statusLabel.text = $"Owned: {owned}";
+                }
+                else
+                {
+                    statusLabel.gameObject.SetActive(isSelected);
+
+                    if (isSelected) 
+                        statusLabel.text = "Selected";
                 }
             }
 
-            if (background != null && !item.IsSpendable)
+            if (background)
             {
-                background.color = owned > 0 ? permanentOwnedColor : defaultColor;
+                if (isSelected)
+                    background.color = selectedColor;
+                else if (!item.IsSpendable && owned > 0)
+                    background.color = permanentOwnedColor;
             }
 
-            if (buyButton != null)
+            if (buyButton)
             {
-                buyButton.interactable = managerUI.CanBuy(item);
+                bool canBuy = managerUI.CanBuy(item);
+                buyButton.interactable = owned > 0 ? !isSelected : canBuy;
             }
         }
-
         void Subscribe()
         {
-            if (managerUI == null || subscribed)
-            {
-                return;
-            }
+            if (!managerUI || subscribed) return;
 
             managerUI.OnCreditsChanged += HandleCreditsChanged;
             managerUI.OnItemBought += HandleItemBought;
+            managerUI.OnItemSelected += HandleItemSelected;
             subscribed = true;
 
             RefreshUI();
-        }
 
+            if (buyButton) 
+                buyButton.onClick.AddListener(HandleAction);
+        }
         void Unsubscribe()
         {
-            if (managerUI == null || !subscribed)
-            {
-                return;
-            }
+            if (!managerUI || !subscribed) return;
 
             managerUI.OnCreditsChanged -= HandleCreditsChanged;
             managerUI.OnItemBought -= HandleItemBought;
+            managerUI.OnItemSelected -= HandleItemSelected;
             subscribed = false;
+
+            if (buyButton) 
+                buyButton.onClick.RemoveListener(HandleAction);
         }
     }
 }
