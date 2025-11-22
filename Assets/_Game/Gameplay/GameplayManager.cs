@@ -19,30 +19,17 @@ namespace ShipIt.Gameplay
         {
             base.Awake();
 
-            if (inst != this)
-            {
-                return;
-            }
-
-            if (!orderManager)
-            {
-                orderManager = OrderManager.inst;
-            }
-
-            if (!fuelBank)
-            {
-                fuelBank = FindObjectOfType<FuelBank>();
-            }
+            if (inst != this) return;
+            if (!orderManager) orderManager = OrderManager.inst;
+            if (!fuelBank) fuelBank = FindObjectOfType<FuelBank>();
         }
-
-        void OnEnable()
+        void Start() => Subscribe();
+        internal override void OnDestroy()
         {
-            Subscribe();
-        }
-
-        void OnDisable()
-        {
+            if(this != inst) return;
             Unsubscribe();
+            Time.timeScale = 1f;
+            base.OnDestroy();
         }
 
         void Subscribe()
