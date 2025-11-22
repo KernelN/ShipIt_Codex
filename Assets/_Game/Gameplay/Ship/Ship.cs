@@ -59,18 +59,6 @@ namespace ShipIt.Gameplay
             cPlanet = transform.parent;
             if (cPlanet)
                 cPlanetBody = cPlanet.GetComponent<AstralBody>();
-
-            if (!planetLine)
-            {
-                planetLine = gameObject.AddComponent<LineRenderer>();
-
-                // pre set
-                planetLine.positionCount = 2;
-                planetLine.useWorldSpace = true;
-                planetLine.widthMultiplier = 0.05f;
-                if (planetLine.material == null)
-                    planetLine.material = new Material(Shader.Find("Sprites/Default")); // simple unlit shader}
-            }
         }
         void Start()
         {
@@ -131,24 +119,21 @@ namespace ShipIt.Gameplay
                 QueryTriggerInteraction.Ignore);
 
             HasPlanetAbove = hitSomething;
-            planetLine.SetPosition(0, ray.origin);
 
             // Update visual
             if (hitSomething)
             {
-                planetLine.SetPosition(1, hit.point);
-                SetLineColor(Color.white);
                 DetectedPlanet = hit.transform;
                 detectedTargetPoint = hit.point;
                 UpdateTargetOutline(DetectedPlanet);
+                UpdateLine(ray.origin, hit.point, Color.white);
             }
             else
             {
-                planetLine.SetPosition(1, ray.origin + ray.direction * checkDistance);
-                SetLineColor(Color.red);
                 DetectedPlanet = null;
                 detectedTargetPoint = Vector3.zero;
                 UpdateTargetOutline(null);
+                UpdateLine(ray.origin, ray.origin + ray.direction * checkDistance, Color.red);
             }
         }
 #if UNITY_EDITOR
@@ -290,12 +275,27 @@ namespace ShipIt.Gameplay
         }
         void SetLineColor(Color c)
         {
+            if (!planetLine)
+                return;
+
             var grad = new Gradient();
             grad.SetKeys(
                 new[] { new GradientColorKey(c, 0f), new GradientColorKey(c, 1f) },
                 new[] { new GradientAlphaKey(c.a, 0f), new GradientAlphaKey(c.a, 1f) }
             );
             planetLine.colorGradient = grad;
+        }
+
+        void UpdateLine(Vector3 start, Vector3 end, Color color)
+        {
+            if (!planetLine)
+                return;
+
+            planetLine.positionCount = 2;
+            planetLine.useWorldSpace = true;
+            planetLine.SetPosition(0, start);
+            planetLine.SetPosition(1, end);
+            SetLineColor(color);
         }
 
         void NotifyPlanetEntered(Transform planet)
