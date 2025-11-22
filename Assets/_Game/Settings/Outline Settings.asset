@@ -51,8 +51,8 @@ MonoBehaviour:
   injectionPoint: 600
   showInSceneView: 1
   outlines:
-  - {fileID: 2852530539244449255}
   - {fileID: -4029597442505260933}
+  - {fileID: 2852530539244449255}
 --- !u!114 &2852530539244449255
 MonoBehaviour:
   m_ObjectHideFlags: 0
