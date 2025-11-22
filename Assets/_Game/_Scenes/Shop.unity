@@ -129,6 +129,7 @@ GameObject:
   m_Component:
   - component: {fileID: 150175630}
   - component: {fileID: 150175629}
+  - component: {fileID: 150175631}
   m_Layer: 0
   m_Name: ShopManager
   m_TagString: Untagged
@@ -163,6 +164,24 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &150175631
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 150175628}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b165cefd632581046b7262286f3ecfac, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  achivements:
+  - shopItem: {fileID: 11400000, guid: a65b772242700364c86aa490e0df2d02, type: 2}
+    achievementName: 0
+  - shopItem: {fileID: 11400000, guid: 5ff95ef28f4e74944a644c2e2b0b4b9f, type: 2}
+    achievementName: 1
+  shopManager: {fileID: 150175629}
 --- !u!224 &223878440 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 5220724180275379697, guid: c4b1b10c67eba5b4f8a56f0796c3a6c2, type: 3}

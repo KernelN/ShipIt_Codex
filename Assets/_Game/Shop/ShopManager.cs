@@ -31,15 +31,11 @@ namespace ShipIt
         }
         public bool TryBuy(ShopItem item)
         {
-            if (item == null || manager == null || manager.Data == null)
-            {
+            if (!item || !manager || manager.Data == null)
                 return false;
-            }
 
             if (!CanBuy(item))
-            {
                 return false;
-            }
 
             ItemData record = manager.Data.items.Find(p => p.id == item.ItemId);
 
@@ -52,13 +48,9 @@ namespace ShipIt
             manager.Data.credits -= item.Cost;
 
             if (item.IsSpendable)
-            {
                 record.quantity += 1;
-            }
             else
-            {
                 record.quantity = 1;
-            }
 
             manager.SaveGameData();
 

@@ -25,6 +25,8 @@
 public static class GPGSIds
 {
         public const string achievement_game_started = "CgkIptmg3LQEEAIQAQ"; // <GPGSID>
+        public const string achievement_bought_red_ship = "CgkIptmg3LQEEAIQAw"; // <GPGSID>
+        public const string achievement_bought_green_ship = "CgkIptmg3LQEEAIQAg"; // <GPGSID>
 
 }
 

@@ -12,12 +12,7 @@ namespace ShipIt.Gameplay
         public event Action OnSkinChanged;
 
         string selectedSkinId;
-
-        internal override void Awake()
-        {
-            base.Awake();
-        }
-
+        
         void Start()
         {
             if (this != inst)
