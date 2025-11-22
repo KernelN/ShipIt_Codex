@@ -12,7 +12,9 @@ namespace ShipIt.Gameplay
         [SerializeField] float checkDistance = 20f;
         [SerializeField] LayerMask planetMask;
         [SerializeField] LineRenderer planetLine;
+        [SerializeField] GameObject targetPlanetOutline;
         Transform cPlanet;
+        AstralBody cPlanetBody;
         Vector3 detectedTargetPoint;
         public bool HasPlanetAbove { get; private set; }
         Vector3 RayOrigin => cPlanet ? cPlanet.position : transform.position;
@@ -55,6 +57,8 @@ namespace ShipIt.Gameplay
         {
             CacheSqrJumpSpeed();
             cPlanet = transform.parent;
+            if (cPlanet)
+                cPlanetBody = cPlanet.GetComponent<AstralBody>();
 
             if (!planetLine)
             {
@@ -136,6 +140,7 @@ namespace ShipIt.Gameplay
                 SetLineColor(Color.white);
                 DetectedPlanet = hit.transform;
                 detectedTargetPoint = hit.point;
+                UpdateTargetOutline(DetectedPlanet);
             }
             else
             {
@@ -143,6 +148,7 @@ namespace ShipIt.Gameplay
                 SetLineColor(Color.red);
                 DetectedPlanet = null;
                 detectedTargetPoint = Vector3.zero;
+                UpdateTargetOutline(null);
             }
         }
 #if UNITY_EDITOR
@@ -295,10 +301,13 @@ namespace ShipIt.Gameplay
         void NotifyPlanetEntered(Transform planet)
         {
             if (!planet)
+            {
+                cPlanetBody = null;
                 return;
+            }
 
-            AstralBody body = planet.GetComponent<AstralBody>();
-            body?.OnShipEntered(this);
+            cPlanetBody = planet.GetComponent<AstralBody>();
+            cPlanetBody?.OnShipEntered(this);
         }
 
         void NotifyPlanetExit(Transform planet)
@@ -306,8 +315,28 @@ namespace ShipIt.Gameplay
             if (!planet)
                 return;
 
-            AstralBody body = planet.GetComponent<AstralBody>();
-            body?.OnShipExit(this);
+            cPlanetBody?.OnShipExit(this);
+            cPlanetBody = null;
+        }
+
+        void UpdateTargetOutline(Transform targetPlanet)
+        {
+            if (!targetPlanetOutline)
+                return;
+
+            if (targetPlanet)
+            {
+                Transform outlineTransform = targetPlanetOutline.transform;
+                outlineTransform.SetParent(targetPlanet);
+                outlineTransform.localScale = Vector3.one;
+                outlineTransform.localPosition = Vector3.zero;
+                outlineTransform.localRotation = Quaternion.identity;
+                targetPlanetOutline.SetActive(true);
+            }
+            else
+            {
+                targetPlanetOutline.SetActive(false);
+            }
         }
 
         #region Fail Launch
