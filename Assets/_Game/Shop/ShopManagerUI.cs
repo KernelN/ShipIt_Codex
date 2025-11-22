@@ -20,6 +20,7 @@ namespace ShipIt
 
         public event Action<int> OnCreditsChanged;
         public event Action<ShopItem> OnItemBought;
+        public event Action<ShopItem> OnItemSelected;
 
         bool subscribed;
 
@@ -67,6 +68,29 @@ namespace ShipIt
             return shopManager != null ? shopManager.GetOwnedQuantity(item) : 0;
         }
 
+        public bool IsSelected(ShopItem item)
+        {
+            return shopManager != null && shopManager.IsSelected(item);
+        }
+
+        public bool TrySelect(ShopItem item)
+        {
+            if (shopManager == null)
+            {
+                return false;
+            }
+
+            bool selected = shopManager.TrySelect(item);
+
+            if (selected)
+            {
+                RefreshAll();
+                OnSelectionChanged(item);
+            }
+
+            return selected;
+        }
+
         public int GetCredits()
         {
             return shopManager != null ? shopManager.GetCredits() : 0;
@@ -107,6 +131,17 @@ namespace ShipIt
             UpdateEntry(item);
         }
 
+        void HandleSelectionChanged(ShopItem item)
+        {
+            OnSelectionChanged(item);
+            RefreshAll();
+        }
+
+        void OnSelectionChanged(ShopItem item)
+        {
+            OnItemSelected?.Invoke(item);
+        }
+
         void RefreshAll()
         {
             foreach (ShopEntry entry in shopEntries)
@@ -127,6 +162,7 @@ namespace ShipIt
 
             shopManager.OnCreditsChanged += HandleCreditsChanged;
             shopManager.OnItemBought += HandleItemBought;
+            shopManager.OnItemSelected += HandleSelectionChanged;
             subscribed = true;
         }
 
@@ -139,6 +175,7 @@ namespace ShipIt
 
             shopManager.OnCreditsChanged -= HandleCreditsChanged;
             shopManager.OnItemBought -= HandleItemBought;
+            shopManager.OnItemSelected -= HandleSelectionChanged;
             subscribed = false;
         }
     }

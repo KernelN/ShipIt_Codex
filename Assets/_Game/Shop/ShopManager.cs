@@ -1,3 +1,4 @@
+using ShipIt.Gameplay;
 using UnityEngine;
 
 namespace ShipIt
@@ -6,6 +7,7 @@ namespace ShipIt
     {
         public System.Action<int> OnCreditsChanged;
         public System.Action<ShopItem> OnItemBought;
+        public System.Action<ShopItem> OnItemSelected;
 
         GameManager manager;
 
@@ -60,10 +62,42 @@ namespace ShipIt
 
             manager.SaveGameData();
 
+            TrySelect(item);
+
             OnItemBought?.Invoke(item);
             OnCreditsChanged?.Invoke(manager.Data.credits);
 
             return true;
+        }
+        public bool TrySelect(ShopItem item)
+        {
+            if (item == null || manager == null)
+            {
+                return false;
+            }
+
+            if (GetOwnedQuantity(item) <= 0)
+            {
+                return false;
+            }
+
+            bool selected = false;
+
+            if (item is SkinOption skinOption)
+            {
+                SkinsManager skinsManager = SkinsManager.inst;
+                if (skinsManager != null)
+                {
+                    selected = skinsManager.TrySelectSkin(skinOption);
+                }
+            }
+
+            if (selected)
+            {
+                OnItemSelected?.Invoke(item);
+            }
+
+            return selected;
         }
         public int GetOwnedQuantity(ShopItem item)
         {
@@ -74,6 +108,21 @@ namespace ShipIt
 
             ItemData record = manager.Data.items.Find(p => p.id == item.ItemId);
             return record?.quantity ?? 0;
+        }
+        public bool IsSelected(ShopItem item)
+        {
+            if (item == null)
+            {
+                return false;
+            }
+
+            if (item is SkinOption skinOption)
+            {
+                SkinsManager skinsManager = SkinsManager.inst;
+                return skinsManager != null && skinsManager.IsSkinSelected(skinOption);
+            }
+
+            return false;
         }
         public int GetCredits()
         {

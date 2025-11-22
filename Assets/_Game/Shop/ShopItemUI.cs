@@ -17,6 +17,7 @@ namespace ShipIt
         bool subscribed;
         Color defaultColor = Color.white;
         Color permanentOwnedColor = Color.green;
+        Color selectedColor = Color.cyan;
 
         void OnEnable()
         {
@@ -47,14 +48,28 @@ namespace ShipIt
             Subscribe();
         }
 
-        void BuyItem()
+        void HandleAction()
         {
             if (managerUI == null || item == null)
             {
                 return;
             }
 
-            managerUI.TryBuy(item);
+            if (item.IsSpendable)
+            {
+                managerUI.TryBuy(item);
+                return;
+            }
+
+            int owned = managerUI.GetOwnedQuantity(item);
+
+            if (owned <= 0)
+            {
+                managerUI.TryBuy(item);
+                return;
+            }
+
+            managerUI.TrySelect(item);
         }
 
         void HandleCreditsChanged(int _)
@@ -70,6 +85,19 @@ namespace ShipIt
             }
         }
 
+        void HandleItemSelected(ShopItem selectedItem)
+        {
+            if (selectedItem == null || item == null)
+            {
+                return;
+            }
+
+            if (selectedItem == item || managerUI.IsSelected(item))
+            {
+                RefreshUI();
+            }
+        }
+
         public void RefreshUI()
         {
             if (managerUI == null || item == null)
@@ -78,26 +106,46 @@ namespace ShipIt
             }
 
             int owned = managerUI.GetOwnedQuantity(item);
+            bool isSelected = managerUI.IsSelected(item);
 
             if (statusLabel != null)
             {
-                bool showStatus = item.IsSpendable;
-                statusLabel.gameObject.SetActive(showStatus);
-
-                if (showStatus)
+                if (item.IsSpendable)
                 {
+                    statusLabel.gameObject.SetActive(true);
                     statusLabel.text = $"Owned: {owned}";
+                }
+                else
+                {
+                    statusLabel.gameObject.SetActive(isSelected);
+
+                    if (isSelected)
+                    {
+                        statusLabel.text = "Selected";
+                    }
                 }
             }
 
-            if (background != null && !item.IsSpendable)
+            if (background != null)
             {
-                background.color = owned > 0 ? permanentOwnedColor : defaultColor;
+                if (isSelected)
+                {
+                    background.color = selectedColor;
+                }
+                else if (!item.IsSpendable && owned > 0)
+                {
+                    background.color = permanentOwnedColor;
+                }
+                else
+                {
+                    background.color = defaultColor;
+                }
             }
 
             if (buyButton != null)
             {
-                buyButton.interactable = managerUI.CanBuy(item);
+                bool canBuy = managerUI.CanBuy(item);
+                buyButton.interactable = owned > 0 ? !isSelected : canBuy;
             }
         }
 
@@ -110,9 +158,15 @@ namespace ShipIt
 
             managerUI.OnCreditsChanged += HandleCreditsChanged;
             managerUI.OnItemBought += HandleItemBought;
+            managerUI.OnItemSelected += HandleItemSelected;
             subscribed = true;
 
             RefreshUI();
+
+            if (buyButton != null)
+            {
+                buyButton.onClick.AddListener(HandleAction);
+            }
         }
 
         void Unsubscribe()
@@ -124,7 +178,13 @@ namespace ShipIt
 
             managerUI.OnCreditsChanged -= HandleCreditsChanged;
             managerUI.OnItemBought -= HandleItemBought;
+            managerUI.OnItemSelected -= HandleItemSelected;
             subscribed = false;
+
+            if (buyButton != null)
+            {
+                buyButton.onClick.RemoveListener(HandleAction);
+            }
         }
     }
 }
