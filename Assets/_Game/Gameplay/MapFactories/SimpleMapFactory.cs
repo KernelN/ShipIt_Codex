@@ -6,6 +6,9 @@ namespace ShipIt.Gameplay.Astral
     public class SimpleMapFactory : MapFactory
     {
         [SerializeField] AstralTargetBuilder targetBuilder;
+        [SerializeField, Range(0f, 180f)] float maxRotationAngle = 45f;
+
+        const float k_MinRotationOffset = 0.1f;
 
         public override int SpawnMap(Transform anchor, int seed)
         {
@@ -38,7 +41,10 @@ namespace ShipIt.Gameplay.Astral
             {
                 float distance = Random.Range(minDistance, maxDistance);
                 Vector3 spawnPos = prevPlanet.position + prevPlanet.forward * distance;
-                Quaternion spawnRot = Random.rotation;
+                float rotationLimit = Mathf.Max(k_MinRotationOffset, maxRotationAngle);
+                Quaternion targetRotation = Random.rotation;
+                float rotationStep = Random.Range(k_MinRotationOffset, rotationLimit);
+                Quaternion spawnRot = Quaternion.RotateTowards(prevPlanet.rotation, targetRotation, rotationStep);
 
                 AstralBody planet = planetFactory.SpawnBody(spawnPos, spawnRot);
                 if (planet == null)

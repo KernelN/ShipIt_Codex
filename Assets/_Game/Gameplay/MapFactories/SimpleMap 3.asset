@@ -14,8 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   planetFactory: {fileID: 11400000, guid: 841964032dd8c934cbc2917b15fb520f, type: 2}
   planetQuantity: 15
-  minDistanceBetweenPlanets: 7.5
-  maxDistanceBetweenPlanets: 12.5
+  minDistanceBetweenPlanets: 5
+  maxDistanceBetweenPlanets: 10
   componentBuilders:
   - {fileID: 11400000, guid: 51695a80d58c13d48919aba29a75a333, type: 2}
   targetBuilder: {fileID: 11400000, guid: 89a0810bbcf54550b47248543fe50a03, type: 2}
+  maxRotationAngle: 90
