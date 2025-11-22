@@ -9,10 +9,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2ebb9acd54ff3f44987bb9688d1acaf7, type: 3}
-  m_Name: Skin_Green
+  m_Script: {fileID: 11500000, guid: 0381aa7805f6fb644a396e1727a4496e, type: 3}
+  m_Name: Skin_Red
   m_EditorClassIdentifier: 
-  displayName: Green Ship
-  itemId: Skin_Green
+  displayName: Red Ship
+  itemId: Skin_Red
   cost: 100
   isSpendable: 0
+  prefab: {fileID: 2649575484089557789, guid: cc4d303c412cb47bfb6c4a1d78862a29, type: 3}

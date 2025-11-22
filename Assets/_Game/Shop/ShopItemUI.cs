@@ -15,25 +15,17 @@ namespace ShipIt
         ShopItem item;
         ShopManagerUI managerUI;
         bool subscribed;
-        Color defaultColor = Color.white;
         Color permanentOwnedColor = Color.green;
         Color selectedColor = Color.cyan;
 
-        void OnEnable()
-        {
-            Subscribe();
-        }
+        void Start() => Subscribe();
+        void OnDestroy() => Unsubscribe();
 
-        void OnDisable()
-        {
-            Unsubscribe();
-        }
-
-        public void Initialize(ShopManagerUI shopManagerUI, ShopItem shopItem, Color defaultItemColor, Color permanentColor)
+        public void Initialize(ShopManagerUI shopManagerUI, ShopItem shopItem, Color selectedColor, Color permanentColor)
         {
             managerUI = shopManagerUI;
             item = shopItem;
-            defaultColor = defaultItemColor;
+            this.selectedColor = selectedColor;
             permanentOwnedColor = permanentColor;
             
             if(!item) return;
@@ -47,13 +39,9 @@ namespace ShipIt
             RefreshUI();
             Subscribe();
         }
-
-        void HandleAction()
+        public void HandleAction()
         {
-            if (managerUI == null || item == null)
-            {
-                return;
-            }
+            if (!managerUI || !item) return;
 
             if (item.IsSpendable)
             {
@@ -71,44 +59,27 @@ namespace ShipIt
 
             managerUI.TrySelect(item);
         }
-
-        void HandleCreditsChanged(int _)
-        {
-            RefreshUI();
-        }
-
+        void HandleCreditsChanged(int _) => RefreshUI();
         void HandleItemBought(ShopItem purchasedItem)
         {
-            if (item != null && purchasedItem == item)
-            {
+            if (item && purchasedItem == item) 
                 RefreshUI();
-            }
         }
-
         void HandleItemSelected(ShopItem selectedItem)
         {
-            if (selectedItem == null || item == null)
-            {
-                return;
-            }
+            if (!selectedItem || !item) return;
 
-            if (selectedItem == item || managerUI.IsSelected(item))
-            {
+            if (selectedItem == item || managerUI.IsSelected(item)) 
                 RefreshUI();
-            }
         }
-
         public void RefreshUI()
         {
-            if (managerUI == null || item == null)
-            {
-                return;
-            }
+            if (!managerUI || !item) return;
 
             int owned = managerUI.GetOwnedQuantity(item);
             bool isSelected = managerUI.IsSelected(item);
 
-            if (statusLabel != null)
+            if (statusLabel)
             {
                 if (item.IsSpendable)
                 {
@@ -119,42 +90,28 @@ namespace ShipIt
                 {
                     statusLabel.gameObject.SetActive(isSelected);
 
-                    if (isSelected)
-                    {
+                    if (isSelected) 
                         statusLabel.text = "Selected";
-                    }
                 }
             }
 
-            if (background != null)
+            if (background)
             {
                 if (isSelected)
-                {
                     background.color = selectedColor;
-                }
                 else if (!item.IsSpendable && owned > 0)
-                {
                     background.color = permanentOwnedColor;
-                }
-                else
-                {
-                    background.color = defaultColor;
-                }
             }
 
-            if (buyButton != null)
+            if (buyButton)
             {
                 bool canBuy = managerUI.CanBuy(item);
                 buyButton.interactable = owned > 0 ? !isSelected : canBuy;
             }
         }
-
         void Subscribe()
         {
-            if (managerUI == null || subscribed)
-            {
-                return;
-            }
+            if (!managerUI || subscribed) return;
 
             managerUI.OnCreditsChanged += HandleCreditsChanged;
             managerUI.OnItemBought += HandleItemBought;
@@ -163,28 +120,20 @@ namespace ShipIt
 
             RefreshUI();
 
-            if (buyButton != null)
-            {
+            if (buyButton) 
                 buyButton.onClick.AddListener(HandleAction);
-            }
         }
-
         void Unsubscribe()
         {
-            if (managerUI == null || !subscribed)
-            {
-                return;
-            }
+            if (!managerUI || !subscribed) return;
 
             managerUI.OnCreditsChanged -= HandleCreditsChanged;
             managerUI.OnItemBought -= HandleItemBought;
             managerUI.OnItemSelected -= HandleItemSelected;
             subscribed = false;
 
-            if (buyButton != null)
-            {
+            if (buyButton) 
                 buyButton.onClick.RemoveListener(HandleAction);
-            }
         }
     }
 }

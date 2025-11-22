@@ -11,15 +11,8 @@ namespace ShipIt.Gameplay
 
         void Awake()
         {
-            if (skinsManager == null)
-            {
+            if (!skinsManager) 
                 skinsManager = SkinsManager.inst;
-            }
-
-            if (skinsManager == null)
-            {
-                skinsManager = FindObjectOfType<SkinsManager>();
-            }
         }
 
         void Start()
@@ -29,18 +22,18 @@ namespace ShipIt.Gameplay
 
         void ApplySelectedSkin()
         {
-            SkinOption option = skinsManager != null ? skinsManager.GetSelectedSkin() : null;
-            if (option == null || option.Prefab == null)
+            SkinOption option = skinsManager ? skinsManager.GetSelectedSkin() : null;
+            if (!option || !option.Prefab)
             {
                 return;
             }
 
-            if (currentModelInstance != null)
+            if (currentModelInstance)
             {
                 Destroy(currentModelInstance);
             }
 
-            Transform parent = modelParent != null ? modelParent : transform;
+            Transform parent = modelParent ? modelParent : transform;
             currentModelInstance = Instantiate(option.Prefab, parent);
             currentModelInstance.transform.localPosition = Vector3.zero;
             currentModelInstance.transform.localRotation = Quaternion.identity;

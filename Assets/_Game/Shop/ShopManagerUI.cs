@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -6,7 +5,7 @@ namespace ShipIt
 {
     public class ShopManagerUI : MonoBehaviour
     {
-        [Serializable]
+        [System.Serializable]
         public class ShopEntry
         {
             public ShopItem item;
@@ -15,22 +14,15 @@ namespace ShipIt
 
         [SerializeField] ShopManager shopManager;
         [SerializeField] List<ShopEntry> shopEntries = new List<ShopEntry>();
-        [SerializeField] Color defaultItemColor = Color.white;
-        [SerializeField] Color permanentOwnedColor = Color.green;
+        [SerializeField] Color permanentOwnedColor = Color.grey;
+        [SerializeField] Color selectedItemColor = Color.cyan;
 
-        public event Action<int> OnCreditsChanged;
-        public event Action<ShopItem> OnItemBought;
-        public event Action<ShopItem> OnItemSelected;
+        public System.Action<int> OnCreditsChanged;
+        public System.Action<ShopItem> OnItemBought;
+        public System.Action<ShopItem> OnItemSelected;
 
         bool subscribed;
-
-        void Awake()
-        {
-            if (shopManager == null)
-            {
-                shopManager = GetComponent<ShopManager>();
-            }
-        }
+        
         void Start()
         {
             SubscribeToShopManager();
@@ -40,45 +32,31 @@ namespace ShipIt
         {
             UnsubscribeFromShopManager();
         }
-
-        public bool CanBuy(ShopItem item)
-        {
-            return shopManager != null && shopManager.CanBuy(item);
-        }
+        public bool CanBuy(ShopItem item) 
+            => shopManager && shopManager.CanBuy(item);
 
         public bool TryBuy(ShopItem item)
         {
-            if (shopManager == null)
-            {
-                return false;
-            }
+            if (!shopManager) return false;
 
             bool bought = shopManager.TryBuy(item);
 
-            if (bought)
-            {
+            if (bought) 
                 UpdateEntry(item);
-            }
 
             return bought;
         }
-
         public int GetOwnedQuantity(ShopItem item)
         {
-            return shopManager != null ? shopManager.GetOwnedQuantity(item) : 0;
+            return shopManager ? shopManager.GetOwnedQuantity(item) : 0;
         }
-
         public bool IsSelected(ShopItem item)
         {
-            return shopManager != null && shopManager.IsSelected(item);
+            return shopManager && shopManager.IsSelected(item);
         }
-
         public bool TrySelect(ShopItem item)
         {
-            if (shopManager == null)
-            {
-                return false;
-            }
+            if (!shopManager) return false;
 
             bool selected = shopManager.TrySelect(item);
 
@@ -93,30 +71,24 @@ namespace ShipIt
 
         public int GetCredits()
         {
-            return shopManager != null ? shopManager.GetCredits() : 0;
+            return shopManager ? shopManager.GetCredits() : 0;
         }
 
         void InitializeEntries()
         {
             foreach (ShopEntry entry in shopEntries)
-            {
-                if (entry.ui != null && entry.item != null)
-                {
-                    entry.ui.Initialize(this, entry.item, defaultItemColor, permanentOwnedColor);
-                }
-            }
+                if (entry.ui && entry.item) 
+                    entry.ui.Initialize(this, entry.item, selectedItemColor, permanentOwnedColor);
         }
 
         void UpdateEntry(ShopItem item)
         {
             foreach (ShopEntry entry in shopEntries)
-            {
-                if (entry.item == item && entry.ui != null)
+                if (entry.item == item && entry.ui)
                 {
                     entry.ui.RefreshUI();
                     break;
                 }
-            }
         }
 
         void HandleCreditsChanged(int credits)

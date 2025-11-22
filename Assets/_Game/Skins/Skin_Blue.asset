@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0381aa7805f6fb644a396e1727a4496e, type: 3}
+  m_Name: Skin_Blue
+  m_EditorClassIdentifier: 
+  displayName: Blue Ship
+  itemId: Skin_Blue
+  cost: 100
+  isSpendable: 0
+  prefab: {fileID: 4624496923813122708, guid: 3542f0d3296be4619b6608200d80e1d4, type: 3}
