@@ -285,7 +285,6 @@ namespace ShipIt.Gameplay
             );
             planetLine.colorGradient = grad;
         }
-
         void UpdateLine(Vector3 start, Vector3 end, Color color)
         {
             if (!planetLine)
@@ -297,7 +296,6 @@ namespace ShipIt.Gameplay
             planetLine.SetPosition(1, end);
             SetLineColor(color);
         }
-
         void NotifyPlanetEntered(Transform planet)
         {
             if (!planet)
@@ -309,7 +307,6 @@ namespace ShipIt.Gameplay
             cPlanetBody = planet.GetComponent<AstralBody>();
             cPlanetBody?.OnShipEntered(this);
         }
-
         void NotifyPlanetExit(Transform planet)
         {
             if (!planet)
@@ -318,7 +315,6 @@ namespace ShipIt.Gameplay
             cPlanetBody?.OnShipExit(this);
             cPlanetBody = null;
         }
-
         void UpdateTargetOutline(Transform targetPlanet)
         {
             if (!targetPlanetOutline)
@@ -338,12 +334,13 @@ namespace ShipIt.Gameplay
                 targetPlanetOutline.SetActive(false);
             }
         }
-
         #region Fail Launch
         void StartFailLaunch()
         {
             if (failTravelDistance <= 0f)
                 return;
+            
+            CandyCoded.HapticFeedback.HapticFeedback.LightFeedback();
 
             isFailLaunching = true;
             jumpElapsed = 0f;
@@ -358,7 +355,6 @@ namespace ShipIt.Gameplay
                 FinishFailLaunch();
             }
         }
-
         void UpdateFailLaunch()
         {
             if (!isFailLaunching)
@@ -374,7 +370,6 @@ namespace ShipIt.Gameplay
                 FinishFailLaunch();
             }
         }
-
         void FinishFailLaunch()
         {
             isFailLaunching = false;
