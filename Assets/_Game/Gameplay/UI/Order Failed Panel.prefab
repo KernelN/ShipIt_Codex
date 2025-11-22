@@ -10,7 +10,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 765369701111943064, guid: 5377c84ea6429684781824ef0ad35f53, type: 3}
       propertyPath: m_Name
-      value: Order Failed Panel Variant
+      value: Order Failed Panel
       objectReference: {fileID: 0}
     - target: {fileID: 1041221774184583981, guid: 5377c84ea6429684781824ef0ad35f53, type: 3}
       propertyPath: m_Name
@@ -38,14 +38,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4855034534387034002, guid: 5377c84ea6429684781824ef0ad35f53, type: 3}
       propertyPath: m_AnchorMin.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4855034534387034002, guid: 5377c84ea6429684781824ef0ad35f53, type: 3}
-      propertyPath: m_SizeDelta.x
-      value: -1740
-      objectReference: {fileID: 0}
-    - target: {fileID: 4855034534387034002, guid: 5377c84ea6429684781824ef0ad35f53, type: 3}
-      propertyPath: m_SizeDelta.y
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4855034534387034002, guid: 5377c84ea6429684781824ef0ad35f53, type: 3}
@@ -78,10 +70,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4855034534387034002, guid: 5377c84ea6429684781824ef0ad35f53, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4855034534387034002, guid: 5377c84ea6429684781824ef0ad35f53, type: 3}
-      propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4855034534387034002, guid: 5377c84ea6429684781824ef0ad35f53, type: 3}

@@ -79,6 +79,9 @@ namespace ShipIt
             int owned = managerUI.GetOwnedQuantity(item);
             bool isSelected = managerUI.IsSelected(item);
 
+            if (costLabel && !item.IsSpendable && owned > 0)
+                costLabel.fontStyle = FontStyles.Strikethrough;
+
             if (statusLabel)
             {
                 if (item.IsSpendable)

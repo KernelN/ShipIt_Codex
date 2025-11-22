@@ -1255,10 +1255,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 2069597869}
     m_Modifications:
-    - target: {fileID: 5814102827017586939, guid: 4cc0a38864b195842a76a60945aaa69e, type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: 80.05469
-      objectReference: {fileID: 0}
     - target: {fileID: 7153017527029986088, guid: 4cc0a38864b195842a76a60945aaa69e, type: 3}
       propertyPath: fuelBank
       value: 
@@ -1633,14 +1629,6 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6498983050936726642, guid: 686cfe71b81b52249981901a78dd6d7b, type: 3}
-      propertyPath: m_SizeDelta.x
-      value: -1740
-      objectReference: {fileID: 0}
-    - target: {fileID: 6498983050936726642, guid: 686cfe71b81b52249981901a78dd6d7b, type: 3}
-      propertyPath: m_SizeDelta.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6498983050936726642, guid: 686cfe71b81b52249981901a78dd6d7b, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
       objectReference: {fileID: 0}
@@ -1666,14 +1654,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6498983050936726642, guid: 686cfe71b81b52249981901a78dd6d7b, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6498983050936726642, guid: 686cfe71b81b52249981901a78dd6d7b, type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6498983050936726642, guid: 686cfe71b81b52249981901a78dd6d7b, type: 3}
-      propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6498983050936726642, guid: 686cfe71b81b52249981901a78dd6d7b, type: 3}
@@ -1743,14 +1723,6 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4855034534387034002, guid: 5377c84ea6429684781824ef0ad35f53, type: 3}
-      propertyPath: m_SizeDelta.x
-      value: -1740
-      objectReference: {fileID: 0}
-    - target: {fileID: 4855034534387034002, guid: 5377c84ea6429684781824ef0ad35f53, type: 3}
-      propertyPath: m_SizeDelta.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4855034534387034002, guid: 5377c84ea6429684781824ef0ad35f53, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
       objectReference: {fileID: 0}
@@ -1776,14 +1748,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4855034534387034002, guid: 5377c84ea6429684781824ef0ad35f53, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4855034534387034002, guid: 5377c84ea6429684781824ef0ad35f53, type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4855034534387034002, guid: 5377c84ea6429684781824ef0ad35f53, type: 3}
-      propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4855034534387034002, guid: 5377c84ea6429684781824ef0ad35f53, type: 3}
@@ -1819,18 +1783,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 65653453320403719, guid: c21ae717b86bcc044918e60546f2c324, type: 3}
-      propertyPath: planetLine
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 65653453320403719, guid: c21ae717b86bcc044918e60546f2c324, type: 3}
-      propertyPath: targetPlanetOutline
-      value: 
-      objectReference: {fileID: 466919500}
-    - target: {fileID: 1652586189441331931, guid: c21ae717b86bcc044918e60546f2c324, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 522224569020011764, guid: 433b48919ec86294fa6d38b321ea11cd, type: 3}
       propertyPath: m_Name
       value: Ship
@@ -1887,6 +1839,18 @@ PrefabInstance:
       propertyPath: skinsManager
       value: 
       objectReference: {fileID: 1948141982}
+    - target: {fileID: 65653453320403719, guid: c21ae717b86bcc044918e60546f2c324, type: 3}
+      propertyPath: planetLine
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 65653453320403719, guid: c21ae717b86bcc044918e60546f2c324, type: 3}
+      propertyPath: targetPlanetOutline
+      value: 
+      objectReference: {fileID: 466919500}
+    - target: {fileID: 1652586189441331931, guid: c21ae717b86bcc044918e60546f2c324, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
