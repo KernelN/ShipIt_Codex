@@ -37,6 +37,7 @@ namespace ShipIt.Gameplay
             if (orderManager != null)
             {
                 orderManager.TargetReached += HandleOrderCompleted;
+                orderManager.CreditsDepleted += HandleOrderFailed;
             }
 
             if (fuelBank != null)
@@ -50,6 +51,7 @@ namespace ShipIt.Gameplay
             if (orderManager != null)
             {
                 orderManager.TargetReached -= HandleOrderCompleted;
+                orderManager.CreditsDepleted -= HandleOrderFailed;
             }
 
             if (fuelBank != null)
