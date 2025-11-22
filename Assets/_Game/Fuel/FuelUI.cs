@@ -11,78 +11,46 @@ namespace ShipIt
 
         void Awake()
         {
-            if (fuelManager == null && fuelBank == null)
-            {
-                return;
-            }
+            if (!fuelManager && !fuelBank) return;
 
             Subscribe();
             RefreshFuel();
         }
-
-        void OnDisable()
-        {
-            Unsubscribe();
-        }
-
-        void OnDestroy()
-        {
-            Unsubscribe();
-        }
+        void OnDestroy() => Unsubscribe();
 
         void Subscribe()
         {
-            if (fuelManager != null)
-            {
+            if (fuelManager)
                 fuelManager.OnFuelChanged += HandleFuelChanged;
-            }
 
-            if (fuelBank != null)
-            {
+            if (fuelBank)
                 fuelBank.OnFuelChanged += HandleFuelChanged;
-            }
         }
-
         void Unsubscribe()
         {
-            if (fuelManager != null)
-            {
+            if (fuelManager) 
                 fuelManager.OnFuelChanged -= HandleFuelChanged;
-            }
 
-            if (fuelBank != null)
-            {
+            if (fuelBank) 
                 fuelBank.OnFuelChanged -= HandleFuelChanged;
-            }
         }
-
         void RefreshFuel()
         {
-            if (fuelManager == null && fuelBank == null)
-            {
-                return;
-            }
+            if (!fuelManager && !fuelBank) return;
 
             int amount = 0;
 
-            if (fuelManager != null)
-            {
-                amount = fuelManager.GetCurrentFuel();
-            }
-            else if (fuelBank != null)
-            {
+            if (fuelManager)
+                amount = fuelManager.CurrentFuel;
+            else if (fuelBank) 
                 amount = fuelBank.CurrentFuel;
-            }
 
             HandleFuelChanged(amount);
         }
-
         void HandleFuelChanged(int amount)
         {
-            if (fuelLabel != null)
-            {
+            if (fuelLabel) 
                 fuelLabel.text = amount.ToString();
-            }
         }
     }
 }

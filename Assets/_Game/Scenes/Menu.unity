@@ -1275,8 +1275,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fuelPerRecharge: 5
   rechargeMinutes: 10
-  startingFuel: 10
-  maxFuel: 20
+  startingFuel: 30
+  maxFuel: 50
 --- !u!4 &607095675
 Transform:
   m_ObjectHideFlags: 0

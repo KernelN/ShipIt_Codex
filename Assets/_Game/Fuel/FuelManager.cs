@@ -17,6 +17,9 @@ namespace ShipIt
         IdleManager idleManager;
 
         public System.Action<int> OnFuelChanged;
+        
+        public int CurrentFuel => currentFuel;
+        float RechargeTime => rechargeMinutes * 60f;
 
         void Awake()
         {
@@ -25,10 +28,8 @@ namespace ShipIt
 
             InitializeFuel();
 
-            if (idleManager != null)
-            {
+            if (idleManager) 
                 idleManager.OnIdleEvaluated += HandleIdleEvaluation;
-            }
         }
 
         void OnDestroy()
@@ -78,42 +79,29 @@ namespace ShipIt
 
             OnFuelChanged?.Invoke(currentFuel);
         }
-
         void HandleIdleEvaluation()
         {
-            if (idleManager == null || RechargeTime <= 0f)
-            {
-                return;
-            }
+            if (!idleManager || RechargeTime <= 0f) return;
 
             float savedRatio = idleManager.GetResource(FuelResourceKey);
             float savedSeconds = savedRatio * RechargeTime;
             float elapsedSeconds = idleManager.HasLastCheck ? (float)idleManager.OfflineTimeSpan.TotalSeconds : 0f;
             float totalSeconds = savedSeconds + elapsedSeconds;
 
-            if (totalSeconds <= 0f)
-            {
-                return;
-            }
+            if (totalSeconds <= 0f) return;
 
             int cycles = Mathf.FloorToInt(totalSeconds / RechargeTime);
             float remainder = totalSeconds % RechargeTime;
 
-            if (cycles > 0)
-            {
+            if (cycles > 0) 
                 RechargeFuel(cycles * fuelPerRecharge);
-            }
 
             timer = remainder;
             idleManager.SaveResource(FuelResourceKey, RechargeTime > 0f ? Mathf.Clamp01(timer / RechargeTime) : 0f);
         }
-
         void RechargeFuel(int amount)
         {
-            if (amount <= 0)
-            {
-                return;
-            }
+            if (amount <= 0) return;
 
             int previousFuel = currentFuel;
             currentFuel = Mathf.Min(currentFuel + amount, maxFuel);
@@ -124,24 +112,13 @@ namespace ShipIt
                 OnFuelChanged?.Invoke(currentFuel);
             }
         }
-
         void PersistFuel()
         {
-            if (gameManager == null)
-            {
-                return;
-            }
+            if (!gameManager) return;
 
             GameData data = gameManager.Data;
             data.fuel = currentFuel;
             gameManager.SaveGameData();
         }
-
-        public int GetCurrentFuel()
-        {
-            return currentFuel;
-        }
-
-        float RechargeTime => rechargeMinutes * 60f;
     }
 }

@@ -1,21 +1,20 @@
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 using Universal.FileManaging;
 
 namespace ShipIt
 {
-    [Serializable]
+    [System.Serializable]
     public class IdleResource
     {
         public string name;
         public float ratio;
     }
 
-    [Serializable]
+    [System.Serializable]
     public class IdleData
     {
-        public DateTime lastCheckTime;
+        public System.DateTime lastCheckTime;
         public List<IdleResource> resources = new List<IdleResource>();
     }
 
@@ -25,8 +24,8 @@ namespace ShipIt
 
         IdleData data;
 
-        public event Action OnIdleEvaluated;
-        public TimeSpan OfflineTimeSpan { get; private set; }
+        public System.Action OnIdleEvaluated;
+        public System.TimeSpan OfflineTimeSpan { get; private set; }
         public bool HasLastCheck { get; private set; }
 
         internal override void Awake()
@@ -40,13 +39,9 @@ namespace ShipIt
             LoadIdleData();
 
             if (data == null)
-            {
                 data = new IdleData();
-            }
-            else if (data.resources == null)
-            {
+            else if (data.resources == null) 
                 data.resources = new List<IdleResource>();
-            }
         }
 
         void Start()
@@ -57,7 +52,10 @@ namespace ShipIt
         void EvaluateLastCheck()
         {
             HasLastCheck = data.lastCheckTime != default;
-            OfflineTimeSpan = HasLastCheck ? DateTime.Now - data.lastCheckTime : TimeSpan.Zero;
+            if (HasLastCheck)
+                OfflineTimeSpan = System.DateTime.Now - data.lastCheckTime;
+            else
+                OfflineTimeSpan = System.TimeSpan.Zero;
             OnIdleEvaluated?.Invoke();
         }
 
@@ -94,7 +92,7 @@ namespace ShipIt
                     data = new IdleData();
                 }
 
-                data.lastCheckTime = DateTime.Now;
+                data.lastCheckTime = System.DateTime.Now;
                 SaveIdleData();
             }
 
