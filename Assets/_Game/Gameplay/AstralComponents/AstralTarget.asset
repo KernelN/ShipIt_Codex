@@ -11,4 +11,5 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6a79fb7c94b24a1f9f13ed16199ac0b8, type: 3}
   m_Name: AstralTarget
-  m_EditorClassIdentifier:
+  m_EditorClassIdentifier: 
+  outline: {fileID: 8307951799788443606, guid: 7436260c6294bd84088b227f0739da9f, type: 3}

@@ -52,8 +52,9 @@ namespace ShipIt.Gameplay.Astral
                 lastPlanet = planet;
             }
 
-            if (lastPlanet != null && targetBuilder != null)
+            if (lastPlanet && targetBuilder)
             {
+                targetBuilder.Build(lastPlanet.transform);
                 lastPlanet.AddAstralComponent(targetBuilder.GetComponent());
             }
 
