@@ -41,7 +41,7 @@ namespace ShipIt.Gameplay
         {
             if(!enableRotation) return;
             Vector2 input = ctx.ReadValue<Vector2>();
-            Vector3 rot = new Vector3(input.y, input.x, 0);
+            Vector3 rot = new Vector3(input.y * speed, input.x * speed, 0);
             rb.angularVelocity = Vector3.zero;
             rb.AddRelativeTorque(rot, ForceMode.Impulse);
         }
