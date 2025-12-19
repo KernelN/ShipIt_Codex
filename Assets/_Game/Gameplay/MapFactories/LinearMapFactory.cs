@@ -36,15 +36,16 @@ namespace ShipIt.Gameplay.Astral
             firstPlanet.gameObject.name = "Planet 1";
             Transform prevPlanet = firstPlanet.transform;
             AstralBody lastPlanet = firstPlanet;
+            Quaternion referenceRotation = firstPlanet.transform.rotation;
 
             for (int i = 1; i < planetQuantity; i++)
             {
                 float distance = Random.Range(minDistance, maxDistance);
-                Vector3 spawnPos = prevPlanet.position + prevPlanet.forward * distance;
                 float rotationLimit = Mathf.Max(k_MinRotationOffset, maxRotationAngle);
                 Quaternion targetRotation = Random.rotation;
                 float rotationStep = Random.Range(k_MinRotationOffset, rotationLimit);
-                Quaternion spawnRot = Quaternion.RotateTowards(prevPlanet.rotation, targetRotation, rotationStep);
+                Quaternion spawnRot = Quaternion.RotateTowards(referenceRotation, targetRotation, rotationStep);
+                Vector3 spawnPos = prevPlanet.position + (spawnRot * Vector3.forward) * distance;
 
                 AstralBody planet = planetFactory.SpawnBody(spawnPos, spawnRot);
                 if (planet == null)
