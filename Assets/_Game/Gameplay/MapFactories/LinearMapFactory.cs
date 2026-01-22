@@ -7,6 +7,7 @@ namespace ShipIt.Gameplay.Astral
     {
         [SerializeField] AstralTargetBuilder targetBuilder;
         [SerializeField, Range(0f, 180f)] float maxRotationAngle = 45f;
+        [SerializeField] Vector3 rotationAxisMultiplier = Vector3.one;
 
         const float k_MinRotationOffset = 0.1f;
 
@@ -43,7 +44,9 @@ namespace ShipIt.Gameplay.Astral
                 float distance = Random.Range(minDistance, maxDistance);
                 Vector3 spawnPos = prevPlanet.position + prevPlanet.forward * distance;
                 float rotationLimit = Mathf.Max(k_MinRotationOffset, maxRotationAngle);
-                Quaternion targetRotation = Random.rotation;
+                Vector3 targetEuler = Random.rotation.eulerAngles;
+                Vector3 constrainedEuler = Vector3.Scale(targetEuler, rotationAxisMultiplier);
+                Quaternion targetRotation = Quaternion.Euler(constrainedEuler);
                 float rotationStep = Random.Range(k_MinRotationOffset, rotationLimit);
                 Quaternion spawnRot = Quaternion.RotateTowards(referenceRotation, targetRotation, rotationStep);
 
