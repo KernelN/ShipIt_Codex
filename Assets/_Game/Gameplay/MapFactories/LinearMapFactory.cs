@@ -46,7 +46,7 @@ namespace ShipIt.Gameplay.Astral
             }
 
             firstPlanet.AddAstralComponent(componentBuilders[0].GetComponent());
-            firstPlanet.gameObject.name = "Planet 1";
+            firstPlanet.gameObject.name = "Planet (0, 0, 0)";
             Quaternion referenceRotation = firstPlanet.transform.rotation;
             AstralBody lastPlanet = firstPlanet;
             planetGrid[0, 0, 0] = firstPlanet.transform;
@@ -71,12 +71,11 @@ namespace ShipIt.Gameplay.Astral
                 }
 
                 planet.AddAstralComponent(componentBuilders[0].GetComponent());
-                planet.gameObject.name = $"Planet {planetIndex + 1}";
-
                 Vector3 relativePos = spawnPos - anchorPosition;
                 int gridX = Mathf.Clamp(Mathf.RoundToInt(relativePos.x / cellSpacing), 0, gridSize.x - 1);
                 int gridY = Mathf.Clamp(Mathf.RoundToInt(relativePos.y / cellSpacing), 0, gridSize.y - 1);
                 int gridZ = Mathf.Clamp(Mathf.RoundToInt(relativePos.z / cellSpacing), 0, gridSize.z - 1);
+                planet.gameObject.name = $"Planet ({gridX}, {gridY}, {gridZ})";
                 planetGrid[gridX, gridY, gridZ] = planet.transform;
 
                 lastPlanet = planet;
