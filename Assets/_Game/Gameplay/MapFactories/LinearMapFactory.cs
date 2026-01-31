@@ -52,38 +52,35 @@ namespace ShipIt.Gameplay.Astral
             planetGrid[0, 0, 0] = firstPlanet.transform;
 
             int planetIndex = 1;
-            for (int x = 0; x < gridSize.x && planetIndex < totalPlanets; x++)
+            for (int i = 1; i < totalPlanets; i++)
             {
-                for (int y = 0; y < gridSize.y && planetIndex < totalPlanets; y++)
+                float distance = Random.Range(minDistanceBetweenPlanets, maxDistanceBetweenPlanets);
+                float rotationLimit = Mathf.Max(k_MinRotationOffset, maxRotationAngle);
+                Vector3 targetEuler = Random.rotation.eulerAngles;
+                Vector3 constrainedEuler = Vector3.Scale(targetEuler, rotationAxisMultiplier);
+                Quaternion targetRotation = Quaternion.Euler(constrainedEuler);
+                float rotationStep = Random.Range(k_MinRotationOffset, rotationLimit);
+                Quaternion spawnRot = Quaternion.RotateTowards(referenceRotation, targetRotation, rotationStep);
+                Vector3 direction = spawnRot * Vector3.forward;
+                Vector3 spawnPos = anchorPosition + direction * distance;
+
+                AstralBody planet = planetFactory.SpawnBody(spawnPos, spawnRot);
+                if (planet == null)
                 {
-                    for (int z = 0; z < gridSize.z && planetIndex < totalPlanets; z++)
-                    {
-                        if (x == 0 && y == 0 && z == 0)
-                        {
-                            continue;
-                        }
-
-                        Vector3 spawnPos = anchorPosition + new Vector3(x * cellSpacing, y * cellSpacing, z * cellSpacing);
-                        float rotationLimit = Mathf.Max(k_MinRotationOffset, maxRotationAngle);
-                        Vector3 targetEuler = Random.rotation.eulerAngles;
-                        Vector3 constrainedEuler = Vector3.Scale(targetEuler, rotationAxisMultiplier);
-                        Quaternion targetRotation = Quaternion.Euler(constrainedEuler);
-                        float rotationStep = Random.Range(k_MinRotationOffset, rotationLimit);
-                        Quaternion spawnRot = Quaternion.RotateTowards(referenceRotation, targetRotation, rotationStep);
-
-                        AstralBody planet = planetFactory.SpawnBody(spawnPos, spawnRot);
-                        if (planet == null)
-                        {
-                            continue;
-                        }
-
-                        planet.AddAstralComponent(componentBuilders[0].GetComponent());
-                        planet.gameObject.name = $"Planet {planetIndex + 1}";
-                        planetGrid[x, y, z] = planet.transform;
-                        lastPlanet = planet;
-                        planetIndex++;
-                    }
+                    continue;
                 }
+
+                planet.AddAstralComponent(componentBuilders[0].GetComponent());
+                planet.gameObject.name = $"Planet {planetIndex + 1}";
+
+                Vector3 relativePos = spawnPos - anchorPosition;
+                int gridX = Mathf.Clamp(Mathf.RoundToInt(relativePos.x / cellSpacing), 0, gridSize.x - 1);
+                int gridY = Mathf.Clamp(Mathf.RoundToInt(relativePos.y / cellSpacing), 0, gridSize.y - 1);
+                int gridZ = Mathf.Clamp(Mathf.RoundToInt(relativePos.z / cellSpacing), 0, gridSize.z - 1);
+                planetGrid[gridX, gridY, gridZ] = planet.transform;
+
+                lastPlanet = planet;
+                planetIndex++;
             }
 
             if (lastPlanet && targetBuilder)
