@@ -31,7 +31,7 @@ namespace ShipIt.Gameplay.Astral
                 return LastSeed;
             }
 
-            Vector3 anchorPosition = new Vector3(gridSize.x * 0.5f, 0f, 0f);
+            Vector3 anchorPosition = anchor.position;
             float cellSpacing = minDistanceBetweenPlanets;
             int totalSlots = gridSize.x * gridSize.y * gridSize.z;
             int totalPlanets = Mathf.Min(planetQuantity, totalSlots);
