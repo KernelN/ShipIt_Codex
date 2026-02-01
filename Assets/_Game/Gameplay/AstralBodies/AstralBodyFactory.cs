@@ -8,6 +8,10 @@ namespace ShipIt.Gameplay.Astral
         [SerializeField] ComponentExposer bodyPrefab;
         [SerializeField] float minScaleMultiplier = 1f;
         [SerializeField] float maxScaleMultiplier = 1f;
+        
+        Vector3 bodySize => bodyPrefab.Renderer.bounds.size;
+        public Vector3 MinScale => minScaleMultiplier * bodySize;
+        public Vector3 MaxScale => maxScaleMultiplier * bodySize;
 
         public virtual AstralBody SpawnBody(Vector3 position, Quaternion rotation, Transform parent = null)
         {

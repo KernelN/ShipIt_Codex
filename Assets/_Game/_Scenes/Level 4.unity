@@ -1598,10 +1598,6 @@ PrefabInstance:
       value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 3860494650939545052, guid: 433b48919ec86294fa6d38b321ea11cd, type: 3}
-      propertyPath: checkDistance
-      value: 15
-      objectReference: {fileID: 0}
-    - target: {fileID: 3860494650939545052, guid: 433b48919ec86294fa6d38b321ea11cd, type: 3}
       propertyPath: targetPlanetOutline
       value: 
       objectReference: {fileID: 466919500}
