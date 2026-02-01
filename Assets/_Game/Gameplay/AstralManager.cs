@@ -12,6 +12,9 @@ namespace ShipIt.Gameplay.Astral
 
         public int MapSeed { get; private set; }
         public Transform[,,] MapGrid { get; private set; }
+        public Vector3 MapCellSize => mapFactory && mapFactory.planetFactory
+            ? mapFactory.planetFactory.MaxScale
+            : Vector3.one;
         public Transform OriginPlanet => mapFactory ? mapFactory.OriginPlanet : null;
 
         internal override bool DoNotDestroyOnLoad => false;

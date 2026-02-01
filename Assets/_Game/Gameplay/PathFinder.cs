@@ -13,10 +13,26 @@ namespace ShipIt.Gameplay.Astral
         Vector3 cellSize = Vector3.one;
         readonly Dictionary<Transform, Vector3Int> planetIndexLookup = new Dictionary<Transform, Vector3Int>();
 
-        public void SetMatrix(Transform[,,] planetMatrix, Vector3 cellSize)
+        public void SetGrid()
         {
-            this.planetMatrix = planetMatrix;
-            this.cellSize = cellSize;
+            if (planetMatrix != null)
+            {
+                return;
+            }
+
+            AstralManager astralManager = AstralManager.inst;
+            if (!astralManager)
+            {
+                return;
+            }
+
+            planetMatrix = astralManager.MapGrid;
+            if (planetMatrix == null)
+            {
+                return;
+            }
+
+            cellSize = astralManager.MapCellSize;
             CachePlanetIndices();
         }
 
