@@ -16,7 +16,7 @@ namespace ShipIt.Gameplay.Astral
 
         public override int SpawnMap(Transform anchor, int seed)
         {
-            if (anchor == null || planetFactory == null || planetQuantity <= 0)
+            if (!anchor || !planetFactory || planetQuantity <= 0)
             {
                 LastSeed = 0;
                 return LastSeed;
@@ -33,13 +33,13 @@ namespace ShipIt.Gameplay.Astral
             }
 
             Vector3 anchorPosition = anchor.position;
-            float cellSpacing = minDistanceBetweenPlanets;
-            int totalSlots = gridSize.x * gridSize.y * gridSize.z;
-            int totalPlanets = Mathf.Min(planetQuantity, totalSlots);
+            int totalCells = gridSize.x * gridSize.y * gridSize.z;
+            int totalPlanets = Mathf.Min(planetQuantity, totalCells);
+            Vector3 cellSize = planetFactory.MaxScale;
             planetGrid = new Transform[gridSize.x, gridSize.y, gridSize.z];
 
             AstralBody firstPlanet = planetFactory.SpawnBody(anchorPosition, anchor.rotation);
-            if (firstPlanet == null)
+            if (!firstPlanet)
             {
                 LastSeed = 0;
                 Random.state = previousState;
@@ -68,21 +68,18 @@ namespace ShipIt.Gameplay.Astral
                     Vector3 direction = spawnRot * Vector3.forward;
                     Vector3 candidatePos = prevPlanet.position + direction * distance;
                     Vector3 relativePos = candidatePos - anchorPosition;
-                    int gridX = Mathf.Clamp(Mathf.RoundToInt(relativePos.x / cellSpacing), 0, gridSize.x - 1);
-                    int gridY = Mathf.Clamp(Mathf.RoundToInt(relativePos.y / cellSpacing), 0, gridSize.y - 1);
-                    int gridZ = Mathf.Clamp(Mathf.RoundToInt(relativePos.z / cellSpacing), 0, gridSize.z - 1);
+                    int gridX = Mathf.Clamp(Mathf.RoundToInt(relativePos.x / cellSize.x), 0, gridSize.x - 1);
+                    int gridY = Mathf.Clamp(Mathf.RoundToInt(relativePos.y / cellSize.y), 0, gridSize.y - 1);
+                    int gridZ = Mathf.Clamp(Mathf.RoundToInt(relativePos.z / cellSize.z), 0, gridSize.z - 1);
 
-                    if (planetGrid[gridX, gridY, gridZ] != null)
-                    {
+                    if (planetGrid[gridX, gridY, gridZ])
                         continue;
-                    }
 
-                    Vector3 spawnPos = anchorPosition + new Vector3(gridX * cellSpacing, gridY * cellSpacing, gridZ * cellSpacing);
+                    Vector3 gridPos = new Vector3(gridX * cellSize.x, gridY * cellSize.y, gridZ * cellSize.z);
+                    Vector3 spawnPos = anchorPosition + gridPos;
                     AstralBody planet = planetFactory.SpawnBody(spawnPos, spawnRot);
-                    if (planet == null)
-                    {
+                    if (!planet)
                         continue;
-                    }
 
                     planet.AddAstralComponent(componentBuilders[0].GetComponent());
                     planet.gameObject.name = $"Planet ({gridX}, {gridY}, {gridZ})";
