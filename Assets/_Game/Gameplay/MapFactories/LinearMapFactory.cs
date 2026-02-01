@@ -48,6 +48,7 @@ namespace ShipIt.Gameplay.Astral
             firstPlanet.AddAstralComponent(componentBuilders[0].GetComponent());
             firstPlanet.gameObject.name = "Planet (0, 0, 0)";
             Quaternion referenceRotation = firstPlanet.transform.rotation;
+            Transform prevPlanet = firstPlanet.transform;
             AstralBody lastPlanet = firstPlanet;
             planetGrid[0, 0, 0] = firstPlanet.transform;
 
@@ -62,7 +63,7 @@ namespace ShipIt.Gameplay.Astral
                 float rotationStep = Random.Range(k_MinRotationOffset, rotationLimit);
                 Quaternion spawnRot = Quaternion.RotateTowards(referenceRotation, targetRotation, rotationStep);
                 Vector3 direction = spawnRot * Vector3.forward;
-                Vector3 spawnPos = anchorPosition + direction * distance;
+                Vector3 spawnPos = prevPlanet.position + direction * distance;
 
                 AstralBody planet = planetFactory.SpawnBody(spawnPos, spawnRot);
                 if (planet == null)
@@ -78,6 +79,7 @@ namespace ShipIt.Gameplay.Astral
                 planet.gameObject.name = $"Planet ({gridX}, {gridY}, {gridZ})";
                 planetGrid[gridX, gridY, gridZ] = planet.transform;
 
+                prevPlanet = planet.transform;
                 lastPlanet = planet;
                 planetIndex++;
             }
