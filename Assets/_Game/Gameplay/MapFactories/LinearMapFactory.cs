@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace ShipIt.Gameplay.Astral
@@ -14,13 +15,13 @@ namespace ShipIt.Gameplay.Astral
         const int k_MaxPlacementAttempts = 25;
         Transform[,,] planetGrid;
 
-        public override int SpawnMap(Transform anchor, int seed)
+        public override MapData SpawnMap(Transform anchor, int seed)
         {
             if (!anchor || !planetFactory || planetQuantity <= 0)
             {
                 originPlanet = null;
                 LastSeed = 0;
-                return LastSeed;
+                return new MapData(LastSeed, new List<AstralBodyData>(), new Transform[0, 0, 0]);
             }
 
             var previousState = Random.state;
@@ -31,7 +32,7 @@ namespace ShipIt.Gameplay.Astral
                 originPlanet = null;
                 LastSeed = 0;
                 Random.state = previousState;
-                return LastSeed;
+                return new MapData(LastSeed, new List<AstralBodyData>(), new Transform[0, 0, 0]);
             }
 
             Vector3 anchorPosition = anchor.position;
@@ -39,6 +40,13 @@ namespace ShipIt.Gameplay.Astral
             int totalPlanets = Mathf.Min(planetQuantity, totalCells);
             Vector3 cellSize = planetFactory.MaxScale;
             planetGrid = new Transform[gridSize.x, gridSize.y, gridSize.z];
+            var bodyData = new List<AstralBodyData>();
+            var baseComponents = new List<AstralComponentType>();
+            if (componentBuilders != null && componentBuilders.Length > 0 && componentBuilders[0] != null)
+            {
+                baseComponents.Add(componentBuilders[0].GetType);
+            }
+            int lastBodyIndex = -1;
 
             AstralBody firstPlanet = planetFactory.SpawnBody(anchorPosition, anchor.rotation);
             if (!firstPlanet)
@@ -46,7 +54,7 @@ namespace ShipIt.Gameplay.Astral
                 originPlanet = null;
                 LastSeed = 0;
                 Random.state = previousState;
-                return LastSeed;
+                return new MapData(LastSeed, bodyData, planetGrid);
             }
 
             firstPlanet.AddAstralComponent(componentBuilders[0].GetComponent());
@@ -56,6 +64,13 @@ namespace ShipIt.Gameplay.Astral
             AstralBody lastPlanet = firstPlanet;
             originPlanet = firstPlanet.transform;
             planetGrid[0, 0, 0] = firstPlanet.transform;
+            bodyData.Add(new AstralBodyData
+            {
+                gridPos = Vector3Int.zero,
+                up = firstPlanet.transform.up,
+                componentTypes = baseComponents.ToArray()
+            });
+            lastBodyIndex = bodyData.Count - 1;
 
             for (int i = 1; i < totalPlanets; i++)
             {
@@ -88,6 +103,13 @@ namespace ShipIt.Gameplay.Astral
                     planet.AddAstralComponent(componentBuilders[0].GetComponent());
                     planet.gameObject.name = $"Planet ({gridX}, {gridY}, {gridZ})";
                     planetGrid[gridX, gridY, gridZ] = planet.transform;
+                    bodyData.Add(new AstralBodyData
+                    {
+                        gridPos = new Vector3Int(gridX, gridY, gridZ),
+                        up = planet.transform.up,
+                        componentTypes = baseComponents.ToArray()
+                    });
+                    lastBodyIndex = bodyData.Count - 1;
 
                     prevPlanet = planet.transform;
                     lastPlanet = planet;
@@ -105,12 +127,20 @@ namespace ShipIt.Gameplay.Astral
             {
                 targetBuilder.Build(lastPlanet.transform);
                 lastPlanet.AddAstralComponent(targetBuilder.GetComponent());
+                if (lastBodyIndex >= 0)
+                {
+                    var updatedData = bodyData[lastBodyIndex];
+                    var updatedComponents = new List<AstralComponentType>(updatedData.componentTypes);
+                    updatedComponents.Add(targetBuilder.GetType);
+                    updatedData.componentTypes = updatedComponents.ToArray();
+                    bodyData[lastBodyIndex] = updatedData;
+                }
             }
 
             LastSeed = seed;
             Random.state = previousState;
 
-            return LastSeed;
+            return new MapData(LastSeed, bodyData, planetGrid);
         }
     }
 }
