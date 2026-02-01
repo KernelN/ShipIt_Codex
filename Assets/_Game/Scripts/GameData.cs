@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using ShipIt.Gameplay.Astral;
 
 namespace ShipIt
 {
@@ -14,6 +15,7 @@ namespace ShipIt
     public class GameData
     {
         public int randomSeed = -1;
+        public AstralBodyData[] astralBodies = Array.Empty<AstralBodyData>();
         public int credits;
         public int fuel = -1;
         public List<ItemData> items = new List<ItemData>();
