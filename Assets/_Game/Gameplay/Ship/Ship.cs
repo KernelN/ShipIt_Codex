@@ -17,6 +17,7 @@ namespace ShipIt.Gameplay
         AstralBody cPlanetBody;
         Vector3 detectedTargetPoint;
         public bool HasPlanetAbove { get; private set; }
+        public float MaxJumpDistance => checkDistance;
         Vector3 RayOrigin => cPlanet ? cPlanet.position : transform.position;
         public Transform CurrentPlanet => cPlanet;
         public Transform DetectedPlanet { get; private set; }
