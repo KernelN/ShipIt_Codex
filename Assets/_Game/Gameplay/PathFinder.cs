@@ -4,31 +4,23 @@ using ShipIt.Gameplay;
 
 namespace ShipIt.Gameplay.Astral
 {
-    public class PathTracer
+    public class PathFinder : MonoBehaviour
     {
-        readonly Transform[,,] planetMatrix;
-        readonly Vector3 cellSize;
+        [SerializeField] Ship ship;
+        [SerializeField, Min(0f)] float angleThreshold = 5f;
+
+        Transform[,,] planetMatrix;
+        Vector3 cellSize = Vector3.one;
         readonly Dictionary<Transform, Vector3Int> planetIndexLookup = new Dictionary<Transform, Vector3Int>();
 
-        public PathTracer(Transform[,,] planetMatrix)
-            : this(planetMatrix, Vector3.one)
-        {
-        }
-
-        public PathTracer(Transform[,,] planetMatrix, Vector3 cellSize)
+        public void SetMatrix(Transform[,,] planetMatrix, Vector3 cellSize)
         {
             this.planetMatrix = planetMatrix;
             this.cellSize = cellSize;
             CachePlanetIndices();
         }
 
-        public List<Transform> GetPaths(Transform planet, Ship ship, float angleThreshold)
-        {
-            float maxJumpDistance = ship ? ship.MaxJumpDistance : 0f;
-            return GetPaths(planet, maxJumpDistance, angleThreshold);
-        }
-
-        public List<Transform> GetPaths(Transform planet, float maxJumpDistance, float angleThreshold)
+        public List<Transform> GetPaths(Transform planet)
         {
             var jumpablePlanets = new List<Transform>();
 
@@ -37,6 +29,7 @@ namespace ShipIt.Gameplay.Astral
                 return jumpablePlanets;
             }
 
+            float maxJumpDistance = ship ? ship.MaxJumpDistance : 0f;
             if (maxJumpDistance <= 0f)
             {
                 return jumpablePlanets;
