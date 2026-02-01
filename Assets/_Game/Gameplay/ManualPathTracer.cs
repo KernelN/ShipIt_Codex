@@ -26,6 +26,11 @@ namespace ShipIt.Gameplay.Astral
 
         void Start()
         {
+            if (pathFinder)
+            {
+                pathFinder.SetGrid();
+            }
+
             Transform originPlanet = AstralManager.inst ? AstralManager.inst.OriginPlanet : null;
             selectionPath.Clear();
             if (originPlanet)
