@@ -10,6 +10,7 @@ namespace ShipIt.Gameplay.Astral
         [SerializeField] MapFactory mapFactory;
 
         public int MapSeed { get; private set; }
+        public Transform OriginPlanet => mapFactory ? mapFactory.OriginPlanet : null;
 
         internal override bool DoNotDestroyOnLoad => false;
 

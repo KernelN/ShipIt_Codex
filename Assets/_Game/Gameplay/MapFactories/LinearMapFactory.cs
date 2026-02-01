@@ -18,6 +18,7 @@ namespace ShipIt.Gameplay.Astral
         {
             if (!anchor || !planetFactory || planetQuantity <= 0)
             {
+                originPlanet = null;
                 LastSeed = 0;
                 return LastSeed;
             }
@@ -27,6 +28,7 @@ namespace ShipIt.Gameplay.Astral
 
             if (gridSize.x <= 0 || gridSize.y <= 0 || gridSize.z <= 0)
             {
+                originPlanet = null;
                 LastSeed = 0;
                 Random.state = previousState;
                 return LastSeed;
@@ -41,6 +43,7 @@ namespace ShipIt.Gameplay.Astral
             AstralBody firstPlanet = planetFactory.SpawnBody(anchorPosition, anchor.rotation);
             if (!firstPlanet)
             {
+                originPlanet = null;
                 LastSeed = 0;
                 Random.state = previousState;
                 return LastSeed;
@@ -51,6 +54,7 @@ namespace ShipIt.Gameplay.Astral
             Quaternion referenceRotation = firstPlanet.transform.rotation;
             Transform prevPlanet = firstPlanet.transform;
             AstralBody lastPlanet = firstPlanet;
+            originPlanet = firstPlanet.transform;
             planetGrid[0, 0, 0] = firstPlanet.transform;
 
             for (int i = 1; i < totalPlanets; i++)

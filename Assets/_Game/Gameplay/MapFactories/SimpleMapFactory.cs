@@ -14,6 +14,7 @@ namespace ShipIt.Gameplay.Astral
         {
             if (anchor == null || planetFactory == null || planetQuantity <= 0)
             {
+                originPlanet = null;
                 LastSeed = 0;
                 return LastSeed;
             }
@@ -27,6 +28,7 @@ namespace ShipIt.Gameplay.Astral
             AstralBody firstPlanet = planetFactory.SpawnBody(anchor.position, anchor.rotation);
             if (firstPlanet == null)
             {
+                originPlanet = null;
                 LastSeed = 0;
                 Random.state = previousState;
                 return LastSeed;
@@ -36,6 +38,7 @@ namespace ShipIt.Gameplay.Astral
             firstPlanet.gameObject.name = "Planet 1";
             Transform prevPlanet = firstPlanet.transform;
             AstralBody lastPlanet = firstPlanet;
+            originPlanet = firstPlanet.transform;
 
             for (int i = 1; i < planetQuantity; i++)
             {
