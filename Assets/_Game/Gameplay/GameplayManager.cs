@@ -21,7 +21,7 @@ namespace ShipIt.Gameplay
 
             if (inst != this) return;
             if (!orderManager) orderManager = OrderManager.inst;
-            if (!fuelBank) fuelBank = FindObjectOfType<FuelBank>();
+            if (!fuelBank) fuelBank = FindAnyObjectByType<FuelBank>();
         }
         void Start() => Subscribe();
         internal override void OnDestroy()

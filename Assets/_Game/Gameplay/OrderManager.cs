@@ -58,7 +58,11 @@ namespace ShipIt.Gameplay.Astral
             TargetReached?.Invoke();
         }
 
-        void OnDestroy() => UnsubscribeFromTicks();
+        internal override void OnDestroy()
+        {
+            UnsubscribeFromTicks();
+            base.OnDestroy();
+        }
 
         void InitializeCredits()
         {

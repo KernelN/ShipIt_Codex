@@ -6,7 +6,7 @@ namespace ShipIt.Gameplay
     public class ComponentExposer : MonoBehaviour
     {
         [SerializeField] AstralBody astralBodybody;
-        [SerializeField] Renderer renderer;
+        [SerializeField] new Renderer renderer;
         
         public AstralBody AstralBody => astralBodybody;
         public Renderer Renderer => renderer;

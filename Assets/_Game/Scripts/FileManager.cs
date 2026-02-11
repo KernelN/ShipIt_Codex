@@ -16,7 +16,7 @@ namespace Universal.FileManaging
 
             //Save obj in file and close
             BinaryFormatter bf = new BinaryFormatter();
-            bf.Serialize(file, objectToSave);
+                bf.Serialize(file, objectToSave);
             file.Close();
         }
         public static T LoadDataFromFile(string dataPath)

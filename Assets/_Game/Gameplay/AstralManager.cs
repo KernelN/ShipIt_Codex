@@ -1,7 +1,5 @@
-using System;
 using UnityEngine;
 using Universal;
-using ShipIt;
 
 namespace ShipIt.Gameplay.Astral
 {
@@ -24,37 +22,29 @@ namespace ShipIt.Gameplay.Astral
             base.Awake();
 
             if (inst != this)
-            {
                 return;
-            }
 
-            if (mapFactory == null || mapRoot == null)
-            {
+            if (!mapFactory || !mapRoot)
                 return;
-            }
 
             int seed = -1;
             GameData data = GameManager.inst?.Data;
             if (data != null)
-            {
                 seed = data.randomSeed;
-            }
 
-            if (seed < 0)
-            {
+            if (seed < 0) 
                 seed = Random.Range(0, int.MaxValue);
-            }
 
             MapData mapData = mapFactory.SpawnMap(mapRoot, seed);
-            MapSeed = mapData != null ? mapData.seed : 0;
-            MapGrid = mapData != null ? mapData.grid : null;
+            MapSeed = mapData?.seed ?? 0;
+            MapGrid = mapData?.grid;
 
             if (data != null)
             {
                 data.randomSeed = MapSeed;
                 data.astralBodies = mapData != null
                     ? mapData.astralBodies.ToArray()
-                    : Array.Empty<AstralBodyData>();
+                    : System.Array.Empty<AstralBodyData>();
                 GameManager.inst.SaveGameData();
             }
         }
