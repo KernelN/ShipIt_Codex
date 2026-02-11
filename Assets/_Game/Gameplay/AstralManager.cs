@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using Universal;
 using ShipIt;
@@ -10,6 +11,11 @@ namespace ShipIt.Gameplay.Astral
         [SerializeField] MapFactory mapFactory;
 
         public int MapSeed { get; private set; }
+        public Transform[,,] MapGrid { get; private set; }
+        public Vector3 MapCellSize => mapFactory && mapFactory.planetFactory
+            ? mapFactory.planetFactory.MaxScale
+            : Vector3.one;
+        public Transform OriginPlanet => mapFactory ? mapFactory.OriginPlanet : null;
 
         internal override bool DoNotDestroyOnLoad => false;
 
@@ -39,11 +45,16 @@ namespace ShipIt.Gameplay.Astral
                 seed = Random.Range(0, int.MaxValue);
             }
 
-            MapSeed = mapFactory.SpawnMap(mapRoot, seed);
+            MapData mapData = mapFactory.SpawnMap(mapRoot, seed);
+            MapSeed = mapData != null ? mapData.seed : 0;
+            MapGrid = mapData != null ? mapData.grid : null;
 
             if (data != null)
             {
                 data.randomSeed = MapSeed;
+                data.astralBodies = mapData != null
+                    ? mapData.astralBodies.ToArray()
+                    : Array.Empty<AstralBodyData>();
                 GameManager.inst.SaveGameData();
             }
         }
