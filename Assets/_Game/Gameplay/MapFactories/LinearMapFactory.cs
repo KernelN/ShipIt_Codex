@@ -15,6 +15,77 @@ namespace ShipIt.Gameplay.Astral
         const int k_MaxPlacementAttempts = 25;
         Transform[,,] planetGrid;
 
+        Vector3 GetWorldPositionForCell(Vector3 anchorPosition, Vector3 cellSize, int centerX, int centerY, Vector3Int cell)
+        {
+            Vector3 gridPos = new Vector3(
+                (cell.x - centerX) * cellSize.x,
+                (cell.y - centerY) * cellSize.y,
+                cell.z * cellSize.z);
+
+            return anchorPosition + gridPos;
+        }
+
+        bool TryMoveCellWithinMaxDistance(
+            Vector3 previousPlanetPosition,
+            Vector3 anchorPosition,
+            Vector3 cellSize,
+            int centerX,
+            int centerY,
+            Vector3Int startCell,
+            out Vector3Int adjustedCell)
+        {
+            adjustedCell = startCell;
+            Vector3 adjustedCellWorldPos = GetWorldPositionForCell(anchorPosition, cellSize, centerX, centerY, adjustedCell);
+            float currentDistance = Vector3.Distance(previousPlanetPosition, adjustedCellWorldPos);
+            if (currentDistance <= maxDistanceBetweenPlanets)
+                return true;
+
+            int maxMoves = Mathf.Max(gridSize.x, 1) * Mathf.Max(gridSize.y, 1) * Mathf.Max(gridSize.z, 1);
+            for (int move = 0; move < maxMoves; move++)
+            {
+                Vector3Int bestCell = adjustedCell;
+                float bestDistance = currentDistance;
+
+                for (int offsetX = -1; offsetX <= 1; offsetX++)
+                {
+                    for (int offsetY = -1; offsetY <= 1; offsetY++)
+                    {
+                        for (int offsetZ = -1; offsetZ <= 1; offsetZ++)
+                        {
+                            if (offsetX == 0 && offsetY == 0 && offsetZ == 0)
+                                continue;
+
+                            Vector3Int neighbourCell = new Vector3Int(
+                                Mathf.Clamp(adjustedCell.x + offsetX, 0, gridSize.x - 1),
+                                Mathf.Clamp(adjustedCell.y + offsetY, 0, gridSize.y - 1),
+                                Mathf.Clamp(adjustedCell.z + offsetZ, 0, gridSize.z - 1));
+
+                            if (neighbourCell == adjustedCell)
+                                continue;
+
+                            Vector3 neighbourWorldPos = GetWorldPositionForCell(anchorPosition, cellSize, centerX, centerY, neighbourCell);
+                            float neighbourDistance = Vector3.Distance(previousPlanetPosition, neighbourWorldPos);
+                            if (neighbourDistance < bestDistance)
+                            {
+                                bestCell = neighbourCell;
+                                bestDistance = neighbourDistance;
+                            }
+                        }
+                    }
+                }
+
+                if (bestCell == adjustedCell)
+                    return false;
+
+                adjustedCell = bestCell;
+                currentDistance = bestDistance;
+                if (currentDistance <= maxDistanceBetweenPlanets)
+                    return true;
+            }
+
+            return false;
+        }
+
         public override MapData SpawnMap(Transform anchor, int seed)
         {
             if (!anchor || !planetFactory || planetQuantity <= 0)
@@ -90,28 +161,37 @@ namespace ShipIt.Gameplay.Astral
                     Vector3 direction = spawnRot * Vector3.forward;
                     Vector3 candidatePos = prevPlanet.position + direction * distance;
                     Vector3 relativePos = candidatePos - anchorPosition;
-                    int gridX = Mathf.Clamp(Mathf.RoundToInt(relativePos.x / cellSize.x) + centerX, 0, gridSize.x - 1);
-                    int gridY = Mathf.Clamp(Mathf.RoundToInt(relativePos.y / cellSize.y) + centerY, 0, gridSize.y - 1);
-                    int gridZ = Mathf.Clamp(Mathf.RoundToInt(relativePos.z / cellSize.z), 0, gridSize.z - 1);
+                    Vector3Int clampedCell = new Vector3Int(
+                        Mathf.Clamp(Mathf.RoundToInt(relativePos.x / cellSize.x) + centerX, 0, gridSize.x - 1),
+                        Mathf.Clamp(Mathf.RoundToInt(relativePos.y / cellSize.y) + centerY, 0, gridSize.y - 1),
+                        Mathf.Clamp(Mathf.RoundToInt(relativePos.z / cellSize.z), 0, gridSize.z - 1));
 
-                    if (planetGrid[gridX, gridY, gridZ])
+                    if (!TryMoveCellWithinMaxDistance(
+                        prevPlanet.position,
+                        anchorPosition,
+                        cellSize,
+                        centerX,
+                        centerY,
+                        clampedCell,
+                        out Vector3Int selectedCell))
+                    {
+                        continue;
+                    }
+
+                    if (planetGrid[selectedCell.x, selectedCell.y, selectedCell.z])
                         continue;
 
-                    Vector3 gridPos = new Vector3(
-                        (gridX - centerX) * cellSize.x,
-                        (gridY - centerY) * cellSize.y,
-                        gridZ * cellSize.z);
-                    Vector3 spawnPos = anchorPosition + gridPos;
+                    Vector3 spawnPos = GetWorldPositionForCell(anchorPosition, cellSize, centerX, centerY, selectedCell);
                     AstralBody planet = planetFactory.SpawnBody(spawnPos, spawnRot);
                     if (!planet)
                         continue;
 
                     planet.AddAstralComponent(componentBuilders[0].GetComponent());
-                    planet.gameObject.name = $"Planet ({gridX}, {gridY}, {gridZ})";
-                    planetGrid[gridX, gridY, gridZ] = planet.transform;
+                    planet.gameObject.name = $"Planet ({selectedCell.x}, {selectedCell.y}, {selectedCell.z})";
+                    planetGrid[selectedCell.x, selectedCell.y, selectedCell.z] = planet.transform;
                     bodyData.Add(new AstralBodyData
                     {
-                        gridPos = new Vector3Int(gridX, gridY, gridZ),
+                        gridPos = selectedCell,
                         up = planet.transform.up,
                         componentTypes = baseComponents.ToArray()
                     });
