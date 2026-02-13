@@ -38,6 +38,7 @@ namespace Universal.FileManaging
             }
             catch (Exception e)
             {
+                UnityEngine.Debug.LogWarning("Error loading data file: " + e);
                 return default;
             }
         }
