@@ -17,6 +17,7 @@ namespace ShipIt.Gameplay
         [SerializeField] string triggerName = "Play";
 
         bool showFirstCamera = true;
+        public Camera cam => showFirstCamera ? firstCamera : secondCamera;
 
         void Awake()
         {

@@ -9,7 +9,7 @@ namespace ShipIt.Gameplay.Astral
     {
         [SerializeField] PathFinder pathFinder;
         [SerializeField] List<GameObject> highlightersPool = new List<GameObject>();
-        [SerializeField] Camera currentCamera;
+        [SerializeField] CameraSwapper camSwapper;
         [SerializeField] PathShower pathShower;
 
         readonly List<GameObject> activeHighlights = new List<GameObject>();
@@ -144,11 +144,11 @@ namespace ShipIt.Gameplay.Astral
             if (!inputs)
                 return;
 
-            if (!currentCamera)
+            if (!camSwapper.cam)
                 return;
 
             Vector2 screenPosition = inputs.actions.UI.Point.ReadValue<Vector2>();
-            Ray ray = currentCamera.ScreenPointToRay(screenPosition);
+            Ray ray = camSwapper.cam.ScreenPointToRay(screenPosition);
             if (!Physics.Raycast(ray, out RaycastHit hit))
                 return;
 
