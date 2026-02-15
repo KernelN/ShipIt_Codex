@@ -10,6 +10,7 @@ namespace ShipIt.Gameplay.Astral
         [SerializeField] PathFinder pathFinder;
         [SerializeField] List<GameObject> highlightersPool = new List<GameObject>();
         [SerializeField] Camera currentCamera;
+        [SerializeField] PathShower pathShower;
 
         readonly List<GameObject> activeHighlights = new List<GameObject>();
         readonly HashSet<Transform> highlightedTargets = new HashSet<Transform>();
@@ -40,6 +41,8 @@ namespace ShipIt.Gameplay.Astral
             {
                 selectionPath.Add(originPlanet);
             }
+
+            ShowPath();
             HighlightPaths(originPlanet);
         }
 
@@ -178,6 +181,7 @@ namespace ShipIt.Gameplay.Astral
             if (selectionPath.Count == 0)
             {
                 selectionPath.Add(selectedPlanet);
+                ShowPath();
                 HighlightPaths(selectedPlanet);
                 return;
             }
@@ -189,12 +193,23 @@ namespace ShipIt.Gameplay.Astral
             if (selectionPath.Count >= 2 && selectedPlanet == selectionPath[selectionPath.Count - 2])
             {
                 selectionPath.RemoveAt(selectionPath.Count - 1);
+                ShowPath();
                 HighlightPaths(selectedPlanet);
                 return;
             }
 
             selectionPath.Add(selectedPlanet);
+            ShowPath();
             HighlightPaths(selectedPlanet);
         }
+
+        void ShowPath()
+        {
+            if (!pathShower)
+                return;
+
+            pathShower.ShowPath(selectionPath);
+        }
+
     }
 }
