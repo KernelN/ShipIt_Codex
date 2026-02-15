@@ -3,7 +3,8 @@ using UnityEngine;
 
 namespace ShipIt.Gameplay.Astral
 {
-    public class PathShower : MonoBehaviour
+    [System.Serializable]
+    public class PathShower
     {
         [SerializeField] LineRenderer pathRenderer;
         [SerializeField] Color pathColor = Color.cyan;

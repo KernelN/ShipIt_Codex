@@ -203,13 +203,6 @@ namespace ShipIt.Gameplay.Astral
             HighlightPaths(selectedPlanet);
         }
 
-        void ShowPath()
-        {
-            if (!pathShower)
-                return;
-
-            pathShower.ShowPath(selectionPath);
-        }
-
+        void ShowPath() => pathShower.ShowPath(selectionPath);
     }
 }
