@@ -48,10 +48,15 @@ namespace ShipIt.Gameplay.Astral
 
             targetCamera.orthographic = true;
 
-            Vector3 forward = GetAxisVector(viewAxis);
-            Vector3 up = GetUpVector(forward);
-            Vector3 right = Vector3.Cross(up, forward).normalized;
-            up = Vector3.Cross(forward, right).normalized;
+            Vector3 baseForward = GetAxisVector(viewAxis);
+            Vector3 baseUp = GetUpVector(baseForward);
+            Quaternion baseRotation = Quaternion.LookRotation(baseForward, baseUp);
+            Quaternion offsetRotation = Quaternion.AngleAxis(rotationOffset, Vector3.forward);
+            Quaternion finalRotation = baseRotation * offsetRotation;
+
+            Vector3 forward = finalRotation * Vector3.forward;
+            Vector3 up = finalRotation * Vector3.up;
+            Vector3 right = finalRotation * Vector3.right;
 
             float minX = float.PositiveInfinity;
             float maxX = float.NegativeInfinity;
@@ -99,9 +104,7 @@ namespace ShipIt.Gameplay.Astral
 
             float orthographicSize = Mathf.Max(requiredHalfHeight, requiredHalfWidth / aspect, minimumOrthographicSize);
 
-            Quaternion baseRotation = Quaternion.LookRotation(forward, up);
-            Quaternion offsetRotation = Quaternion.AngleAxis(rotationOffset, Vector3.forward);
-            targetCamera.transform.rotation = baseRotation * offsetRotation;
+            targetCamera.transform.rotation = finalRotation;
             targetCamera.transform.position = (right * centerX) + (up * centerY) + (forward * cameraDepth);
             targetCamera.orthographicSize = orthographicSize;
             targetCamera.nearClipPlane = 0.01f;
