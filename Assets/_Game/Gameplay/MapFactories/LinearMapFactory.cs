@@ -86,8 +86,10 @@ namespace ShipIt.Gameplay.Astral
             return false;
         }
 
-        public override MapData SpawnMap(Transform anchor, int seed)
+        public override MapData SpawnMap(Transform anchor, int seed, out Transform targetPlanet)
         {
+            targetPlanet = null;
+
             if (!anchor || !planetFactory || planetQuantity <= 0)
             {
                 originPlanet = null;
@@ -213,6 +215,7 @@ namespace ShipIt.Gameplay.Astral
             {
                 targetBuilder.Build(lastPlanet.transform);
                 lastPlanet.AddAstralComponent(targetBuilder.GetComponent());
+                targetPlanet = lastPlanet.transform;
                 if (lastBodyIndex >= 0)
                 {
                     var updatedData = bodyData[lastBodyIndex];

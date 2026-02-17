@@ -13,6 +13,6 @@ namespace ShipIt.Gameplay.Astral
         protected Transform originPlanet;
         public Transform OriginPlanet => originPlanet;
 
-        public abstract MapData SpawnMap(Transform anchor, int seed);
+        public abstract MapData SpawnMap(Transform anchor, int seed, out Transform targetPlanet);
     }
 }

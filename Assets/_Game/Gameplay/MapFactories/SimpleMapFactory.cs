@@ -11,8 +11,10 @@ namespace ShipIt.Gameplay.Astral
 
         const float k_MinRotationOffset = 0.1f;
 
-        public override MapData SpawnMap(Transform anchor, int seed)
+        public override MapData SpawnMap(Transform anchor, int seed, out Transform targetPlanet)
         {
+            targetPlanet = null;
+
             if (anchor == null || planetFactory == null || planetQuantity <= 0)
             {
                 originPlanet = null;
@@ -96,6 +98,7 @@ namespace ShipIt.Gameplay.Astral
             {
                 targetBuilder.Build(lastPlanet.transform);
                 lastPlanet.AddAstralComponent(targetBuilder.GetComponent());
+                targetPlanet = lastPlanet.transform;
                 if (lastBodyIndex >= 0)
                 {
                     var updatedData = bodyData[lastBodyIndex];
