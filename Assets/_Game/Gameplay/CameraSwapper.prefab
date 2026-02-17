@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 5901409256760836093}
   - component: {fileID: 4119179729360326729}
   - component: {fileID: 6316121965303321576}
+  - component: {fileID: 8329863100884402980}
   m_Layer: 0
   m_Name: Camera Top
   m_TagString: Untagged
@@ -137,6 +138,24 @@ MonoBehaviour:
     m_MipBias: 0
     m_VarianceClampScale: 0.9
     m_ContrastAdaptiveSharpening: 0
+--- !u!114 &8329863100884402980
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3396168757932418877}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8e7aa5a8073d427581763c859dfa841c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  targetCamera: {fileID: 5901409256760836093}
+  viewAxis: 3
+  framingPadding: 2
+  depthPadding: 5
+  minimumOrthographicSize: 1
+  rotationOffset: 90
 --- !u!1 &3529282293457469027
 GameObject:
   m_ObjectHideFlags: 0
@@ -149,6 +168,7 @@ GameObject:
   - component: {fileID: 3911246087036813722}
   - component: {fileID: 9012228966422807391}
   - component: {fileID: 585249949163213490}
+  - component: {fileID: 2260350701308178375}
   m_Layer: 0
   m_Name: Camera Side
   m_TagString: Untagged
@@ -274,6 +294,24 @@ MonoBehaviour:
     m_MipBias: 0
     m_VarianceClampScale: 0.9
     m_ContrastAdaptiveSharpening: 0
+--- !u!114 &2260350701308178375
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3529282293457469027}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8e7aa5a8073d427581763c859dfa841c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  targetCamera: {fileID: 3911246087036813722}
+  viewAxis: 1
+  framingPadding: 2
+  depthPadding: 5
+  minimumOrthographicSize: 1
+  rotationOffset: 0
 --- !u!1 &5020693177583457544
 GameObject:
   m_ObjectHideFlags: 0
@@ -320,8 +358,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c6f81cf3380f4a4590e8f53f364503b9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  firstCamera: {fileID: 5901409256760836093}
-  secondCamera: {fileID: 3911246087036813722}
+  firstCamera: {fileID: 3911246087036813722}
+  secondCamera: {fileID: 5901409256760836093}
   swapButton: {fileID: 0}
   targetAnimator: {fileID: 0}
   triggerName: Play
