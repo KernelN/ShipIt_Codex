@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -22,13 +23,11 @@ namespace ShipIt.Gameplay.Astral
         [SerializeField, Min(0.01f)] float minimumOrthographicSize = 1f;
         [SerializeField] float rotationOffset;
 
-        public void AlignToMap(MapData mapData)
-        {
-            if (mapData == null)
-                return;
+        void Start() => AlignToMap(AstralManager.inst.MapGrid);
 
+        public void AlignToMap(Transform[,,] grid)
+        {
             List<Transform> planets = new List<Transform>();
-            Transform[,,] grid = mapData.grid;
             if (grid != null)
             {
                 foreach (Transform planet in grid)

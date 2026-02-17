@@ -7,7 +7,6 @@ namespace ShipIt.Gameplay.Astral
     {
         [SerializeField] Transform mapRoot;
         [SerializeField] MapFactory mapFactory;
-        [SerializeField] CameraAligner cameraAligner;
 
         public int MapSeed { get; private set; }
         public Transform[,,] MapGrid { get; private set; }
@@ -39,8 +38,6 @@ namespace ShipIt.Gameplay.Astral
             MapData mapData = mapFactory.SpawnMap(mapRoot, seed);
             MapSeed = mapData?.seed ?? 0;
             MapGrid = mapData?.grid;
-
-            cameraAligner?.AlignToMap(mapData);
 
             if (data != null)
             {
