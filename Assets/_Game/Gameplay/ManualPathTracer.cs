@@ -182,6 +182,8 @@ namespace ShipIt.Gameplay.Astral
             {
                 selectionPath.Add(selectedPlanet);
                 ShowPath();
+                if (TryCompletePath(selectedPlanet))
+                    return;
                 HighlightPaths(selectedPlanet);
                 return;
             }
@@ -194,13 +196,29 @@ namespace ShipIt.Gameplay.Astral
             {
                 selectionPath.RemoveAt(selectionPath.Count - 1);
                 ShowPath();
+                if (TryCompletePath(selectedPlanet))
+                    return;
                 HighlightPaths(selectedPlanet);
                 return;
             }
 
             selectionPath.Add(selectedPlanet);
             ShowPath();
+            if (TryCompletePath(selectedPlanet))
+                return;
             HighlightPaths(selectedPlanet);
+        }
+
+        bool TryCompletePath(Transform selectedPlanet)
+        {
+            PathManager pathManager = PathManager.inst;
+            if (!pathManager || !pathManager.IsTargetPlanet(selectedPlanet))
+                return false;
+
+            pathManager.CompletePath(selectionPath);
+            highlightedTargets.Clear();
+            ClearHighlights();
+            return true;
         }
 
         void ShowPath() => pathShower.ShowPath(selectionPath);
