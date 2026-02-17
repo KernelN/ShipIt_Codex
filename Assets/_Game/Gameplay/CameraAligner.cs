@@ -20,6 +20,7 @@ namespace ShipIt.Gameplay.Astral
         [SerializeField, Min(0f)] float framingPadding = 2f;
         [SerializeField, Min(0.01f)] float depthPadding = 5f;
         [SerializeField, Min(0.01f)] float minimumOrthographicSize = 1f;
+        [SerializeField] float rotationOffset;
 
         public void AlignToMap(MapData mapData)
         {
@@ -98,7 +99,9 @@ namespace ShipIt.Gameplay.Astral
 
             float orthographicSize = Mathf.Max(requiredHalfHeight, requiredHalfWidth / aspect, minimumOrthographicSize);
 
-            targetCamera.transform.rotation = Quaternion.LookRotation(forward, up);
+            Quaternion baseRotation = Quaternion.LookRotation(forward, up);
+            Quaternion offsetRotation = Quaternion.AngleAxis(rotationOffset, Vector3.forward);
+            targetCamera.transform.rotation = baseRotation * offsetRotation;
             targetCamera.transform.position = (right * centerX) + (up * centerY) + (forward * cameraDepth);
             targetCamera.orthographicSize = orthographicSize;
             targetCamera.nearClipPlane = 0.01f;
