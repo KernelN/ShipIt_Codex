@@ -13,12 +13,12 @@ namespace ShipIt.Gameplay.Astral
         public Vector3 MapCellSize => mapFactory && mapFactory.planetFactory
             ? mapFactory.planetFactory.MaxScale
             : Vector3.one;
-        public Transform OriginPlanet => mapFactory ? mapFactory.OriginPlanet : null;
-        public Transform TargetPlanet { get; private set; }
+        public AstralBody OriginPlanet => mapFactory ? mapFactory.OriginPlanet : null;
+        public AstralBody TargetPlanet { get; private set; }
 
         internal override bool DoNotDestroyOnLoad => false;
 
-        public bool IsTargetPlanet(Transform planet)
+        public bool IsTargetPlanet(AstralBody planet)
         {
             return planet && planet == TargetPlanet;
         }
@@ -41,7 +41,7 @@ namespace ShipIt.Gameplay.Astral
             if (seed < 0)
                 seed = Random.Range(0, int.MaxValue);
 
-            MapData mapData = mapFactory.SpawnMap(mapRoot, seed, out Transform targetPlanet);
+            MapData mapData = mapFactory.SpawnMap(mapRoot, seed, out AstralBody targetPlanet);
             MapSeed = mapData?.seed ?? 0;
             MapGrid = mapData?.grid;
             TargetPlanet = targetPlanet;

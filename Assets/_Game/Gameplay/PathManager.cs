@@ -10,37 +10,57 @@ namespace ShipIt.Gameplay.Astral
         [SerializeField] List<GameObject> enableOnPathCompleted = new List<GameObject>();
 
         readonly List<Vector3> completedPathPoints = new List<Vector3>();
+        readonly List<AstralBody> completedPathBodies = new List<AstralBody>();
 
         public IReadOnlyList<Vector3> CompletedPathPoints => completedPathPoints;
 
         internal override bool DoNotDestroyOnLoad => true;
 
-        public bool IsTargetPlanet(Transform planet)
+        public bool IsTargetPlanet(AstralBody planet)
         {
             AstralManager astralManager = AstralManager.inst;
             return astralManager && astralManager.IsTargetPlanet(planet);
         }
 
-        public void CompletePath(IReadOnlyList<Transform> path)
+        public void CompletePath(IReadOnlyList<AstralBody> path)
         {
             SavePath(path);
             SetObjectsActive(disableOnPathCompleted, false);
             SetObjectsActive(enableOnPathCompleted, true);
         }
 
-        void SavePath(IReadOnlyList<Transform> path)
+        void SavePath(IReadOnlyList<AstralBody> path)
         {
             completedPathPoints.Clear();
+            completedPathBodies.Clear();
 
             if (path == null)
                 return;
 
             for (int i = 0; i < path.Count; i++)
             {
-                Transform planet = path[i];
-                if (planet)
-                    completedPathPoints.Add(planet.position);
+                AstralBody planet = path[i];
+                if (!planet)
+                    continue;
+
+                completedPathBodies.Add(planet);
+                completedPathPoints.Add(planet.transform.position);
             }
+        }
+
+
+        public AstralBody GetNextOnPath(AstralBody current)
+        {
+            if (!current || completedPathBodies.Count == 0)
+                return null;
+
+            for (int i = 0; i < completedPathBodies.Count - 1; i++)
+            {
+                if (completedPathBodies[i] == current)
+                    return completedPathBodies[i + 1];
+            }
+
+            return null;
         }
 
         static void SetObjectsActive(IReadOnlyList<GameObject> objects, bool active)

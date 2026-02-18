@@ -7,9 +7,9 @@ namespace ShipIt.Gameplay.Astral
     {
         [SerializeField] Ship ship;
 
-        Transform[,,] planetMatrix;
+        AstralBody[,,] planetMatrix;
         Vector3 cellSize = Vector3.one;
-        readonly Dictionary<Transform, Vector3Int> planetIndexLookup = new Dictionary<Transform, Vector3Int>();
+        readonly Dictionary<AstralBody, Vector3Int> planetIndexLookup = new Dictionary<AstralBody, Vector3Int>();
 
         public void SetGrid()
         {
@@ -20,17 +20,31 @@ namespace ShipIt.Gameplay.Astral
             if (!astralManager)
                 return;
 
-            planetMatrix = astralManager.MapGrid;
-            if (planetMatrix == null)
+            Transform[,,] mapGrid = astralManager.MapGrid;
+            if (mapGrid == null)
                 return;
+
+            int sizeX = mapGrid.GetLength(0);
+            int sizeY = mapGrid.GetLength(1);
+            int sizeZ = mapGrid.GetLength(2);
+            planetMatrix = new AstralBody[sizeX, sizeY, sizeZ];
+
+            for (int x = 0; x < sizeX; x++)
+            for (int y = 0; y < sizeY; y++)
+            for (int z = 0; z < sizeZ; z++)
+            {
+                Transform planetTransform = mapGrid[x, y, z];
+                if (planetTransform && planetTransform.TryGetComponent(out AstralBody body))
+                    planetMatrix[x, y, z] = body;
+            }
 
             cellSize = astralManager.MapCellSize;
             CachePlanetIndices();
         }
 
-        public List<Transform> GetPaths(Transform planet)
+        public List<AstralBody> GetPaths(AstralBody planet)
         {
-            var jumpablePlanets = new List<Transform>();
+            var jumpablePlanets = new List<AstralBody>();
 
             if (!planet || planetMatrix == null)
                 return jumpablePlanets;
@@ -63,11 +77,11 @@ namespace ShipIt.Gameplay.Astral
             for (int y = minY; y <= maxY; y++)
             for (int z = minZ; z <= maxZ; z++)
             {
-                Transform candidate = planetMatrix[x, y, z];
+                AstralBody candidate = planetMatrix[x, y, z];
                 if (!candidate || candidate == planet)
                     continue;
 
-                Vector3 toCandidate = candidate.position - planet.position;
+                Vector3 toCandidate = candidate.transform.position - planet.transform.position;
                 float sqrDistance = toCandidate.sqrMagnitude;
                 if (sqrDistance > sqrMaxJumpDistance || sqrDistance <= Mathf.Epsilon)
                     continue;
@@ -93,7 +107,7 @@ namespace ShipIt.Gameplay.Astral
             for (int y = 0; y < sizeY; y++)
             for (int z = 0; z < sizeZ; z++)
             {
-                Transform planet = planetMatrix[x, y, z];
+                AstralBody planet = planetMatrix[x, y, z];
                 if (planet) 
                     planetIndexLookup[planet] = new Vector3Int(x, y, z);
             }
