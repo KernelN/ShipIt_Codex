@@ -10,8 +10,10 @@ namespace ShipIt.Gameplay.Astral
         [SerializeField] List<GameObject> enableOnPathCompleted = new List<GameObject>();
 
         readonly List<Vector3> completedPathPoints = new List<Vector3>();
+        readonly List<Transform> completedPathPlanets = new List<Transform>();
 
         public IReadOnlyList<Vector3> CompletedPathPoints => completedPathPoints;
+        public IReadOnlyList<Transform> CompletedPathPlanets => completedPathPlanets;
 
         internal override bool DoNotDestroyOnLoad => true;
 
@@ -31,6 +33,7 @@ namespace ShipIt.Gameplay.Astral
         void SavePath(IReadOnlyList<Transform> path)
         {
             completedPathPoints.Clear();
+            completedPathPlanets.Clear();
 
             if (path == null)
                 return;
@@ -39,8 +42,30 @@ namespace ShipIt.Gameplay.Astral
             {
                 Transform planet = path[i];
                 if (planet)
+                {
+                    completedPathPlanets.Add(planet);
                     completedPathPoints.Add(planet.position);
+                }
             }
+        }
+
+        public Transform GetNextPlanet(Transform currentPlanet)
+        {
+            if (completedPathPlanets.Count == 0)
+                return null;
+
+            if (!currentPlanet)
+                return completedPathPlanets[0];
+
+            int currentIndex = completedPathPlanets.IndexOf(currentPlanet);
+            if (currentIndex < 0)
+                return completedPathPlanets[0];
+
+            int nextIndex = currentIndex + 1;
+            if (nextIndex >= completedPathPlanets.Count)
+                return null;
+
+            return completedPathPlanets[nextIndex];
         }
 
         static void SetObjectsActive(IReadOnlyList<GameObject> objects, bool active)

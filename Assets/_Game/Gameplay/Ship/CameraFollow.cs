@@ -59,6 +59,7 @@ namespace ShipIt.Gameplay
                 case Ship.JumpPhase.ToPlanet:
                     activeCurve = toPlanetCurve;
                     isShipJumping = true;
+                    OverrideConstraintSource(ship.DetectedPlanet);
                     break;
                 case Ship.JumpPhase.Land:
                     activeCurve = landCurve;
