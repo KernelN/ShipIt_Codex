@@ -63,6 +63,14 @@ namespace ShipIt.Gameplay.Astral
             return null;
         }
 
+        public AstralBody GetFirstOnPath()
+        {
+            if (completedPathBodies.Count == 0)
+                return null;
+
+            return completedPathBodies[0];
+        }
+
         static void SetObjectsActive(IReadOnlyList<GameObject> objects, bool active)
         {
             if (objects == null)

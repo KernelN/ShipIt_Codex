@@ -40,6 +40,7 @@ namespace ShipIt.Gameplay
         Vector3 jumpInitialUp;
         Vector3 jumpFinalUp;
         Transform jumpTargetPlanet;
+        bool hasInitializedPathStart;
         public System.Action<JumpPhase> OnJump;
         public float JumpPer { get; private set; }
         public bool IsFailLaunching => isFailLaunching;
@@ -66,6 +67,8 @@ namespace ShipIt.Gameplay
         void Start()
         {
             UpdateManager.inst.SuscribeToLateScaled(SlowUpdateTime, SlowUpdate);
+
+            TrySetStartPlanetFromPath();
 
             InputHolder inputs = InputHolder.inst;
 
@@ -124,6 +127,9 @@ namespace ShipIt.Gameplay
         {
             if(isJumping) return;
 
+            if (!hasInitializedPathStart)
+                TrySetStartPlanetFromPath();
+
             Transform nextPlanet = GetNextPlanetOnPath();
             DetectedPlanet = nextPlanet;
             HasPlanetAbove = DetectedPlanet;
@@ -142,6 +148,34 @@ namespace ShipIt.Gameplay
                 UpdateTargetOutline(null);
                 UpdateLine(RayOrigin, rayEnd, Color.red);
             }
+        }
+        void TrySetStartPlanetFromPath()
+        {
+            hasInitializedPathStart = true;
+
+            if (cPlanetBody)
+                return;
+
+            PathManager pathManager = PathManager.inst;
+            AstralBody firstBody = pathManager ? pathManager.GetFirstOnPath() : null;
+            if (!firstBody)
+            {
+                hasInitializedPathStart = false;
+                return;
+            }
+
+            cPlanet = firstBody.transform;
+            if (!cPlanet)
+                return;
+
+            transform.parent = cPlanet;
+            Vector3 surfacePos = GetPlanetSurfacePoint(cPlanet, transform.position);
+            Vector3 normal = (surfacePos - cPlanet.position).normalized;
+
+            transform.position = surfacePos;
+            transform.up = -normal;
+
+            NotifyPlanetEntered(cPlanet);
         }
 #if UNITY_EDITOR
         void OnValidate() => CacheSqrJumpSpeed();
