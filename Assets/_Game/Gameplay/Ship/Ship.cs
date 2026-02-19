@@ -26,6 +26,8 @@ namespace ShipIt.Gameplay
         [SerializeField, Min(0)] float launchSpeed = 50f;
         [SerializeField, Min(0)] float failTravelDistance = 5f;
         [SerializeField, Min(0)] float failTravelSpeed = 15f;
+        [SerializeField] AnimationCurve turnTowardsTargetCurve = AnimationCurve.EaseInOut(0f, 0f, 1f, 1f);
+        [SerializeField] ParticleSystem landingVfx;
         [SerializeField] FuelBank fuelBank;
         float sqrJumpSpeed;
         bool isJumping;
@@ -34,12 +36,14 @@ namespace ShipIt.Gameplay
         float jumpDuration;
         Vector3 jumpStartPosition;
         Vector3 jumpTargetPosition;
-        Vector3 landTargetPos;
+        Vector3 jumpStartForward;
         Vector3 jumpInitialUp;
         Vector3 jumpFinalUp;
+        Transform jumpTargetPlanet;
         public System.Action<JumpPhase> OnJump;
         public float JumpPer { get; private set; }
         public bool IsFailLaunching => isFailLaunching;
+        public Transform CurrentJumpTargetPlanet => jumpTargetPlanet;
 
         public enum JumpPhase
         {
@@ -50,8 +54,6 @@ namespace ShipIt.Gameplay
 
         JumpPhase jumpPhase = JumpPhase.None;
 
-        [SerializeField, Range(0.05f, 1f)] float finalApproachDurationFactor = 0.35f;
-        
         const int SlowUpdateTime = 2;
 
         void Awake()
@@ -94,17 +96,25 @@ namespace ShipIt.Gameplay
             if(!isJumping) return;
 
             jumpElapsed += Time.deltaTime;
-            JumpPer = jumpElapsed / jumpDuration;
-            transform.position = Vector3.Lerp(jumpStartPosition, jumpTargetPosition, JumpPer);
+            JumpPer = jumpDuration > 0f ? Mathf.Clamp01(jumpElapsed / jumpDuration) : 1f;
+
+            Vector3 toFinalTarget = jumpTargetPosition - jumpStartPosition;
+            float totalDistance = toFinalTarget.magnitude;
+            float traveledDistance = totalDistance * JumpPer;
+            float turnPer = Mathf.Clamp01(turnTowardsTargetCurve.Evaluate(JumpPer));
+            Vector3 targetDirection = totalDistance > Mathf.Epsilon ? toFinalTarget / totalDistance : jumpStartForward;
+            Vector3 flightDirection = Vector3.Slerp(jumpStartForward, targetDirection, turnPer).normalized;
+
+            transform.position = jumpStartPosition + flightDirection * traveledDistance;
 
             transform.up = Vector3.Slerp(jumpInitialUp, jumpFinalUp, JumpPer);
 
             if(JumpPer >= 1f)
             {
-                if (jumpPhase == JumpPhase.ToPlanet)
+                if (jumpPhase != JumpPhase.Land)
                 {
-                    BeginFinalApproach();
-                    return;
+                    jumpPhase = JumpPhase.Land;
+                    OnJump?.Invoke(JumpPhase.Land);
                 }
 
                 Land();
@@ -113,28 +123,24 @@ namespace ShipIt.Gameplay
         void SlowUpdate()
         {
             if(isJumping) return;
-            Ray ray = new Ray(RayOrigin, transform.up);
-            // throw ray in ship direction
 
-            bool hitSomething = Physics.Raycast(ray, out RaycastHit hit, checkDistance, planetMask,
-                QueryTriggerInteraction.Ignore);
+            Transform nextPlanet = GetNextPlanetOnPath();
+            DetectedPlanet = nextPlanet;
+            HasPlanetAbove = DetectedPlanet;
 
-            HasPlanetAbove = hitSomething;
+            Vector3 rayEnd = RayOrigin + transform.up * checkDistance;
 
-            // Update visual
-            if (hitSomething)
+            if (DetectedPlanet)
             {
-                DetectedPlanet = hit.transform;
-                detectedTargetPoint = hit.point;
+                detectedTargetPoint = GetPlanetSurfacePoint(DetectedPlanet, cPlanet ? cPlanet.position : transform.position);
                 UpdateTargetOutline(DetectedPlanet);
-                UpdateLine(ray.origin, hit.point, Color.white);
+                UpdateLine(RayOrigin, detectedTargetPoint, Color.white);
             }
             else
             {
-                DetectedPlanet = null;
                 detectedTargetPoint = Vector3.zero;
                 UpdateTargetOutline(null);
-                UpdateLine(ray.origin, ray.origin + ray.direction * checkDistance, Color.red);
+                UpdateLine(RayOrigin, rayEnd, Color.red);
             }
         }
 #if UNITY_EDITOR
@@ -163,6 +169,8 @@ namespace ShipIt.Gameplay
             transform.parent = null;
 
             jumpStartPosition = transform.position;
+            jumpStartForward = transform.up.normalized;
+            jumpTargetPlanet = DetectedPlanet;
 
             Vector3 displacementToTarget = detectedTargetPoint - jumpStartPosition;
 
@@ -172,31 +180,7 @@ namespace ShipIt.Gameplay
                 return;
             }
 
-            Vector3 pathDirection = displacementToTarget.normalized;
-            Vector3 upReference = Vector3.up;
-            if (Camera.main) upReference = Camera.main.transform.up;
-
-            Vector3 rightDirection = Vector3.Cross(upReference, pathDirection);
-
-            if(rightDirection.sqrMagnitude <= Mathf.Epsilon)
-            {
-                upReference = Vector3.up;
-                rightDirection = Vector3.Cross(upReference, pathDirection);
-            }
-
-            float planetRadius = DetectedPlanet.lossyScale.x;
-
-            Vector3 oppositeDirection = pathDirection;
-            if (cPlanet)
-            {
-                Vector3 toCurrentPlanet = cPlanet.position - DetectedPlanet.position;
-                oppositeDirection = -toCurrentPlanet.normalized;
-            }
-
-            landTargetPos = DetectedPlanet.position + oppositeDirection * planetRadius;
-            Vector3 offsetTarget = DetectedPlanet.position + rightDirection * planetRadius;
-
-            bool startedPhase = StartLaunchPhase(offsetTarget, JumpPhase.ToPlanet);
+            bool startedPhase = StartLaunchPhase(detectedTargetPoint, JumpPhase.ToPlanet);
 
             if (!startedPhase && !isJumping)
                 return;
@@ -219,14 +203,7 @@ namespace ShipIt.Gameplay
             {
                 OnJump?.Invoke(phase);
 
-                if (phase == JumpPhase.ToPlanet)
-                {
-                    BeginFinalApproach();
-                }
-                else
-                {
-                    Land();
-                }
+                Land();
 
                 return false;
             }
@@ -243,36 +220,71 @@ namespace ShipIt.Gameplay
 
             return true;
         }
-        void BeginFinalApproach()
-        {
-            isJumping = false;
-            StartLaunchPhase(landTargetPos, JumpPhase.Land, finalApproachDurationFactor);
-        }
         void Land()
         {
+            if (!jumpTargetPlanet)
+            {
+                isJumping = false;
+                jumpPhase = JumpPhase.None;
+                OnJump?.Invoke(JumpPhase.None);
+                return;
+            }
+
             //Get planet surface
-            Vector3 up = (jumpTargetPosition - DetectedPlanet.position).normalized;
-            up = Vector3.ProjectOnPlane(up, DetectedPlanet.up);
-            Vector3 pos = DetectedPlanet.position + up * (DetectedPlanet.lossyScale.x / 2);
+            Vector3 planetNormal = (jumpTargetPosition - jumpTargetPlanet.position).normalized;
+            Vector3 pos = GetPlanetSurfacePoint(jumpTargetPlanet, jumpStartPosition);
             
             //Set transform
             transform.position = pos;
-            transform.up = up;
+            transform.up = -planetNormal;
+
+            PlayLandingVfx(pos, planetNormal);
 
             //Update planet
-            cPlanet = DetectedPlanet;
+            cPlanet = jumpTargetPlanet;
             transform.parent = cPlanet;
             NotifyPlanetEntered(cPlanet);
             
             //Reset jump values
             isJumping = false;
             jumpPhase = JumpPhase.None;
-            landTargetPos = Vector3.zero;
+            jumpTargetPlanet = null;
             jumpFinalUp = Vector3.zero;
             jumpInitialUp = Vector3.zero;
             jumpElapsed = jumpDuration;
             JumpPer = 1f;
             OnJump?.Invoke(JumpPhase.None);
+        }
+        void PlayLandingVfx(Vector3 position, Vector3 normal)
+        {
+            if (!landingVfx)
+                return;
+
+            Quaternion vfxRotation = Quaternion.LookRotation(transform.forward, normal);
+            ParticleSystem spawned = Instantiate(landingVfx, position, vfxRotation);
+            spawned.Play();
+            Destroy(spawned.gameObject, spawned.main.duration + spawned.main.startLifetime.constantMax + 0.1f);
+        }
+        Transform GetNextPlanetOnPath()
+        {
+            if (!cPlanetBody)
+                return null;
+
+            PathManager pathManager = PathManager.inst;
+            AstralBody nextBody = pathManager ? pathManager.GetNextOnPath(cPlanetBody) : null;
+            return nextBody ? nextBody.transform : null;
+        }
+        Vector3 GetPlanetSurfacePoint(Transform planet, Vector3 fromPosition)
+        {
+            if (!planet)
+                return fromPosition;
+
+            Vector3 normal = (fromPosition - planet.position).normalized;
+            if (normal.sqrMagnitude <= Mathf.Epsilon)
+                normal = planet.up;
+
+            float radius = planet.lossyScale.x * 0.5f;
+            return planet.position + normal * radius;
         }
         void SetLineColor(Color c)
         {
