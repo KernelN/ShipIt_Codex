@@ -10,9 +10,9 @@ namespace ShipIt.Gameplay.Astral
         [SerializeField] internal float maxDistanceBetweenPlanets = 5f;
         [SerializeField] internal AstralComponentBuilder[] componentBuilders;
         public int LastSeed { get; protected set; }
-        protected Transform originPlanet;
-        public Transform OriginPlanet => originPlanet;
+        protected AstralBody originPlanet;
+        public AstralBody OriginPlanet => originPlanet;
 
-        public abstract MapData SpawnMap(Transform anchor, int seed, out Transform targetPlanet);
+        public abstract MapData SpawnMap(Transform anchor, int seed, out AstralBody targetPlanet);
     }
 }

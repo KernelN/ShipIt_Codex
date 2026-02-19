@@ -11,7 +11,7 @@ namespace ShipIt.Gameplay.Astral
 
         const float k_MinRotationOffset = 0.1f;
 
-        public override MapData SpawnMap(Transform anchor, int seed, out Transform targetPlanet)
+        public override MapData SpawnMap(Transform anchor, int seed, out AstralBody targetPlanet)
         {
             targetPlanet = null;
 
@@ -50,7 +50,7 @@ namespace ShipIt.Gameplay.Astral
             firstPlanet.gameObject.name = "Planet 1";
             Transform prevPlanet = firstPlanet.transform;
             AstralBody lastPlanet = firstPlanet;
-            originPlanet = firstPlanet.transform;
+            originPlanet = firstPlanet;
             planetGrid[placedIndex, 0, 0] = firstPlanet.transform;
             bodyData.Add(new AstralBodyData
             {
@@ -98,7 +98,7 @@ namespace ShipIt.Gameplay.Astral
             {
                 targetBuilder.Build(lastPlanet.transform);
                 lastPlanet.AddAstralComponent(targetBuilder.GetComponent());
-                targetPlanet = lastPlanet.transform;
+                targetPlanet = lastPlanet;
                 if (lastBodyIndex >= 0)
                 {
                     var updatedData = bodyData[lastBodyIndex];

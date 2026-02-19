@@ -13,8 +13,8 @@ namespace ShipIt.Gameplay.Astral
         [SerializeField] PathShower pathShower;
 
         readonly List<GameObject> activeHighlights = new List<GameObject>();
-        readonly HashSet<Transform> highlightedTargets = new HashSet<Transform>();
-        readonly List<Transform> selectionPath = new List<Transform>();
+        readonly HashSet<AstralBody> highlightedTargets = new HashSet<AstralBody>();
+        readonly List<AstralBody> selectionPath = new List<AstralBody>();
         
         void OnEnable()
         {
@@ -35,7 +35,7 @@ namespace ShipIt.Gameplay.Astral
 
             SubscribeInput();
 
-            Transform originPlanet = AstralManager.inst ? AstralManager.inst.OriginPlanet : null;
+            AstralBody originPlanet = AstralManager.inst ? AstralManager.inst.OriginPlanet : null;
             selectionPath.Clear();
             if (originPlanet)
             {
@@ -46,7 +46,7 @@ namespace ShipIt.Gameplay.Astral
             HighlightPaths(originPlanet);
         }
 
-        public void HighlightPaths(Transform originPlanet)
+        public void HighlightPaths(AstralBody originPlanet)
         {
             ClearHighlights();
             highlightedTargets.Clear();
@@ -56,13 +56,13 @@ namespace ShipIt.Gameplay.Astral
                 return;
             }
 
-            List<Transform> targets = pathFinder.GetPaths(originPlanet);
+            List<AstralBody> targets = pathFinder.GetPaths(originPlanet);
             if (targets == null || targets.Count == 0)
                 return;
 
             for (int i = 0; i < targets.Count; i++)
             {
-                Transform target = targets[i];
+                AstralBody target = targets[i];
                 if (!target)
                     continue;
 
@@ -71,7 +71,7 @@ namespace ShipIt.Gameplay.Astral
                     break;
 
                 Transform highlighterTransform = highlighter.transform;
-                highlighterTransform.SetParent(target);
+                highlighterTransform.SetParent(target.transform);
                 highlighterTransform.localScale = Vector3.one;
                 highlighterTransform.localPosition = Vector3.zero;
                 highlighterTransform.localRotation = Quaternion.identity;
@@ -152,20 +152,20 @@ namespace ShipIt.Gameplay.Astral
             if (!Physics.Raycast(ray, out RaycastHit hit))
                 return;
 
-            Transform selectedPlanet = GetHighlightedPlanet(hit.transform);
+            AstralBody selectedPlanet = GetHighlightedPlanet(hit.transform);
             if (!selectedPlanet)
                 return;
 
             SelectPlanet(selectedPlanet);
         }
 
-        Transform GetHighlightedPlanet(Transform hitTransform)
+        AstralBody GetHighlightedPlanet(Transform hitTransform)
         {
             Transform current = hitTransform;
             while (current)
             {
-                if (highlightedTargets.Contains(current))
-                    return current;
+                if (current.TryGetComponent(out AstralBody body) && highlightedTargets.Contains(body))
+                    return body;
 
                 current = current.parent;
             }
@@ -173,7 +173,7 @@ namespace ShipIt.Gameplay.Astral
             return null;
         }
 
-        void SelectPlanet(Transform selectedPlanet)
+        void SelectPlanet(AstralBody selectedPlanet)
         {
             if (!selectedPlanet)
                 return;
@@ -188,7 +188,7 @@ namespace ShipIt.Gameplay.Astral
                 return;
             }
 
-            Transform currentPlanet = selectionPath[selectionPath.Count - 1];
+            AstralBody currentPlanet = selectionPath[selectionPath.Count - 1];
             if (selectedPlanet == currentPlanet)
                 return;
 
@@ -209,7 +209,7 @@ namespace ShipIt.Gameplay.Astral
             HighlightPaths(selectedPlanet);
         }
 
-        bool TryCompletePath(Transform selectedPlanet)
+        bool TryCompletePath(AstralBody selectedPlanet)
         {
             PathManager pathManager = PathManager.inst;
             if (!pathManager || !pathManager.IsTargetPlanet(selectedPlanet))

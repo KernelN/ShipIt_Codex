@@ -9,7 +9,7 @@ namespace ShipIt.Gameplay.Astral
         [SerializeField] LineRenderer pathRenderer;
         [SerializeField] Color pathColor = Color.cyan;
 
-        public void ShowPath(IReadOnlyList<Transform> path)
+        public void ShowPath(IReadOnlyList<AstralBody> path)
         {
             if (!pathRenderer)
                 return;
@@ -22,8 +22,8 @@ namespace ShipIt.Gameplay.Astral
             pathRenderer.positionCount = pointCount;
             for (int i = 0; i < pointCount; i++)
             {
-                Transform planet = path[i];
-                Vector3 point = planet ? planet.position : Vector3.zero;
+                AstralBody planet = path[i];
+                Vector3 point = planet ? planet.transform.position : Vector3.zero;
                 pathRenderer.SetPosition(i, point);
             }
         }
