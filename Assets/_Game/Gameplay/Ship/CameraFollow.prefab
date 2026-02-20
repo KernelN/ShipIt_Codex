@@ -146,9 +146,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8917194928399694971}
-  - component: {fileID: 8246909910647301351}
-  - component: {fileID: 6634279271482658885}
-  - component: {fileID: 1163936605524593682}
   - component: {fileID: 6345822085224412399}
   m_Layer: 0
   m_Name: CameraFollow
@@ -173,69 +170,6 @@ Transform:
   - {fileID: 1345038591611949455}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1818360608 &8246909910647301351
-PositionConstraint:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4467866623583048580}
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Weight: 1
-  m_TranslationAtRest: {x: 0, y: 0, z: 0.5}
-  m_TranslationOffset: {x: 0, y: 0, z: 0.5}
-  m_AffectTranslationX: 1
-  m_AffectTranslationY: 1
-  m_AffectTranslationZ: 1
-  m_Active: 1
-  m_IsLocked: 1
-  m_Sources:
-  - sourceTransform: {fileID: 0}
-    weight: 0
-  - sourceTransform: {fileID: 0}
-    weight: 1
---- !u!54 &6634279271482658885
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4467866623583048580}
-  serializedVersion: 4
-  m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 3
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 0
-  m_IsKinematic: 0
-  m_Interpolate: 0
-  m_Constraints: 14
-  m_CollisionDetection: 0
---- !u!114 &1163936605524593682
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4467866623583048580}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a2126a4b785829d49a97dc5ff1bf2c13, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  rb: {fileID: 6634279271482658885}
-  speed: 0.3
 --- !u!114 &6345822085224412399
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -249,53 +183,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ship: {fileID: 0}
-  positionConstraint: {fileID: 8246909910647301351}
-  toPlanetCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 1
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    - serializedVersion: 3
-      time: 1
-      value: 1
-      inSlope: 1
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  landCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 1
-      inSlope: -0.008724154
-      outSlope: -0.008724154
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0.54583335
-    - serializedVersion: 3
-      time: 1
-      value: 0
-      inSlope: -2.541353
-      outSlope: -2.541353
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.15833336
-      outWeight: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  resetWeightsLerpDuration: 0.1
+  cameraTransform: {fileID: 0}
+  followLerpSpeed: 3
+  lookLerpSpeed: 2
+  shipFollowRadius: 3
+  planetFollowRadius: 4
+  aimSwitchRadius: 8

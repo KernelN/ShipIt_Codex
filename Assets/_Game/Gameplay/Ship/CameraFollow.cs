@@ -1,110 +1,131 @@
-using System;
+using ShipIt.Gameplay.Astral;
 using UnityEngine;
-using UnityEngine.Animations;
 
 namespace ShipIt.Gameplay
 {
     public class CameraFollow : MonoBehaviour
     {
+        [Header("References")]
         [SerializeField] Ship ship;
-        [SerializeField] PositionConstraint positionConstraint;
-        [SerializeField] AnimationCurve toPlanetCurve = AnimationCurve.Linear(0f, 0f, 1f, 1f);
-        [SerializeField] AnimationCurve landCurve = AnimationCurve.Linear(0f, 0f, 1f, 1f);
-        [SerializeField] float resetWeightsLerpDuration = .5f;
-        bool isShipJumping;
-        AnimationCurve activeCurve;
+        [SerializeField] Transform cameraTransform;
 
-        void Start()
+        [Header("Follow")]
+        [SerializeField, Min(0.01f)] float followLerpSpeed = 4f;
+        [SerializeField, Min(0.01f)] float lookLerpSpeed = 6f;
+        [SerializeField, Min(0.01f)] float shipFollowRadius = 6f;
+        [SerializeField, Min(0.01f)] float planetFollowRadius = 4f;
+        [SerializeField, Min(0.01f)] float aimSwitchRadius = 5f;
+
+        Vector3 followOffset;
+        AstralBody lookPlanet;
+        bool followingShip;
+
+        void Awake()
         {
-            if (!ship) return;
+            if (!ship)
+                ship = FindAnyObjectByType<Ship>();
 
-            ship.OnJump += OnShipJumpPhase;
+            if (!cameraTransform)
+                cameraTransform = transform;
+
+            if (ship)
+                followOffset = cameraTransform.position - ship.transform.position;
         }
-        void OnDestroy()
-        {
-            if (!ship) return;
 
-            ship.OnJump -= OnShipJumpPhase;
-        }
-        void Update()
+        void LateUpdate()
         {
-            if(!isShipJumping) return;
-            if (!ship || !positionConstraint || activeCurve == null) return;
-
-            float weight = activeCurve.Evaluate(ship.JumpPer);
-
-            SetConstraintWeight(0, weight);
-            SetConstraintWeight(1, 1f - weight);
-        }
-        void SetConstraintWeight(int index, float weight)
-        {
-            if (index < 0 || index >= positionConstraint.sourceCount)
+            if (!ship || !cameraTransform)
                 return;
 
-            var source = positionConstraint.GetSource(index);
-            source.weight = weight;
-            positionConstraint.SetSource(index, source);
+            UpdateFollowMode();
+
+            Transform followTarget = followingShip ? ship.transform : GetCurrentPlanetTransform();
+            if (!followTarget)
+                followTarget = ship.transform;
+
+            Vector3 targetPosition = followTarget.position + followOffset;
+            float posT = 1f - Mathf.Exp(-followLerpSpeed * Time.deltaTime);
+            cameraTransform.position = Vector3.Lerp(cameraTransform.position, targetPosition, posT);
+
+            UpdateLookPlanet();
+            UpdateLookRotation();
         }
-        void OnShipJumpPhase(Ship.JumpPhase phase)
+
+        void UpdateFollowMode()
         {
-            if (ship != null && ship.IsFailLaunching)
+            AstralBody currentPlanet = ship.CurrentPlanet;
+            if (!currentPlanet)
             {
-                activeCurve = null;
-                isShipJumping = false;
+                followingShip = true;
                 return;
             }
 
-            switch (phase)
+            float distanceSqr = (ship.transform.position - currentPlanet.transform.position).sqrMagnitude;
+            if (!followingShip)
             {
-                case Ship.JumpPhase.ToPlanet:
-                    activeCurve = toPlanetCurve;
-                    isShipJumping = true;
-                    break;
-                case Ship.JumpPhase.Land:
-                    activeCurve = landCurve;
-                    isShipJumping = true;
-                    OverrideConstraintSource(ship.DetectedPlanet);
-                    break;
-                case Ship.JumpPhase.None:
-                    activeCurve = null;
-                    isShipJumping = false;
-                    OverrideConstraintSource(ship.CurrentPlanet);
-                    StartCoroutine(ResetWeights());
-                    break;
-                default:
-                    activeCurve = null;
-                    isShipJumping = false;
-                    break;
+                float engageRadius = Mathf.Max(shipFollowRadius, GetPlanetRadius(currentPlanet));
+                followingShip = distanceSqr > engageRadius * engageRadius;
+                return;
             }
+
+            float disengageRadius = Mathf.Max(planetFollowRadius, GetPlanetRadius(currentPlanet));
+            if (distanceSqr <= disengageRadius * disengageRadius)
+                followingShip = false;
         }
 
-        void OverrideConstraintSource(Transform newSource)
+        Transform GetCurrentPlanetTransform()
         {
-            if (!positionConstraint || newSource == null) return;
-
-            if (positionConstraint.sourceCount <= 1) return;
-
-            var source = positionConstraint.GetSource(1);
-            source.sourceTransform = newSource;
-            positionConstraint.SetSource(1, source);
+            return ship.CurrentPlanet ? ship.CurrentPlanet.transform : null;
         }
-        System.Collections.IEnumerator ResetWeights()
+
+        void UpdateLookPlanet()
         {
-            float timer = 0;
-            float t;
-            
-            while (timer < resetWeightsLerpDuration)
+            PathManager pathManager = PathManager.inst;
+            AstralBody currentPlanet = ship.CurrentPlanet;
+            AstralBody targetPlanet = ship.TargetPlanet;
+
+            if (targetPlanet)
             {
-                timer += Time.deltaTime;
-                t = timer / resetWeightsLerpDuration;
-                SetConstraintWeight(0, 1f - t);
-                SetConstraintWeight(1, t);
-                yield return null;
+                float switchDistanceSqr = aimSwitchRadius * aimSwitchRadius;
+                float toTargetSqr = (ship.transform.position - targetPlanet.transform.position).sqrMagnitude;
+                if (toTargetSqr <= switchDistanceSqr && pathManager)
+                {
+                    AstralBody nextAfterTarget = pathManager.GetNextOnPath(targetPlanet);
+                    lookPlanet = nextAfterTarget ? nextAfterTarget : targetPlanet;
+                }
+                else
+                {
+                    lookPlanet = targetPlanet;
+                }
+
+                return;
             }
-            
-            //Reset weights
-            SetConstraintWeight(0, 0);
-            SetConstraintWeight(1, 1);
+
+            if (pathManager && currentPlanet)
+                lookPlanet = pathManager.GetNextOnPath(currentPlanet);
+        }
+
+        void UpdateLookRotation()
+        {
+            Vector3 lookDirection;
+            if (lookPlanet)
+                lookDirection = lookPlanet.transform.position - cameraTransform.position;
+            else
+                lookDirection = ship.transform.position - cameraTransform.position;
+
+            if (lookDirection.sqrMagnitude <= 0.0001f)
+                return;
+
+            Quaternion targetRotation = Quaternion.LookRotation(lookDirection.normalized, Vector3.up);
+            float rotT = 1f - Mathf.Exp(-lookLerpSpeed * Time.deltaTime);
+            cameraTransform.rotation = Quaternion.Slerp(cameraTransform.rotation, targetRotation, rotT);
+        }
+
+        static float GetPlanetRadius(AstralBody planet)
+        {
+            Vector3 scale = planet.transform.lossyScale;
+            float maxDiameter = Mathf.Max(scale.x, scale.y, scale.z);
+            return Mathf.Max(0.01f, maxDiameter * 0.5f);
         }
     }
 }
