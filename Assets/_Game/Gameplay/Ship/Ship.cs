@@ -27,6 +27,9 @@ namespace ShipIt.Gameplay
         float totalTravelDistance;
         bool isTraveling;
         public float MaxJumpDistance => maxJumpDistance;
+        public AstralBody CurrentPlanet => currentPlanet;
+        public AstralBody TargetPlanet => targetPlanet;
+        public bool IsTraveling => isTraveling;
 
         void Awake()
         {
