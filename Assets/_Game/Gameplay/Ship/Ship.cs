@@ -7,11 +7,12 @@ namespace ShipIt.Gameplay
     public class Ship : MonoBehaviour
     {
         [Header("Movement")]
+        [SerializeField] float maxJumpDistance = 20f;
         [SerializeField, Min(0.1f)] float travelSpeed = 10f;
         [SerializeField] AnimationCurve forwardToTargetCurve = AnimationCurve.Linear(0f, 0f, 1f, 1f);
 
         [Header("Landing")]
-        [SerializeField] ParticleSystem landingVfxPrefab;
+        [SerializeField] ParticleSystem landingVfx;
 
         [Header("References")]
         [SerializeField] FuelBank fuelBank;
@@ -25,6 +26,7 @@ namespace ShipIt.Gameplay
         float travelDistance;
         float totalTravelDistance;
         bool isTraveling;
+        public float MaxJumpDistance => maxJumpDistance;
 
         void Awake()
         {
@@ -126,25 +128,20 @@ namespace ShipIt.Gameplay
 
         void UpdateTravel(float dt)
         {
-            Vector3 targetDirection = (targetLandingPoint - transform.position).normalized;
+            Vector3 targetDisp = targetLandingPoint - transform.position;
+            Vector3 targetDir = (targetDisp).normalized;
             float travelPercent = totalTravelDistance > 0.0001f ? Mathf.Clamp01(travelDistance / totalTravelDistance) : 1f;
             float blend = Mathf.Clamp01(forwardToTargetCurve.Evaluate(travelPercent));
-            Vector3 travelDirection = Vector3.Slerp(launchForward, targetDirection, blend).normalized;
+            Vector3 travelDirection = Vector3.Slerp(launchForward, targetDir, blend).normalized;
 
             float step = travelSpeed * dt;
             transform.position += travelDirection * step;
             travelDistance += step;
 
-            if (travelDirection.sqrMagnitude > 0.0001f)
-            {
-                Quaternion lookRotation = Quaternion.LookRotation(travelDirection, transform.up);
-                transform.rotation = lookRotation;
-            }
+            transform.up = travelDirection.normalized;
 
-            if (travelDistance >= totalTravelDistance)
-            {
+            if (targetDisp.sqrMagnitude <= (targetPlanet.transform.localScale*.45f).sqrMagnitude) 
                 CompleteLanding();
-            }
         }
 
         void CompleteLanding()
@@ -193,7 +190,7 @@ namespace ShipIt.Gameplay
 
         void SpawnLandingVfx(Vector3 position, Vector3 normal)
         {
-            if (!landingVfxPrefab)
+            if (!landingVfx)
                 return;
 
             Vector3 vfxForward = Vector3.ProjectOnPlane(transform.forward, normal);
@@ -203,9 +200,9 @@ namespace ShipIt.Gameplay
                 vfxForward = Vector3.Cross(normal, Vector3.forward);
 
             Quaternion rotation = Quaternion.LookRotation(vfxForward.normalized, normal);
-            ParticleSystem vfx = Instantiate(landingVfxPrefab, position, rotation);
-            vfx.Play();
-            Destroy(vfx.gameObject, vfx.main.duration + vfx.main.startLifetime.constantMax + 0.5f);
+            landingVfx.transform.position = position;
+            landingVfx.transform.rotation = rotation;
+            landingVfx.Play();
         }
 
         static float GetPlanetRadius(AstralBody planet)
