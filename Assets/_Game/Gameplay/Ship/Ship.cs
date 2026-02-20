@@ -20,7 +20,7 @@ namespace ShipIt.Gameplay
         AstralBody currentPlanet;
         AstralBody targetPlanet;
 
-        Vector3 launchForward;
+        Vector3 launchDir;
         Vector3 targetLandingPoint;
         Vector3 targetLandingNormal;
         float travelDistance;
@@ -103,8 +103,10 @@ namespace ShipIt.Gameplay
 
         void LaunchTo(AstralBody nextPlanet)
         {
+            transform.parent = null;
+            
             targetPlanet = nextPlanet;
-            launchForward = transform.forward.sqrMagnitude > 0.0001f ? transform.forward.normalized : (targetPlanet.transform.position - transform.position).normalized;
+            launchDir = transform.up;
 
             Vector3 toPlanetCenter = targetPlanet.transform.position - transform.position;
             if (toPlanetCenter.sqrMagnitude <= 0.0001f)
@@ -118,6 +120,7 @@ namespace ShipIt.Gameplay
             targetLandingNormal = fromCenterToShip;
             targetLandingPoint = targetPlanet.transform.position + targetLandingNormal * targetRadius;
 
+            //This doesn't work as it should, but it's good enough for now
             totalTravelDistance = Vector3.Distance(transform.position, targetLandingPoint);
             travelDistance = 0f;
             isTraveling = totalTravelDistance > 0.01f;
@@ -132,7 +135,7 @@ namespace ShipIt.Gameplay
             Vector3 targetDir = (targetDisp).normalized;
             float travelPercent = totalTravelDistance > 0.0001f ? Mathf.Clamp01(travelDistance / totalTravelDistance) : 1f;
             float blend = Mathf.Clamp01(forwardToTargetCurve.Evaluate(travelPercent));
-            Vector3 travelDirection = Vector3.Slerp(launchForward, targetDir, blend).normalized;
+            Vector3 travelDirection = Vector3.Slerp(launchDir, targetDir, blend).normalized;
 
             float step = travelSpeed * dt;
             transform.position += travelDirection * step;
@@ -184,6 +187,8 @@ namespace ShipIt.Gameplay
 
             transform.rotation = Quaternion.LookRotation(projectedForward.normalized, normal);
 
+            transform.parent = planet.transform;
+            
             if (spawnVfx)
                 SpawnLandingVfx(landingPoint, normal);
         }
