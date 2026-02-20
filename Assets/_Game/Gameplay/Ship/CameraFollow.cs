@@ -12,10 +12,13 @@ namespace ShipIt.Gameplay
         [Header("Follow")]
         [SerializeField, Min(0.01f)] float followLerpSpeed = 4f;
         [SerializeField, Min(0.01f)] float lookLerpSpeed = 6f;
-        [SerializeField, Min(0.01f)] float followSwitchRadius = 5f;
+        [SerializeField, Min(0.01f)] float shipFollowRadius = 6f;
+        [SerializeField, Min(0.01f)] float planetFollowRadius = 4f;
+        [SerializeField, Min(0.01f)] float aimSwitchRadius = 5f;
 
         Vector3 followOffset;
         AstralBody lookPlanet;
+        bool followingShip;
 
         void Awake()
         {
@@ -34,8 +37,9 @@ namespace ShipIt.Gameplay
             if (!ship || !cameraTransform)
                 return;
 
-            bool shouldFollowShip = ShouldFollowShip();
-            Transform followTarget = shouldFollowShip ? ship.transform : GetCurrentPlanetTransform();
+            UpdateFollowMode();
+
+            Transform followTarget = followingShip ? ship.transform : GetCurrentPlanetTransform();
             if (!followTarget)
                 followTarget = ship.transform;
 
@@ -47,16 +51,26 @@ namespace ShipIt.Gameplay
             UpdateLookRotation();
         }
 
-        bool ShouldFollowShip()
+        void UpdateFollowMode()
         {
             AstralBody currentPlanet = ship.CurrentPlanet;
             if (!currentPlanet)
-                return true;
+            {
+                followingShip = true;
+                return;
+            }
 
-            float radius = Mathf.Max(followSwitchRadius, GetPlanetRadius(currentPlanet));
-            float radiusSqr = radius * radius;
             float distanceSqr = (ship.transform.position - currentPlanet.transform.position).sqrMagnitude;
-            return distanceSqr > radiusSqr;
+            if (!followingShip)
+            {
+                float engageRadius = Mathf.Max(shipFollowRadius, GetPlanetRadius(currentPlanet));
+                followingShip = distanceSqr > engageRadius * engageRadius;
+                return;
+            }
+
+            float disengageRadius = Mathf.Max(planetFollowRadius, GetPlanetRadius(currentPlanet));
+            if (distanceSqr <= disengageRadius * disengageRadius)
+                followingShip = false;
         }
 
         Transform GetCurrentPlanetTransform()
@@ -66,18 +80,29 @@ namespace ShipIt.Gameplay
 
         void UpdateLookPlanet()
         {
-            if (ship.TargetPlanet)
+            PathManager pathManager = PathManager.inst;
+            AstralBody currentPlanet = ship.CurrentPlanet;
+            AstralBody targetPlanet = ship.TargetPlanet;
+
+            if (targetPlanet)
             {
-                lookPlanet = ship.TargetPlanet;
+                float switchDistanceSqr = aimSwitchRadius * aimSwitchRadius;
+                float toTargetSqr = (ship.transform.position - targetPlanet.transform.position).sqrMagnitude;
+                if (toTargetSqr <= switchDistanceSqr && pathManager)
+                {
+                    AstralBody nextAfterTarget = pathManager.GetNextOnPath(targetPlanet);
+                    lookPlanet = nextAfterTarget ? nextAfterTarget : targetPlanet;
+                }
+                else
+                {
+                    lookPlanet = targetPlanet;
+                }
+
                 return;
             }
 
-            if (!lookPlanet || lookPlanet == ship.CurrentPlanet)
-            {
-                PathManager pathManager = PathManager.inst;
-                if (pathManager && ship.CurrentPlanet)
-                    lookPlanet = pathManager.GetNextOnPath(ship.CurrentPlanet);
-            }
+            if (pathManager && currentPlanet)
+                lookPlanet = pathManager.GetNextOnPath(currentPlanet);
         }
 
         void UpdateLookRotation()
