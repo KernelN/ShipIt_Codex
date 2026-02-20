@@ -184,8 +184,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ship: {fileID: 0}
   cameraTransform: {fileID: 0}
-  followLerpSpeed: 4
+  followLerpSpeed: 3
   lookLerpSpeed: 2
   shipFollowRadius: 3
-  planetFollowRadius: 5
+  planetFollowRadius: 4
   aimSwitchRadius: 8

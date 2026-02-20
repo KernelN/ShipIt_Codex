@@ -138,7 +138,7 @@ namespace ShipIt.Gameplay
             Vector3 targetDir = (targetDisp).normalized;
             float travelPercent = totalTravelDistance > 0.0001f ? Mathf.Clamp01(travelDistance / totalTravelDistance) : 1f;
             float blend = Mathf.Clamp01(forwardToTargetCurve.Evaluate(travelPercent));
-            Vector3 travelDirection = Vector3.Slerp(launchDir, targetDir, blend).normalized;
+            Vector3 travelDirection = Vector3.Lerp(launchDir, targetDir, blend).normalized;
 
             float step = travelSpeed * dt;
             transform.position += travelDirection * step;
