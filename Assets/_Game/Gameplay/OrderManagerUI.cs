@@ -6,6 +6,8 @@ namespace ShipIt.Gameplay.Astral
     public class OrderManagerUI : MonoBehaviour
     {
         [SerializeField] TextMeshProUGUI creditsLabel;
+        [SerializeField] TextMeshProUGUI paymentLabel;
+        [SerializeField] TextMeshProUGUI tipLabel;
         [SerializeField] Color tipStartColor = Color.white;
         [SerializeField] Color tipEndColor = Color.green;
         [SerializeField] Color orderStartColor = Color.white;
@@ -30,11 +32,26 @@ namespace ShipIt.Gameplay.Astral
 
         void OnCreditsUpdated(float orderCredits, float tipCredits)
         {
+            float totalCredits = orderCredits + tipCredits;
+            if (creditsLabel)
+                creditsLabel.text = totalCredits.ToString("$0");
+
+            if (paymentLabel)
+            {
+                paymentLabel.text = orderCredits.ToString("$0");
+                float orderRatio = orderManager.OrderRemainingRatio;
+                paymentLabel.color = Color.Lerp(orderEndColor, orderStartColor, orderRatio);
+            }
+
+            if (tipLabel)
+            {
+                tipLabel.text = tipCredits.ToString("$0");
+                float tipRatio = orderManager.TipRemainingRatio;
+                tipLabel.color = Color.Lerp(tipEndColor, tipStartColor, tipRatio);
+            }
+
             if (!creditsLabel)
                 return;
-
-            float totalCredits = orderCredits + tipCredits;
-            creditsLabel.text = totalCredits.ToString("$0");
 
             if (tipCredits > 0f)
             {
