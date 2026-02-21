@@ -5,32 +5,26 @@ namespace ShipIt.Gameplay
     public class LevelExposer : MonoBehaviour
     {
         [SerializeField] GameplayManager gameplayManager;
-        [SerializeField] int levelIndex;
+        [SerializeField] int level;
 
         void OnEnable()
         {
-            if (!gameplayManager)
-            {
+            if (!gameplayManager) 
                 gameplayManager = GameplayManager.inst;
-            }
 
-            if (gameplayManager != null)
-            {
+            if (gameplayManager) 
                 gameplayManager.OnOrderCompleted += HandleOrderCompleted;
-            }
         }
 
         void OnDisable()
         {
-            if (gameplayManager != null)
-            {
+            if (gameplayManager) 
                 gameplayManager.OnOrderCompleted -= HandleOrderCompleted;
-            }
         }
 
         void HandleOrderCompleted()
         {
-            LevelManager.TryRegisterCompletedLevel(levelIndex);
+            LevelManager.TryRegisterCompletedLevel(level);
         }
     }
 }

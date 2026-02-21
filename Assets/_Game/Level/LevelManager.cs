@@ -9,40 +9,32 @@ namespace ShipIt
             get
             {
                 GameManager gameManager = GameManager.inst;
-                if (gameManager == null || gameManager.Data == null)
+                if (!gameManager || gameManager.Data == null)
                 {
-                    return -1;
+                    return 0;
                 }
 
                 return gameManager.Data.highestLevelCompleted;
             }
         }
 
-        public static bool TryRegisterCompletedLevel(int levelIndex)
+        public static bool TryRegisterCompletedLevel(int level)
         {
-            if (levelIndex < 0)
-            {
+            if (level < 0)
                 return false;
-            }
 
             GameManager gameManager = GameManager.inst;
-            if (gameManager == null)
-            {
+            if (!gameManager)
                 return false;
-            }
 
             GameData data = gameManager.Data;
             if (data == null)
-            {
                 return false;
-            }
 
-            if (levelIndex <= data.highestLevelCompleted)
-            {
+            if (level <= data.highestLevelCompleted)
                 return false;
-            }
 
-            data.highestLevelCompleted = levelIndex;
+            data.highestLevelCompleted = level;
             gameManager.SaveGameData();
             return true;
         }

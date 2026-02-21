@@ -18,7 +18,7 @@ namespace ShipIt
         public AstralBodyData[] astralBodies = Array.Empty<AstralBodyData>();
         public int credits;
         public int fuel = -1;
-        public int highestLevelCompleted = -1;
+        public int highestLevelCompleted = 0;
         public List<ItemData> items = new List<ItemData>();
         public string selectedSkinId;
     }

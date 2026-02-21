@@ -17,10 +17,8 @@ namespace ShipIt
             for (int i = 0; i < levelObjects.Count; i++)
             {
                 GameObject levelObject = levelObjects[i];
-                if (levelObject == null)
-                {
+                if (!levelObject)
                     continue;
-                }
 
                 bool shouldEnable = i == 0 || i <= highestCompletedLevel;
                 levelObject.SetActive(shouldEnable);
