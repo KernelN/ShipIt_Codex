@@ -35,11 +35,13 @@ namespace ShipIt.Gameplay.Astral
             float totalCredits = orderCredits + tipCredits;
             if (creditsLabel)
                 creditsLabel.text = totalCredits.ToString("$0");
-
+            
+            float orderRatio;
+            
             if (paymentLabel)
             {
                 paymentLabel.text = orderCredits.ToString("$0");
-                float orderRatio = orderManager.OrderRemainingRatio;
+                orderRatio = orderManager.OrderRemainingRatio;
                 paymentLabel.color = Color.Lerp(orderEndColor, orderStartColor, orderRatio);
             }
 
@@ -60,7 +62,7 @@ namespace ShipIt.Gameplay.Astral
                 return;
             }
 
-            float orderRatio = orderManager.OrderRemainingRatio;
+            orderRatio = orderManager.OrderRemainingRatio;
             creditsLabel.color = Color.Lerp(orderEndColor, orderStartColor, orderRatio);
         }
     }
