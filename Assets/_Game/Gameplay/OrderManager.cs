@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Serialization;
 using Universal;
 using ShipIt.TickManaging;
 
@@ -8,12 +9,16 @@ namespace ShipIt.Gameplay.Astral
     {
         [SerializeField] float orderCredits;
         [SerializeField] float tipCredits;
-        [SerializeField] float orderTime;
-        [SerializeField] float tipTime;
+        [FormerlySerializedAs("orderTime")]
+        [SerializeField] float planningTime;
+        [SerializeField] float movingTime;
+        [SerializeField] float movingBonusTime;
         float currentOrderCredits;
         float currentTipCredits;
         float tipTimer;
         float orderTimer;
+        float totalOrderTime;
+        float totalTipTime;
         bool tickSubscribed;
         bool creditsDepleted;
 
@@ -66,10 +71,13 @@ namespace ShipIt.Gameplay.Astral
 
         void InitializeCredits()
         {
+            totalOrderTime = planningTime + movingTime;
+            totalTipTime = planningTime + movingBonusTime;
+
             currentOrderCredits = orderCredits;
             currentTipCredits = tipCredits;
-            tipTimer = tipTime;
-            orderTimer = orderTime;
+            tipTimer = totalTipTime;
+            orderTimer = totalOrderTime;
         }
 
         void SubscribeToTicks()
@@ -105,53 +113,37 @@ namespace ShipIt.Gameplay.Astral
 
         bool UpdateTipCredits()
         {
-            if (tipCredits <= 0f || tipTime <= 0f)
-            {
-                bool tipWasAvailable = currentTipCredits > 0f;
-                currentTipCredits = 0f;
-                tipTimer = tipTime;
-                return tipWasAvailable;
-            }
-
-            if (tipTimer <= 0)
-            {
-                currentTipCredits = 0;
-                return false;
-            }
-
-            tipTimer -= TickInterval;
-
-            currentTipCredits = tipCredits * tipTimer / tipTime;
-
-            return true;
+            return UpdateCreditsOverTime(ref currentTipCredits, tipCredits, ref tipTimer, totalTipTime);
         }
 
         bool UpdateOrderCredits()
         {
-            if (!HasTipEnded()) return false;
-
-            if (orderCredits <= 0f || orderTime <= 0f)
-            {
-                bool orderWasAvailable = currentOrderCredits > 0f;
-                currentOrderCredits = 0f;
-                orderTimer = orderTime;
-                return orderWasAvailable;
-            }
-
-            if (orderTimer <= 0)
-            {
-                currentOrderCredits = 0;
-                return false;
-            }
-
-            orderTimer -= TickInterval;
-
-            currentOrderCredits = orderCredits * orderTimer / orderTime;
-
-            return true;
+            return UpdateCreditsOverTime(ref currentOrderCredits, orderCredits, ref orderTimer, totalOrderTime);
         }
 
-        bool HasTipEnded() => tipTimer <= 0 || tipCredits <= 0f;
+        bool UpdateCreditsOverTime(ref float currentCredits, float maxCredits, ref float timer, float totalTime)
+        {
+            if (maxCredits <= 0f || totalTime <= 0f)
+            {
+                bool hadCredits = currentCredits > 0f;
+                currentCredits = 0f;
+                timer = 0f;
+                return hadCredits;
+            }
+
+            if (timer <= 0f)
+            {
+                bool hadCredits = currentCredits > 0f;
+                currentCredits = 0f;
+                return hadCredits;
+            }
+
+            float previousCredits = currentCredits;
+            timer = Mathf.Max(0f, timer - TickInterval);
+            currentCredits = maxCredits * timer / totalTime;
+
+            return !Mathf.Approximately(previousCredits, currentCredits);
+        }
 
         void RaiseCreditsUpdated()
         {
