@@ -1,5 +1,3 @@
-using UnityEngine;
-
 namespace ShipIt
 {
     public static class LevelManager
