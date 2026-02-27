@@ -144,8 +144,10 @@ MonoBehaviour:
   targetCamera: {fileID: 5901409256760836093}
   viewAxis: 3
   framingPadding: 2
-  depthPadding: 5
-  minimumOrthographicSize: 1
+  safeDistance: 0
+  safeViewportOffset: {x: 0, y: 0}
+  depthPadding: 20
+  minimumOrthographicSize: 25
   rotationOffset: 90
 --- !u!1 &3529282293457469027
 GameObject:
@@ -291,8 +293,10 @@ MonoBehaviour:
   targetCamera: {fileID: 3911246087036813722}
   viewAxis: 1
   framingPadding: 2
-  depthPadding: 5
-  minimumOrthographicSize: 1
+  safeDistance: 0
+  safeViewportOffset: {x: 0, y: 0}
+  depthPadding: 20
+  minimumOrthographicSize: 25
   rotationOffset: 0
 --- !u!1 &5020693177583457544
 GameObject:

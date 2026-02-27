@@ -18,8 +18,6 @@ namespace ShipIt.Gameplay.Astral
         [SerializeField] Camera targetCamera;
         [SerializeField] AxisDirection viewAxis = AxisDirection.ZNegative;
         [SerializeField, Min(0f)] float framingPadding = 2f;
-        [SerializeField, Min(0f)] float safeDistance = 0f;
-        [SerializeField] Vector2 safeViewportOffset;
         [SerializeField, Min(0.01f)] float depthPadding = 5f;
         [SerializeField, Min(0.01f)] float minimumOrthographicSize = 1f;
         [SerializeField] float rotationOffset;
@@ -148,10 +146,10 @@ namespace ShipIt.Gameplay.Astral
             float requiredHalfHeight = (maxY - minY) * 0.5f;
             float aspect = Mathf.Max(0.0001f, targetCamera.aspect);
 
-            float orthographicSize = Mathf.Max(requiredHalfHeight, requiredHalfWidth / aspect, minimumOrthographicSize) + safeDistance;
+            float orthographicSize = Mathf.Max(requiredHalfHeight, requiredHalfWidth / aspect, minimumOrthographicSize);
 
-            float offsetX = safeViewportOffset.x * orthographicSize * aspect * 2f;
-            float offsetY = safeViewportOffset.y * orthographicSize * 2f;
+            float offsetX = orthographicSize * aspect * 2f;
+            float offsetY = orthographicSize * 2f;
             centerX += offsetX;
             centerY += offsetY;
 
