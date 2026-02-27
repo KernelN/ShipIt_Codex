@@ -8,7 +8,7 @@ using Unity.Services.Core;
 using UnityEngine;
 using UnityEngine.Events;
 
-namespace Universal.SaveData
+namespace Universal.FileManaging.Cloud
 {
     public class CloudDataManager : Singleton<CloudDataManager>
     {
@@ -42,7 +42,7 @@ namespace Universal.SaveData
             await LoadDataWithErrorHandling();
         }
 
-        public void SaveKeyData(Key key, object data)
+        public void SaveKeyData(Key key, string data)
         {
             if(!this.data.TryAdd(key, data))
                 this.data[key] = data;

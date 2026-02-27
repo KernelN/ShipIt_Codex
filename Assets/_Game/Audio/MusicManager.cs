@@ -7,6 +7,7 @@ namespace ShipIt
     public class MusicManager : Universal.Singleton<MusicManager>
     {
         internal override bool DoNotDestroyOnLoad => true;
+        internal override bool DestroyGameObject => true;
 
         const string ConfigDataPath = "/Data/ConfigData.dat";
 

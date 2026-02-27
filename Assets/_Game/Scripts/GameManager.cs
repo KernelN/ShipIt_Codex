@@ -1,13 +1,14 @@
 using System.Threading.Tasks;
 using UnityEngine;
 using Universal.FileManaging;
-using CloudDataManager = Universal.SaveData.CloudDataManager;
+using CloudDataManager = Universal.FileManaging.Cloud.CloudDataManager;
 
 namespace ShipIt
 {
     public class GameManager : Universal.Singleton<GameManager>
     {
         internal override bool DoNotDestroyOnLoad => true;
+        internal override bool DestroyGameObject => true;
         const string DataPath = "/Data/GameData.dat";
 
         [SerializeField] GameData data;
@@ -29,8 +30,9 @@ namespace ShipIt
         void OnCloudLoaded(CloudDataManager.Key key, Unity.Services.CloudSave.Models.Item data)
         {
             if(key != CloudDataManager.Key.GameData) return;
-
-            this.data = data.Value.GetAs<GameData>();
+            
+            string dataString = data.Value.GetAs<string>();
+            this.data = JsonUtility.FromJson<GameData>(dataString);
             SaveGameData();
         }
 
@@ -49,7 +51,8 @@ namespace ShipIt
         {
             string path = Application.persistentDataPath + DataPath;
             FileManager<GameData>.SaveDataToFile(data, path);
-            cloudDataManager.SaveKeyData(CloudDataManager.Key.GameData, data);
+            string dataString = JsonUtility.ToJson(data);
+            cloudDataManager.SaveKeyData(CloudDataManager.Key.GameData, dataString);
         }
         public void LoadGameData()
         {

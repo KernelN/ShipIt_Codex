@@ -1544,9 +1544,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   orderCredits: 3375
   tipCredits: 1680
-  planningTime: 30
-  movingTime: 40
-  movingBonusTime: 10
+  planningTime: 60
+  movingTime: 90
+  movingBonusTime: 25
 --- !u!4 &1764793356
 Transform:
   m_ObjectHideFlags: 0

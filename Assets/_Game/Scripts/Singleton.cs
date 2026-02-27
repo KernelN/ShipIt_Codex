@@ -10,6 +10,7 @@ namespace Universal
         /// False by default.
         /// </summary>
         internal virtual bool DoNotDestroyOnLoad => false;
+        internal virtual bool DestroyGameObject => false;
         internal virtual void Awake()
         {
             if (inst != null)
@@ -26,6 +27,8 @@ namespace Universal
         internal virtual void OnDestroy()
         {
             if (inst == this) inst = null;
+            
+            if(DestroyGameObject && gameObject) Destroy(gameObject);
         }
     }
 }

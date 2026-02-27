@@ -1,6 +1,6 @@
 using Unity.Services.CloudSave.Models;
 using UnityEngine;
-using Universal.SaveData;
+using Universal.FileManaging.Cloud;
 
 namespace ShipIt.CloudData
 {
@@ -12,11 +12,13 @@ namespace ShipIt.CloudData
 
         public void Start()
         {
-            if(!CloudDataManager.inst.hasDataConflict) return;
+            CloudDataManager dataManager = CloudDataManager.inst;
+            if(!dataManager) return;
+            if(!dataManager.hasDataConflict) return;
             
             dataConflictPanel.SetActive(true);
             localShower?.Show(GameManager.inst.Data);
-            Item cloudData = CloudDataManager.inst.GetData(CloudDataManager.Key.GameData);
+            Item cloudData = dataManager.GetData(CloudDataManager.Key.GameData);
             cloudShower?.Show(cloudData.Value.GetAs<GameData>());
         }
     }
