@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -23,7 +22,53 @@ namespace ShipIt.Gameplay.Astral
         [SerializeField, Min(0.01f)] float minimumOrthographicSize = 1f;
         [SerializeField] float rotationOffset;
 
-        void Start() => AlignToMap(AstralManager.inst.MapGrid);
+        bool isSubscribedToPathManager;
+
+        void OnEnable() => SubscribeToPathManager();
+
+        void OnDisable() => UnsubscribeFromPathManager();
+
+        void Start()
+        {
+            SubscribeToPathManager();
+            AlignToMap(AstralManager.inst.MapGrid);
+        }
+
+        void SubscribeToPathManager()
+        {
+            PathManager pathManager = PathManager.inst;
+            if (!pathManager || isSubscribedToPathManager)
+                return;
+
+            pathManager.SelectionContextUpdated += HandleSelectionContextUpdated;
+            isSubscribedToPathManager = true;
+        }
+
+        void UnsubscribeFromPathManager()
+        {
+            PathManager pathManager = PathManager.inst;
+            if (!pathManager || !isSubscribedToPathManager)
+                return;
+
+            pathManager.SelectionContextUpdated -= HandleSelectionContextUpdated;
+            isSubscribedToPathManager = false;
+        }
+
+        void HandleSelectionContextUpdated(AstralBody selectedPlanet, IReadOnlyList<AstralBody> selectablePlanets)
+        {
+            List<Transform> selectableTransforms = new List<Transform>();
+            if (selectablePlanets != null)
+            {
+                for (int i = 0; i < selectablePlanets.Count; i++)
+                {
+                    AstralBody selectablePlanet = selectablePlanets[i];
+                    if (selectablePlanet)
+                        selectableTransforms.Add(selectablePlanet.transform);
+                }
+            }
+
+            AlignToSelection(selectedPlanet ? selectedPlanet.transform : null, selectableTransforms);
+        }
 
         public void AlignToMap(Transform[,,] grid)
         {
@@ -103,11 +148,41 @@ namespace ShipIt.Gameplay.Astral
 
             float orthographicSize = Mathf.Max(requiredHalfHeight, requiredHalfWidth / aspect, minimumOrthographicSize);
 
+            float offsetX = orthographicSize * aspect * 2f;
+            float offsetY = orthographicSize * 2f;
+            centerX += offsetX;
+            centerY += offsetY;
+
             targetCamera.transform.rotation = finalRotation;
             targetCamera.transform.position = (right * centerX) + (up * centerY) + (forward * cameraDepth);
             targetCamera.orthographicSize = orthographicSize;
             targetCamera.nearClipPlane = 0.01f;
             targetCamera.farClipPlane = Mathf.Max(100f, (maxZ - cameraDepth) + depthPadding);
+        }
+
+        public void AlignToSelection(Transform selectedPlanet, IReadOnlyList<Transform> selectablePlanets)
+        {
+            List<Transform> focusPlanets = new List<Transform>();
+
+            if (selectedPlanet)
+                focusPlanets.Add(selectedPlanet);
+
+            if (selectablePlanets != null)
+            {
+                for (int i = 0; i < selectablePlanets.Count; i++)
+                {
+                    Transform selectablePlanet = selectablePlanets[i];
+                    if (!selectablePlanet || selectablePlanet == selectedPlanet || focusPlanets.Contains(selectablePlanet))
+                        continue;
+
+                    focusPlanets.Add(selectablePlanet);
+                }
+            }
+
+            if (focusPlanets.Count == 0)
+                return;
+
+            AlignToPlanets(focusPlanets);
         }
 
         static Vector3 GetAxisVector(AxisDirection axis)

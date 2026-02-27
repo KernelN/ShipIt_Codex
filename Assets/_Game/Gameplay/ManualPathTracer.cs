@@ -57,6 +57,7 @@ namespace ShipIt.Gameplay.Astral
             }
 
             List<AstralBody> targets = pathFinder.GetPaths(originPlanet);
+            NotifySelectionContext(originPlanet, targets);
             if (targets == null || targets.Count == 0)
                 return;
 
@@ -208,6 +209,18 @@ namespace ShipIt.Gameplay.Astral
                 return;
             HighlightPaths(selectedPlanet);
         }
+
+
+
+        void NotifySelectionContext(AstralBody selectedPlanet, IReadOnlyList<AstralBody> selectablePlanets)
+        {
+            PathManager pathManager = PathManager.inst;
+            if (!pathManager)
+                return;
+
+            pathManager.NotifySelectionContext(selectedPlanet, selectablePlanets);
+        }
+
 
         bool TryCompletePath(AstralBody selectedPlanet)
         {
