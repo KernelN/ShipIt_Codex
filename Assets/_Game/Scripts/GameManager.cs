@@ -55,6 +55,7 @@ namespace ShipIt
         {
             string path = Application.persistentDataPath + DataPath;
             data = FileManager<GameData>.LoadDataFromFile(path);
+            if(data == null) data = new GameData();
         }
         [ContextMenu("Clear Game Data")]
         public void ClearGameData()

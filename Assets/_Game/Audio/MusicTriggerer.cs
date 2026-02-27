@@ -6,20 +6,6 @@ namespace ShipIt
     {
         [SerializeField] AudioClip track;
 
-        public void TriggerTrack()
-        {
-            if (MusicManager.inst)
-            {
-                MusicManager.inst.RequestTrack(track);
-            }
-        }
-
-        public void TriggerTrack(AudioClip newTrack)
-        {
-            if (MusicManager.inst)
-            {
-                MusicManager.inst.RequestTrack(newTrack);
-            }
-        }
+        public void Start() => MusicManager.inst?.RequestTrack(track);
     }
 }

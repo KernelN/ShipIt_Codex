@@ -5,18 +5,15 @@ namespace ShipIt
 {
     public class MusicManagerUI : MonoBehaviour
     {
-        [SerializeField] MusicManager manager;
+        MusicManager manager;
         [SerializeField] Slider volumeSlider;
         [SerializeField] Button muteButton;
 
         float lastUnmutedVolume = 1f;
 
-        void Awake()
+        void Start()
         {
-            if (!manager)
-            {
                 manager = MusicManager.inst;
-            }
 
             if (volumeSlider)
             {
