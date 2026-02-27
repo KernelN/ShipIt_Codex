@@ -11,7 +11,6 @@ namespace ShipIt.Gameplay.Astral
         [SerializeField] List<GameObject> highlightersPool = new List<GameObject>();
         [SerializeField] CameraSwapper camSwapper;
         [SerializeField] PathShower pathShower;
-        [SerializeField] CameraAligner cameraAligner;
 
         readonly List<GameObject> activeHighlights = new List<GameObject>();
         readonly HashSet<AstralBody> highlightedTargets = new HashSet<AstralBody>();
@@ -58,7 +57,7 @@ namespace ShipIt.Gameplay.Astral
             }
 
             List<AstralBody> targets = pathFinder.GetPaths(originPlanet);
-            AlignCameraToSelection(originPlanet, targets);
+            NotifySelectionContext(originPlanet, targets);
             if (targets == null || targets.Count == 0)
                 return;
 
@@ -212,24 +211,16 @@ namespace ShipIt.Gameplay.Astral
         }
 
 
-        void AlignCameraToSelection(AstralBody selectedPlanet, IReadOnlyList<AstralBody> selectablePlanets)
+
+        void NotifySelectionContext(AstralBody selectedPlanet, IReadOnlyList<AstralBody> selectablePlanets)
         {
-            if (!cameraAligner)
+            PathManager pathManager = PathManager.inst;
+            if (!pathManager)
                 return;
 
-            List<Transform> selectableTransforms = new List<Transform>();
-            if (selectablePlanets != null)
-            {
-                for (int i = 0; i < selectablePlanets.Count; i++)
-                {
-                    AstralBody selectablePlanet = selectablePlanets[i];
-                    if (selectablePlanet)
-                        selectableTransforms.Add(selectablePlanet.transform);
-                }
-            }
-
-            cameraAligner.AlignToSelection(selectedPlanet ? selectedPlanet.transform : null, selectableTransforms);
+            pathManager.NotifySelectionContext(selectedPlanet, selectablePlanets);
         }
+
 
         bool TryCompletePath(AstralBody selectedPlanet)
         {

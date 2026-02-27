@@ -24,7 +24,53 @@ namespace ShipIt.Gameplay.Astral
         [SerializeField, Min(0.01f)] float minimumOrthographicSize = 1f;
         [SerializeField] float rotationOffset;
 
-        void Start() => AlignToMap(AstralManager.inst.MapGrid);
+        bool isSubscribedToPathManager;
+
+        void OnEnable() => SubscribeToPathManager();
+
+        void OnDisable() => UnsubscribeFromPathManager();
+
+        void Start()
+        {
+            SubscribeToPathManager();
+            AlignToMap(AstralManager.inst.MapGrid);
+        }
+
+        void SubscribeToPathManager()
+        {
+            PathManager pathManager = PathManager.inst;
+            if (!pathManager || isSubscribedToPathManager)
+                return;
+
+            pathManager.SelectionContextUpdated += HandleSelectionContextUpdated;
+            isSubscribedToPathManager = true;
+        }
+
+        void UnsubscribeFromPathManager()
+        {
+            PathManager pathManager = PathManager.inst;
+            if (!pathManager || !isSubscribedToPathManager)
+                return;
+
+            pathManager.SelectionContextUpdated -= HandleSelectionContextUpdated;
+            isSubscribedToPathManager = false;
+        }
+
+        void HandleSelectionContextUpdated(AstralBody selectedPlanet, IReadOnlyList<AstralBody> selectablePlanets)
+        {
+            List<Transform> selectableTransforms = new List<Transform>();
+            if (selectablePlanets != null)
+            {
+                for (int i = 0; i < selectablePlanets.Count; i++)
+                {
+                    AstralBody selectablePlanet = selectablePlanets[i];
+                    if (selectablePlanet)
+                        selectableTransforms.Add(selectablePlanet.transform);
+                }
+            }
+
+            AlignToSelection(selectedPlanet ? selectedPlanet.transform : null, selectableTransforms);
+        }
 
         public void AlignToMap(Transform[,,] grid)
         {

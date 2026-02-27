@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using Universal;
@@ -14,12 +15,20 @@ namespace ShipIt.Gameplay.Astral
 
         public IReadOnlyList<Vector3> CompletedPathPoints => completedPathPoints;
 
+        public event Action<AstralBody, IReadOnlyList<AstralBody>> SelectionContextUpdated;
+
         internal override bool DoNotDestroyOnLoad => true;
 
         public bool IsTargetPlanet(AstralBody planet)
         {
             AstralManager astralManager = AstralManager.inst;
             return astralManager && astralManager.IsTargetPlanet(planet);
+        }
+
+
+        public void NotifySelectionContext(AstralBody selectedPlanet, IReadOnlyList<AstralBody> selectablePlanets)
+        {
+            SelectionContextUpdated?.Invoke(selectedPlanet, selectablePlanets);
         }
 
         public void CompletePath(IReadOnlyList<AstralBody> path)
