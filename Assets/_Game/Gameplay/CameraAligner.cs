@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -19,6 +18,8 @@ namespace ShipIt.Gameplay.Astral
         [SerializeField] Camera targetCamera;
         [SerializeField] AxisDirection viewAxis = AxisDirection.ZNegative;
         [SerializeField, Min(0f)] float framingPadding = 2f;
+        [SerializeField, Min(0f)] float safeDistance = 0f;
+        [SerializeField] Vector2 safeViewportOffset;
         [SerializeField, Min(0.01f)] float depthPadding = 5f;
         [SerializeField, Min(0.01f)] float minimumOrthographicSize = 1f;
         [SerializeField] float rotationOffset;
@@ -101,13 +102,43 @@ namespace ShipIt.Gameplay.Astral
             float requiredHalfHeight = (maxY - minY) * 0.5f;
             float aspect = Mathf.Max(0.0001f, targetCamera.aspect);
 
-            float orthographicSize = Mathf.Max(requiredHalfHeight, requiredHalfWidth / aspect, minimumOrthographicSize);
+            float orthographicSize = Mathf.Max(requiredHalfHeight, requiredHalfWidth / aspect, minimumOrthographicSize) + safeDistance;
+
+            float offsetX = safeViewportOffset.x * orthographicSize * aspect * 2f;
+            float offsetY = safeViewportOffset.y * orthographicSize * 2f;
+            centerX += offsetX;
+            centerY += offsetY;
 
             targetCamera.transform.rotation = finalRotation;
             targetCamera.transform.position = (right * centerX) + (up * centerY) + (forward * cameraDepth);
             targetCamera.orthographicSize = orthographicSize;
             targetCamera.nearClipPlane = 0.01f;
             targetCamera.farClipPlane = Mathf.Max(100f, (maxZ - cameraDepth) + depthPadding);
+        }
+
+        public void AlignToSelection(Transform selectedPlanet, IReadOnlyList<Transform> selectablePlanets)
+        {
+            List<Transform> focusPlanets = new List<Transform>();
+
+            if (selectedPlanet)
+                focusPlanets.Add(selectedPlanet);
+
+            if (selectablePlanets != null)
+            {
+                for (int i = 0; i < selectablePlanets.Count; i++)
+                {
+                    Transform selectablePlanet = selectablePlanets[i];
+                    if (!selectablePlanet || selectablePlanet == selectedPlanet || focusPlanets.Contains(selectablePlanet))
+                        continue;
+
+                    focusPlanets.Add(selectablePlanet);
+                }
+            }
+
+            if (focusPlanets.Count == 0)
+                return;
+
+            AlignToPlanets(focusPlanets);
         }
 
         static Vector3 GetAxisVector(AxisDirection axis)
