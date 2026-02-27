@@ -183,7 +183,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ship: {fileID: 0}
-  cameraTransform: {fileID: 0}
+  cameraTransform: {fileID: 8917194928399694971}
   followLerpSpeed: 3
   lookLerpSpeed: 2
   shipFollowRadius: 3

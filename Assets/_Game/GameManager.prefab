@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 3764864747844816277}
   - component: {fileID: 5850824727006568146}
   - component: {fileID: 7029803061938798861}
+  - component: {fileID: 7364495440761327265}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -72,6 +73,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 241cd923743d7c04a8fa2351ed5cf8bd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  data:
+    randomSeed: -1
+    astralBodies: []
+    credits: 0
+    fuel: -1
+    highestLevelCompleted: 0
+    items: []
+    selectedSkinId: 
 --- !u!114 &7029803061938798861
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -84,3 +93,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8519952091ad37d4f80f0908c147cfb2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &7364495440761327265
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9079193186310300250}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1623fcf22a79438439dc59701bae9d97, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  OnDataConflictFixed:
+    m_PersistentCalls:
+      m_Calls: []
+  OnDataLoaded:
+    m_PersistentCalls:
+      m_Calls: []

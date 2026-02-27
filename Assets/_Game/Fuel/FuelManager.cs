@@ -99,7 +99,7 @@ namespace ShipIt
             timer = remainder;
             idleManager.SaveResource(FuelResourceKey, RechargeTime > 0f ? Mathf.Clamp01(timer / RechargeTime) : 0f);
         }
-        void RechargeFuel(int amount)
+        public void RechargeFuel(int amount)
         {
             if (amount <= 0) return;
 

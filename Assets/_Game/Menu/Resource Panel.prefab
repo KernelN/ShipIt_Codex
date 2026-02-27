@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 7952975840283728458}
   - component: {fileID: 4872528185725914506}
   m_Layer: 5
-  m_Name: Fuel Image
+  m_Name: Resource Image
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -32,10 +32,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 743866941406705077}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 110, y: 0}
-  m_SizeDelta: {x: 109.8833, y: 0}
+  m_AnchorMin: {x: 0.1, y: 0.2}
+  m_AnchorMax: {x: 0.3, y: 0.8}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &7952975840283728458
 CanvasRenderer:
@@ -66,7 +66,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_Sprite: {fileID: 21300000, guid: 8854f4d9ca8ef704b820870a714a446f, type: 3}
-  m_Type: 0
+  m_Type: 1
   m_PreserveAspect: 1
   m_FillCenter: 1
   m_FillMethod: 4
@@ -86,9 +86,8 @@ GameObject:
   - component: {fileID: 743866941406705077}
   - component: {fileID: 6957045079295596080}
   - component: {fileID: 2485499279284442059}
-  - component: {fileID: 8948624922833323479}
   m_Layer: 5
-  m_Name: Fuel Panel
+  m_Name: Resource Panel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -153,21 +152,6 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 0.11
---- !u!114 &8948624922833323479
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4198212280431016945}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 763ecd8c08ceab04d9ae5275ed9d4ee5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  fuelManager: {fileID: 0}
-  fuelBank: {fileID: 0}
-  fuelLabel: {fileID: 4584351447813826503}
 --- !u!1 &5313525910732381726
 GameObject:
   m_ObjectHideFlags: 0
@@ -180,7 +164,7 @@ GameObject:
   - component: {fileID: 7383401696939775751}
   - component: {fileID: 4584351447813826503}
   m_Layer: 5
-  m_Name: Fuel Text
+  m_Name: Resource Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -200,10 +184,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 743866941406705077}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 1, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -228.3171, y: 0}
-  m_SizeDelta: {x: 456.6342, y: 0}
+  m_AnchorMin: {x: 0.33727777, y: 0.17270774}
+  m_AnchorMax: {x: 0.93000007, y: 0.849427}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &7383401696939775751
 CanvasRenderer:
@@ -260,12 +244,12 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 95
+  m_fontSize: 100
   m_fontSizeBase: 95
   m_fontWeight: 400
-  m_enableAutoSizing: 0
+  m_enableAutoSizing: 1
   m_fontSizeMin: 18
-  m_fontSizeMax: 72
+  m_fontSizeMax: 100
   m_fontStyle: 0
   m_HorizontalAlignment: 1
   m_VerticalAlignment: 512

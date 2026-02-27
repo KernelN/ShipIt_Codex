@@ -1,5 +1,7 @@
+using System.Threading.Tasks;
 using UnityEngine;
 using Universal.FileManaging;
+using CloudDataManager = Universal.SaveData.CloudDataManager;
 
 namespace ShipIt
 {
@@ -10,6 +12,7 @@ namespace ShipIt
 
         [SerializeField] GameData data;
         public GameData Data => data;
+        CloudDataManager cloudDataManager;
 
         internal override void Awake()
         {
@@ -18,21 +21,35 @@ namespace ShipIt
             if (this != inst) return;
 
             LoadGameData();
+            
+            cloudDataManager = CloudDataManager.inst;
+            cloudDataManager.OnDataLoaded.AddListener(OnCloudLoaded);
+        }
 
-            if (data == null) 
-                data = new GameData();
+        void OnCloudLoaded(CloudDataManager.Key key, Unity.Services.CloudSave.Models.Item data)
+        {
+            if(key != CloudDataManager.Key.GameData) return;
+
+            this.data = data.Value.GetAs<GameData>();
+            SaveGameData();
+        }
+
+        internal override void OnDestroy()
+        {
+            if(this != inst) return;
+            
+            SaveGameData();
+            cloudDataManager.SaveDataWithErrorHandling();
+            
+            base.OnDestroy();
         }
 
         //Methods
-        public void QuitGame()
-        {
-            SaveGameData();
-            Application.Quit();
-        }
         public void SaveGameData()
         {
             string path = Application.persistentDataPath + DataPath;
             FileManager<GameData>.SaveDataToFile(data, path);
+            cloudDataManager.SaveKeyData(CloudDataManager.Key.GameData, data);
         }
         public void LoadGameData()
         {

@@ -14,8 +14,5 @@ namespace ShipIt
         {
             inst = GameManager.inst;
         }
-
-        //Methods
-        public void QuitGame() => inst.QuitGame();
     }
 }
