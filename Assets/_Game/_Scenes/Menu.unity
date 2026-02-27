@@ -843,7 +843,7 @@ GameObject:
   - component: {fileID: 171730989}
   - component: {fileID: 171730988}
   - component: {fileID: 171730987}
-  - component: {fileID: 171730986}
+  - component: {fileID: 171730990}
   m_Layer: 5
   m_Name: Mute Button
   m_TagString: Untagged
@@ -870,20 +870,6 @@ RectTransform:
   m_AnchoredPosition: {x: -338, y: -511}
   m_SizeDelta: {x: 130.1279, y: 136.21}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &171730986
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 171730984}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 233738868cc3f454b8938c1f0b53f6ff, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  volumeSlider: {fileID: 0}
-  muteButton: {fileID: 171730987}
 --- !u!114 &171730987
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -966,6 +952,22 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 171730984}
   m_CullTransparentMesh: 1
+--- !u!114 &171730990
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 171730984}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 233738868cc3f454b8938c1f0b53f6ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  volumeSlider: {fileID: 0}
+  muteButton: {fileID: 171730987}
+  muteSprite: {fileID: 21300000, guid: 90b998770e77532409ccdf0abddfa435, type: 3}
+  unmuteSprite: {fileID: 21300000, guid: c53406b28008b7b4aba9260e10009a84, type: 3}
 --- !u!1 &177487719
 GameObject:
   m_ObjectHideFlags: 0
@@ -8217,7 +8219,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8882312763801169666, guid: 367bdfe184172614ca03113c926132dd, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -31.881348
+      value: -31.881836
       objectReference: {fileID: 0}
     - target: {fileID: 8882312763801169666, guid: 367bdfe184172614ca03113c926132dd, type: 3}
       propertyPath: m_AnchoredPosition.y
@@ -8253,10 +8255,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 7971031121247153304}
     m_Modifications:
-    - target: {fileID: 1767410832001108724, guid: d250cafd7eb22f34aa9984a68dac651c, type: 3}
-      propertyPath: fuelBank
-      value: 
-      objectReference: {fileID: 5620941227150342596}
     - target: {fileID: 1767410832001108724, guid: d250cafd7eb22f34aa9984a68dac651c, type: 3}
       propertyPath: fuelManager
       value: 
@@ -8327,7 +8325,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5777398703234442476, guid: d250cafd7eb22f34aa9984a68dac651c, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -31.881348
+      value: -31.881836
       objectReference: {fileID: 0}
     - target: {fileID: 5777398703234442476, guid: d250cafd7eb22f34aa9984a68dac651c, type: 3}
       propertyPath: m_AnchoredPosition.y
@@ -8352,29 +8350,8 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 6934634521017019048, guid: d250cafd7eb22f34aa9984a68dac651c, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 5620941227150342596}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d250cafd7eb22f34aa9984a68dac651c, type: 3}
---- !u!1 &5620941227150342595 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 6934634521017019048, guid: d250cafd7eb22f34aa9984a68dac651c, type: 3}
-  m_PrefabInstance: {fileID: 5620941227150342594}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &5620941227150342596
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5620941227150342595}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1949da640050fa14bb2670a8f1ca3641, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  launchFuelCost: 1
 --- !u!1001 &5855755740503168966
 PrefabInstance:
   m_ObjectHideFlags: 0

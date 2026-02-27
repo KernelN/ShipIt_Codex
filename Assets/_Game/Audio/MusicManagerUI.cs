@@ -8,6 +8,8 @@ namespace ShipIt
         MusicManager manager;
         [SerializeField] Slider volumeSlider;
         [SerializeField] Button muteButton;
+        [SerializeField] Sprite muteSprite;
+        [SerializeField] Sprite unmuteSprite;
 
         float lastUnmutedVolume = 1f;
 
@@ -93,10 +95,11 @@ namespace ShipIt
 
             manager.SetVolume(volume);
 
-            if (volumeSlider && !Mathf.Approximately(volumeSlider.value, volume))
-            {
+            if (volumeSlider && !Mathf.Approximately(volumeSlider.value, volume)) 
                 volumeSlider.SetValueWithoutNotify(volume);
-            }
+
+            if (muteButton) 
+                muteButton.image.sprite = volume > 0f ? muteSprite : unmuteSprite;
         }
 
         void RefreshUIFromManager()
@@ -117,6 +120,9 @@ namespace ShipIt
             {
                 lastUnmutedVolume = managerVolume;
             }
+
+            if (muteButton) 
+                muteButton.image.sprite = managerVolume > 0f ? muteSprite : unmuteSprite;
         }
     }
 }
